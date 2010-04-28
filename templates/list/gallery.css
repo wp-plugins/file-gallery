@@ -1,0 +1,59 @@
+.gallery.list,
+#content .gallery.list
+{
+	margin: 0 0 0 1em;
+}
+
+.entry ul.gallery.list li:before
+{
+	content: "";
+}
+
+html > body .entry ul.gallery.list
+{
+	text-indent: 0;
+}
+
+html > body .entry ul.gallery.list li
+{
+	margin: 0;
+}
+
+.gallery.list .gallery-item,
+#content .gallery.list .gallery-item
+{
+	float: none;
+	width: auto;
+	text-align: left;
+}
+
+.gallery.list .gallery-item a,
+#content .gallery.list .gallery-item a
+{
+	clear: both;
+}
+
+.gallery.list .gallery-caption,
+#content .gallery.list .gallery-caption
+{
+	margin: 0;
+}
+
+.gallery.list .gallery-description
+{
+	font-size: 80%;
+	color: #664422;
+	margin: 0;
+}
+
+.gallery.list .gallery-endcol
+{
+	margin-right: 0;
+}
+
+.gallery.list .clear
+{
+	clear: both;
+	height: 0.001px;
+	visibility: hidden;
+}
