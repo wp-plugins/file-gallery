@@ -20,7 +20,7 @@ more... Here's the full list of features:
 **Features:**
 
 1.  multiple galleries per post with custom attachment order
-2.  a basic templating system – choose a different template for each 
+2.  a basic templating system - choose a different template for each 
     gallery, even within the same post
 3.  simple, easy to use UI with drag and drop sorting shows attachment 
     thumbnails beneath text editor: everything attachments-related is on 
@@ -30,7 +30,7 @@ more... Here's the full list of features:
     data only, not the file)
 6.  copy all attachments from another post
 7.  unattach (detach) items from current post
-8.  media tags – tag your attachments and then use those tags to choose 
+8.  media tags - tag your attachments and then use those tags to choose 
     which attachments you want to display in your gallery or to filter 
 	your media library items.
 9.  different background colors for items in media library depending 
