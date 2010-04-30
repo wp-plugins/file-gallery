@@ -20,7 +20,7 @@ more... Here's the full list of features:
 **Features:**
 
 1.  multiple galleries per post with custom attachment order
-2.  a basic templating system - choose a different template for each 
+2.  a basic templating system – choose a different template for each 
     gallery, even within the same post
 3.  simple, easy to use UI with drag and drop sorting shows attachment 
     thumbnails beneath text editor: everything attachments-related is on 
@@ -30,7 +30,7 @@ more... Here's the full list of features:
     data only, not the file)
 6.  copy all attachments from another post
 7.  unattach (detach) items from current post
-8.  media tags - tag your attachments and then use those tags to choose 
+8.  media tags – tag your attachments and then use those tags to choose 
     which attachments you want to display in your gallery or to filter 
 	your media library items.
 9.  different background colors for items in media library depending 
@@ -39,6 +39,17 @@ more... Here's the full list of features:
 10. compatible with "WordPress Mobile Edition" and "Media Tags" plugins	
 11. basic caching of gallery output and frequent queries (transients)
 12. various smaller modifications described in help files (coming soon!) 
+
+== Screenshots ==
+
+1. File Gallery main box on editing screen
+2. Edit attachment data
+3. Copy all attachments from another post
+4. Deleting attachments that have copies
+5. Build a gallery by choosing media tags
+6. Settings page
+7. Post thumb and number of attachments as extras in this view
+8. Copying attachments from media library
 
 == Installation == 
 
