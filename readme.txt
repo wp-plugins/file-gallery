@@ -20,7 +20,7 @@ more... Here's the full list of features:
 **Features:**
 
 1.  multiple galleries per post with custom attachment order
-2.  a basic templating system – choose a different template for each 
+2.  a basic templating system - choose a different template for each 
     gallery, even within the same post
 3.  simple, easy to use UI with drag and drop sorting shows attachment 
     thumbnails beneath text editor: everything attachments-related is on 
