@@ -190,7 +190,7 @@
 
 .post_thumb_status
 {
-	bottom: 0;
+	bottom: 1px;
 	left: 40px;
 	position: absolute;
 	text-decoration: none;
@@ -448,7 +448,7 @@ a.img_edit
 	margin-right: 15px;
 }
 
-#fg_gallery_tags_container
+#file_gallery fieldset #fg_gallery_tags_container
 {
 	display: none;
 	width: 95%;

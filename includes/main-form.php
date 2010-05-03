@@ -114,7 +114,7 @@
 				<label for="fg_gallery_tags"><?php _e("Media tags", "file-gallery");?>:</label>
 				<input type="text" id="fg_gallery_tags" name="fg_gallery_tags" value="<?php echo $_POST["tag_list"]; ?>" />
 	
-				<label for="fg_gallery_tags_from"><?php _e("current post's attachments only?", "file-gallery"); ?>:</label>
+				<label for="fg_gallery_tags_from"><?php _e("current post's attachments only?", "file-gallery"); ?></label>
 				<input type="checkbox" id="fg_gallery_tags_from" name="fg_gallery_tags_from" checked="checked" />
 			</p>
 			
@@ -189,7 +189,7 @@
 // prints number of attachments
 $print_attachment_count = __("File Gallery &mdash; %d attachment.", "file-gallery");
 
-if( $count_attachments > 1 )
+if( 0 == $count_attachments || $count_attachments > 1 )
 	$print_attachment_count = __("File Gallery &mdash; %d attachments.", "file-gallery");
 
 echo '<script type="text/javascript">

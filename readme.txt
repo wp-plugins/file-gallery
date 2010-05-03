@@ -61,6 +61,14 @@ more... Here's the full list of features:
 
 == Changelog ==
 
+= 1.5.1 =
+* May 4th, 2010
+* added option to filter out duplicate attachments (copies) when
+  browsing media library
+* post thumbnail is now removed when that attachment is deleted or
+  detached
+* and finally, the help file is included :)
+
 = 1.5 =
 * April 25th, 2010
 * fixed _has_copies meta handling when deleting a copy

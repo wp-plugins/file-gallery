@@ -1,6 +1,6 @@
 <?php
 	$starttag = "div";
-	$cleartag = "\n<br class=\"clear\" />\n";
+	$cleartag = "\n<br class='clear' />\n";
 ?>
 <dl class="gallery-item<?php echo $endcol; ?>">
 	<dt class="gallery-icon">

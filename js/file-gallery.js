@@ -102,6 +102,9 @@ jQuery(document).ready(function()
 				jQuery("#file_gallery_upload_files").hide();
 			}
 			
+			if( 0 === num_attachments || 0 == jQuery("#file_gallery_list .post_thumb").length )
+				WPRemoveThumbnail();
+			
 			// tags from current post only checkbox
 			if( "false" == tags_from )
 				jQuery("#fg_gallery_tags_from").attr("checked", false);

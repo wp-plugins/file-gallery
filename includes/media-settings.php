@@ -116,6 +116,8 @@ function file_gallery_options_init()
 	
 	add_settings_field("file_gallery_e_display_post_thumb", __("Display post thumb (if set)?", 'file-gallery'), create_function("", 'return file_gallery_options_fields( array("name" => "file_gallery_e_display_post_thumb") );'), 'media', 'file_gallery_options');
 	
+	add_settings_field("file_gallery_library_filter_duplicates", __("Filter out duplicate attachments (copies) when browsing media library?", 'file-gallery'), create_function("", 'return file_gallery_options_fields( array("name" => "file_gallery_library_filter_duplicates") );'), 'media', 'file_gallery_options');
+	
 	add_settings_field("file_gallery_e_display_media_tags", __("Display media tags for attachments in media library?", 'file-gallery'), create_function("", 'return file_gallery_options_fields( array("name" => "file_gallery_e_display_media_tags") );'), 'media', 'file_gallery_options');
 	
 	
@@ -391,7 +393,10 @@ function file_gallery_options_fields( $args )
 			case "file_gallery_show_on_post_type" :
 					$output = $post_types;
 				break;
-			
+			case "file_gallery_library_filter_duplicates" :
+					$output = '<input type="checkbox" name="file_gallery[library_filter_duplicates]" id="file_gallery_library_filter_duplicates" value="1" ' . checked('1', $file_gallery_options["library_filter_duplicates"], false) . ' />';
+				break;
+				
 			/* non editable variables */
 			
 			case "folder" :

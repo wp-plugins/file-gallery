@@ -2,7 +2,7 @@
 /*
 Plugin Name: File Gallery
 Plugin URI: http://skyphe.org/code/wordpress/file-gallery/
-Version: 1.5
+Version: 1.5.1
 Description: "File Gallery" extends WordPress' media (attachments) capabilities by adding a new gallery shortcode handler with templating support, a new interface for attachment handling when editing posts, and much more.
 Author: Bruno "Aesqe" Babic
 Author URI: http://skyphe.org
@@ -70,6 +70,8 @@ define("FILE_GALLERY_DEFAULT_TEMPLATES", serialize( array("default", "file-galle
  */
 function file_gallery_plugins_support()
 {
+	global $sitepress, $wp_taxonomies;
+	
 	$mobile = false;
 	$fg_ss_dir = get_stylesheet_directory();
 	$file_gallery_media_tag_name = "media_tag";
@@ -96,8 +98,14 @@ function file_gallery_plugins_support()
 	define("FILE_GALLERY_THEME_ABSPATH", $file_gallery_theme_abspath);
 	define("FILE_GALLERY_THEME_TEMPLATES_ABSPATH", $file_gallery_theme_templates_abspath);
 	define("FILE_GALLERY_THEME_TEMPLATES_URL", $file_gallery_theme_templates_url);
+	
+	/*if( FILE_GALLERY_MEDIA_TAG_NAME == $_GET["taxonomy"] )
+	{
+		remove_action('add_tag_form',  array($sitepress, 'edit_term_form'));
+		remove_action('edit_tag_form', array($sitepress, 'edit_term_form'));
+	}*/
 }
-add_action("plugins_loaded", "file_gallery_plugins_support");
+add_action("plugins_loaded", "file_gallery_plugins_support", 100);
 
 
 
@@ -141,7 +149,9 @@ function file_gallery_activate()
 		'del_options_on_deactivate' => false,
 
 		'show_on_post_type_post'	=> true,
-		'show_on_post_type_page'	=> true
+		'show_on_post_type_page'	=> true,
+		
+		'library_filter_duplicates' => true
 	);
 	
 	if( $options = get_option("file_gallery") )
@@ -187,15 +197,16 @@ add_filter("plugin_action_links_" . plugin_basename(__FILE__), 'file_gallery_add
  */
 function file_gallery_add_taxonomies()
 {
-	global $wp_taxonomies;
-
-	$media_tag->name                  = FILE_GALLERY_MEDIA_TAG_NAME; // media_tag by default
-	$media_tag->object_type           = "attachment";
-	$media_tag->hierarchical          = "";
-	$media_tag->update_count_callback = "file_gallery_update_media_tag_term_count";
-    $media_tag->label                 = __("Media tags", "file-gallery");
+	$args = array(
+		"update_count_callback" => "file_gallery_update_media_tag_term_count",
+		"label" => __("Media tags", "file-gallery"),
+		"singular_label" => __("Media tag", "file-gallery"),
+		"public" => true,
+		"rewrite" => true,
+		"query_var" => FILE_GALLERY_MEDIA_TAG_NAME
+	);
 	
-	$wp_taxonomies[FILE_GALLERY_MEDIA_TAG_NAME] = $media_tag;
+	register_taxonomy( FILE_GALLERY_MEDIA_TAG_NAME, "attachment", $args );
 }
 add_action("init", "file_gallery_add_taxonomies");
 
@@ -259,42 +270,27 @@ function file_gallery_get_intermediate_image_sizes()
 
 
 /**
- * Writes errors, notices, etc, to the log file
- * Limited to 100 kB
- */
-function file_gallery_write_log( $data = "" )
-{
-	$data = date("Y-m-d@H:i:s") . "\n" . str_replace("<br />", "\n", $data) . "\n";
-	$filename = str_replace("\\", "/", WP_CONTENT_DIR) . "/file_gallery_log.txt";
-	
-	if( @file_exists($filename) )
-		$data .= @implode("", @file($filename, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES)) . "\n";
-	
-	$file = @fopen($filename, "w+t");
-
-	if( false !== $file )
-	{		
-		@fwrite($file, $data);
-		
-		if( 102400 < (filesize($filename) + strlen($data)) )
-			@ftruncate($file, 102400);
-	}
-	
-	@fclose($file);
-}
-
-
-
-/**
  * Media library extensions
  */
 function file_gallery_add_library_query_vars( $input )
 {
-	global $pagenow;
-	
+	global $wpdb, $pagenow;
+
+	$options = get_option("file_gallery");
+
 	// affect the query only if we're on a certain page
-	if( "media-upload.php" == $pagenow && "library" == $_GET["tab"] && is_numeric($_GET['post_id']) && "current" == $_GET['exclude'] )
-		$input .= " AND `post_parent` != " . intval($_GET["post_id"]) . " ";
+	if( "media-upload.php" == $pagenow && "library" == $_GET["tab"] && is_numeric($_GET['post_id']) )
+	{
+		if( "current" == $_GET['exclude'] )
+			$input .= " AND `post_parent` != " . intval($_GET["post_id"]) . " ";
+
+		if( true == $options["library_filter_duplicates"] )
+			$input .= " AND $wpdb->posts.ID NOT IN ( SELECT ID FROM $wpdb->posts AS ps INNER JOIN $wpdb->postmeta AS pm ON pm.post_id = ps.ID WHERE pm.meta_key = '_is_copy_of' ) ";
+	}
+	elseif( "upload.php" == $pagenow && true == $options["library_filter_duplicates"] )
+	{
+		$input .= " AND $wpdb->posts.ID NOT IN ( SELECT ID FROM $wpdb->posts AS ps INNER JOIN $wpdb->postmeta AS pm ON pm.post_id = ps.ID WHERE pm.meta_key = '_is_copy_of' ) ";
+	}
 
 	return $input;
 }
@@ -476,7 +472,7 @@ function file_gallery_content()
 			<div id="delete_dialog" title="' . __("Delete attachment dialog", "file-gallery") . '">
 				<p><strong>' . __("Warning: one of the attachments you've chosen to delete has copies.", "file-gallery") . '</strong></p>
 				<p>' . __("How do you wish to proceed?", "file-gallery") . '</p>
-				<p><a href="' . FILE_GALLERY_URL . '/help/index.html#copying_attachments" target="_blank">' . __("Click here if you have no idea what this dialog means", "file-gallery") . '</a> (opens File Gallery help in new browser window)</p>
+				<p><a href="' . FILE_GALLERY_URL . '/help/index.html#deleting_originals" target="_blank">' . __("Click here if you have no idea what this dialog means", "file-gallery") . '</a> (opens File Gallery help in new browser window)</p>
 			</div>
 			
 			<div id="file_gallery_copy_all_dialog" title="' . __("Copy all attachments from another post", "file-gallery") . '">

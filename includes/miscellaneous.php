@@ -55,4 +55,31 @@ function file_gallery_save_toggle_state()
 }
 add_action('wp_ajax_file_gallery_save_toggle_state', 'file_gallery_save_toggle_state');
 
+
+
+/**
+ * Writes errors, notices, etc, to the log file
+ * Limited to 100 kB
+ */
+function file_gallery_write_log( $data = "" )
+{
+	$data = date("Y-m-d@H:i:s") . "\n" . str_replace("<br />", "\n", $data) . "\n";
+	$filename = str_replace("\\", "/", WP_CONTENT_DIR) . "/file_gallery_log.txt";
+	
+	if( @file_exists($filename) )
+		$data .= @implode("", @file($filename, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES)) . "\n";
+	
+	$file = @fopen($filename, "w+t");
+
+	if( false !== $file )
+	{		
+		@fwrite($file, $data);
+		
+		if( 102400 < (filesize($filename) + strlen($data)) )
+			@ftruncate($file, 102400);
+	}
+	
+	@fclose($file);
+}
+
 ?>

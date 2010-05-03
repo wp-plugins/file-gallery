@@ -49,7 +49,6 @@ add_action('wp_ajax_file_gallery_send_single', 'file_gallery_get_attachment_data
  * 
  * @param int $attachment_id ID of the attachment
  * @return mixed Returns a HTML string, or FALSE if $attachment_id is not a number
- * with {@link file_gallery_parse_attachment_data()}
  */
 function file_gallery_parse_attachment_data( $attachment_id, $size, $linkto, $linkclass, $imageclass )
 {
@@ -102,7 +101,7 @@ function file_gallery_parse_attachment_data( $attachment_id, $size, $linkto, $li
 	if( "" != $link )
 		$output = '<a href="' . $link . '"' . $linkclass . '>' . $output . '</a>';
 
-	return apply_filters("file_gallery_parse_attachment_data", $output);
+	return apply_filters("file_gallery_parse_attachment_data", $output, $attachment_id);
 }
 
 
