@@ -20,7 +20,7 @@ more... Here's the full list of features:
 **Features:**
 
 1.  multiple galleries per post with custom attachment order
-2.  a basic templating system - choose a different template for each 
+2.  a basic templating system = choose a different template for each 
     gallery, even within the same post
 3.  simple, easy to use UI with drag and drop sorting shows attachment 
     thumbnails beneath text editor: everything attachments-related is on 
@@ -30,11 +30,11 @@ more... Here's the full list of features:
     data only, not the file)
 6.  copy all attachments from another post
 7.  unattach (detach) items from current post
-8.  media tags – tag your attachments and then use those tags to choose 
+8.  media tags = tag your attachments and then use those tags to choose 
     which attachments you want to display in your gallery or to filter 
 	your media library items.
 9.  different background colors for items in media library depending 
-    on their status - completely unattached (white), attached to other 
+    on their status = completely unattached (white), attached to other 
     posts (red), or attached to current post (yellow)
 10. compatible with "WordPress Mobile Edition" and "Media Tags" plugins	
 11. basic caching of gallery output and frequent queries (transients)
@@ -171,18 +171,17 @@ more... Here's the full list of features:
 
 This plugin uses icons from the awesome famfamfam Silk icon set by 
 Mark James :)
+
 "Silk" can be found at: http://famfamfam.com/lab/icons/silk/
 
 Plugin settings are integrated into media settings page.
 
-Please visit http://skyphe.org/code/wordpress/file-gallery/ until I 
-find time to write a proper usage manual. Thanks :)
+Help file is included, you'll find it in the help subfolder :)
 
 == Plans for the next version? ==
 
 sooner (before 1.6):
 
-- help files
 - content type filtering
 - audio and video preview on editing screens
 
