@@ -2,7 +2,7 @@
 /**
  * html form in which all the attachments are 
  * displayed on edit post screen in admin
- */
+ */ 
 ?>
 <div id="file_gallery_response"><?php echo $output; ?></div>
 
@@ -55,6 +55,7 @@
 					<option value="none"<?php if( "none" == $file_gallery_options["default_linkto"]){ ?> selected="selected"<?php } ?>><?php _e("nothing (do not link)", "file-gallery"); ?></option>
 					<option value="file"<?php if( "file" == $file_gallery_options["default_linkto"]){ ?> selected="selected"<?php } ?>><?php _e("file", "file-gallery"); ?></option>
 					<option value="attachment"<?php if( "attachment" == $file_gallery_options["default_linkto"]){ ?> selected="selected"<?php } ?>><?php _e("attachment page", "file-gallery"); ?></option>
+					<option value="parent_post"<?php if( "parent_post" == $file_gallery_options["default_linkto"]){ ?> selected="selected"<?php } ?>><?php _e("parent post", "file-gallery"); ?></option>
 				</select>
 			</p>
 			
@@ -145,6 +146,7 @@
 					<option value="none"<?php if( "none" == $file_gallery_options["single_default_linkto"]){ ?> selected="selected"<?php } ?>><?php _e("nothing (do not link)", "file-gallery"); ?></option>
 					<option value="file"<?php if( "file" == $file_gallery_options["single_default_linkto"]){ ?> selected="selected"<?php } ?>><?php _e("file", "file-gallery"); ?></option>
 					<option value="attachment"<?php if( "attachment" == $file_gallery_options["single_default_linkto"]){ ?> selected="selected"<?php } ?>><?php _e("attachment page", "file-gallery"); ?></option>
+					<option value="parent_post"<?php if( "parent_post" == $file_gallery_options["single_default_linkto"]){ ?> selected="selected"<?php } ?>><?php _e("parent post", "file-gallery"); ?></option>
 				</select>
 			</p>
 			
@@ -156,6 +158,16 @@
 			<p>
 				<label for="file_gallery_single_imageclass"><?php _e("image class", "file-gallery"); ?>:</label>
 				<input type="text" name="file_gallery_single_imageclass" id="file_gallery_single_imageclass" value="<?php echo $file_gallery_options["single_default_imageclass"]; ?>" />
+			</p>
+			
+			<p>
+				<label for="file_gallery_single_align"><?php _e("alignment", "file-gallery"); ?>:</label>
+				<select name="file_gallery_single_align" id="file_gallery_single_align">
+					<option value="none"<?php if( "none" == $file_gallery_options["single_default_align"]){ ?> selected="selected"<?php } ?>><?php _e("none", "file-gallery"); ?></option>
+					<option value="left"<?php if( "left" == $file_gallery_options["single_default_align"]){ ?> selected="selected"<?php } ?>><?php _e("left", "file-gallery"); ?></option>
+					<option value="right"<?php if( "right" == $file_gallery_options["single_default_align"]){ ?> selected="selected"<?php } ?>><?php _e("right", "file-gallery"); ?></option>
+					<option value="center"<?php if( "center" == $file_gallery_options["single_default_align"]){ ?> selected="selected"<?php } ?>><?php _e("center", "file-gallery"); ?></option>
+				</select>
 			</p>
 			
 			<br />
@@ -179,7 +191,7 @@
 	</div>
 	
 	<div id="file_gallery_tag_list">
-		<p id="fg_media_tag_list"><?php echo implode(" ", array_unique(file_gallery_list_tags())); ?></p>
+		<p id="fg_media_tag_list"><?php file_gallery_list_tags( array("link" => true, "separator" => " ") ); ?></p>
 	</div>
 	
 </form>

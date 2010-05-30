@@ -74,7 +74,7 @@ function file_gallery_list_attachments(&$count_attachments, $post_id, $attachmen
 			// if it's not an image...
 			if( "" == $attachment_thumb )
 			{
-				$attachment_thumb = get_option('home') . "/wp-includes/images/crystal/" . file_gallery_get_file_type($attachment->post_mime_type) . ".png";
+				$attachment_thumb = get_bloginfo('wpurl') . "/" . WPINC . "/images/crystal/" . file_gallery_get_file_type($attachment->post_mime_type) . ".png";
 				$attachment_width = "";
 				$attachment_height = "";
 				$non_image = " non_image";
@@ -173,19 +173,40 @@ function file_gallery_list_attachments(&$count_attachments, $post_id, $attachmen
 /**
  * returns a list of media tags found in db
  */
-function file_gallery_list_tags( $type = "html" )
+function file_gallery_list_tags( $args = array() )
 {
 	global $wpdb;
 	
+	$list = array();
+	
+	extract(
+		wp_parse_args(
+			$args, 
+			array(
+				"type" => "html",
+				"echo" => true,
+				"link" => true,
+				"slug" => false,
+				"separator" => ", "
+	)));
+	
 	$options = get_option("file_gallery");
 	
+	$media_tag_tax  = get_taxonomy(FILE_GALLERY_MEDIA_TAG_NAME);
+	$media_tag_slug = $media_tag_tax->rewrite["slug"];
+
 	if( isset($options["cache"]) && true == $options["cache"] )
 	{
 		$transient = "filegallery_mediatags_" . $type;
 		$cache     = get_transient($transient);
 		
 		if( $cache )
-			return $cache;
+		{
+			if( $echo )
+				echo $cache;
+			else
+				return $cache;	
+		}
 	}
 
 	$media_tags = $wpdb->get_results("SELECT * FROM $wpdb->terms 
@@ -194,6 +215,7 @@ function file_gallery_list_tags( $type = "html" )
 									  LEFT JOIN $wpdb->term_relationships 
 									  	ON ( $wpdb->term_taxonomy.term_taxonomy_id = $wpdb->term_relationships.term_taxonomy_id ) 
 									  WHERE $wpdb->term_taxonomy.taxonomy = '" . FILE_GALLERY_MEDIA_TAG_NAME . "'
+									  GROUP BY $wpdb->terms.term_id
 									  ORDER BY `name` ASC");
 
 	if( !empty($media_tags) )
@@ -226,20 +248,53 @@ function file_gallery_list_tags( $type = "html" )
 		}
 		else // html
 		{
-			foreach( $media_tags as $tag )
+			if( $link )
 			{
-				$list[] = '<a href="#" class="fg_insert_tag" name="' . $tag->slug . '">' . $tag->name . '</a>';
+				global $wp_rewrite;
+				
+				$taglink = $wp_rewrite->get_tag_permastruct();
+				
+				$fs = "/";
+				$ss = "/";
+				$ts = "/";
+				
+				if( "" == $taglink )
+				{
+					$fs = "?";
+					$ss = "=";
+					$ts = "";
+				}
+
+				foreach( $media_tags as $tag )
+				{						
+					$list[] = '<a href="' . get_bloginfo("url") . $fs . $media_tag_slug . $ss . $tag->slug . $ts . '" class="fg_insert_tag" name="' . $tag->slug . '">' . $tag->name . '</a>';
+				}
+			}
+			else
+			{
+				if( $slug )
+					$whattag = "slug";
+				else
+					$whattag = "name";
+
+				foreach( $media_tags as $tag )
+				{
+					$list[] = $tag->{$whattag};
+				}
 			}
 		}
 	}
 
-	if( empty($list) )
-		$list[] = implode("<br />", $media_tags);
+	if( $echo && "html" == $type )
+		$list = implode($separator, $list);
 	
 	if( isset($options["cache"]) && true == $options["cache"] )
 		set_transient($transient, $list, $options["cache_time"]);
 	
-	return $list;
+	if( $echo )
+		echo $list;
+	else
+		return $list;
 }
 
 

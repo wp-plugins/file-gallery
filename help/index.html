@@ -132,8 +132,8 @@ strong
 		<li>Buttons number two and three will <strong>check / uncheck</strong> all
 			the attachments.</li>
 		<li>Button number four will <strong>save current attachment order</strong>.</li>
-		<li>Button number five will open a dialog for <strong>copying all attachments</strong> from some
-			other post to the current one.</li>
+		<li>Button number five will open a dialog for <strong>copying all attachments</strong> from
+			some other post to the current one.</li>
 		<li>Button number six will <strong>delete</strong> all the checked attachments</li>
 		<li>Button number seven will <strong>detach</strong> all the checked attachments</li>
 	</ul>
@@ -163,8 +163,8 @@ strong
 	<p><img src="images/13.png" alt="" width="250" height="175" /></p>
 	<p>Each attachment representation has a few buttons / icons.</p>
 	<p>Top left button (a magnifying glass) <strong>opens a bigger version
-			of the image in a lightbox</strong>, if that attachment is an image viewable in
-			browser. This icon is not present if the attachment is not an image.</p>
+			of the image in a lightbox</strong>, if that attachment is an image viewable
+			in browser. This icon is not present if the attachment is not an image.</p>
 	<p>Beneath the magnifying glass button is edit button which <strong>opens
 			attachment editing screen</strong>. You can also <strong>double click
 			on the attachment thumbnail</strong> to trigger the same action.</p>
@@ -275,12 +275,15 @@ strong
 	<p>&quot;File Gallery&quot; caches most of the output it creates - both
 		in frontend and backend - via <a href="http://codex.wordpress.org/Transients_API">WordPress'
 		transients</a>.</p>
-	<p><strong>Cache is disabled by default</strong>, you'll have to enable it on
-		the Media settings page.</p>
+	<p><strong>Cache is disabled by default</strong>, you'll have to enable
+		it on the Media settings page.</p>
 	<p class="tip"><strong>Tip</strong>: be sure to clear the cache (there's
 		a button for that on the Media settings page) when you add a new gallery
 		template, otherwise it won't show on the dropdown list in File Gallery
 		box on post editing screens.</p>
+	<p class="tip">File Gallery cache is automatically cleared everytime you
+		activate
+		or deactivate the plugin.</p>
 	<h2><a name="custom_templates" id="custom_templates"></a>Custom gallery
 		templates</h2>
 	<p>With this plugin are included three gallery templates:</p>
@@ -323,6 +326,7 @@ strong
 		<li> <strong>$thumb_link</strong> - attachment thumbnail URL</li>
 		<li> <strong>$thumb_width</strong> - width of attachment thumbnail</li>
 		<li> <strong>$thumb_height</strong> - height of attachment thumbnail</li>
+		<li><strong>$thumb_alt</strong> - image alt text (if set)</li>
 		<li> <strong>$caption</strong> - attachment caption (if set)</li>
 		<li><strong>$description</strong> - attachment description (if set)</li>
 	</ul>
@@ -355,15 +359,33 @@ strong
 	<p>There are two functions you might find useful in your own themes.</p>
 	<ol>
 		<li>
-			<p><strong>file_gallery_list_tags( </strong><em>$type</em><strong> )</strong></p>
+			<p><strong>file_gallery_list_tags( </strong><em>$arguments</em><strong> )</strong></p>
 			will list all media tags.
-			<p class="tip"><em>$type</em> can be: <strong>html, object, array or
-					json</strong></p>
-		</li>
-		<li>
-			<p><strong>file_gallery_shortcode( </strong><em>$attributes</em><strong> )</strong></p>
-			will fetch attachments from a post.
-			<p> Default <em>$attributes</em> are:</p>
+			<p>Default $arguments are:</p>
+			<p class="tip">array(<br />
+				"type" => "html",<br />
+				"echo" => true,<br />
+				"link" => true,<br />
+				"slug" => false,<br />
+				"separator" => ", "<br />
+				) </p>
+			<p>type = html, object, array or json</p>
+			<p>echo = whether to echo or return data (type must be html)</p>
+			<p>link = wrap a link around each media tag (type must be html)</p>
+			<p>slug = use media tag slug for link HTML instead of media tag name
+				(type must be html)</p>
+			<p>separator = if data is echoed, what to use as separator (type must
+				be html)</p>
+			<p>If you place <strong>&lt;?php file_gallery_list_tags(); ?&gt;</strong>
+				somewhere in your theme, it will echo a list of html links
+					to media tag archives.</p>
+		<p>I'll probably add a widget for this in v1.5.3.</p>
+		<p class="tip"><strong>Tip</strong>: if the media tag links lead you to a &quot;404 Not found&quot; page, go
+			to settings =&gt; permalinks and just click the &quot;Save changes&quot;
+		button to refresh the rewrite rules.</p></li>
+		<li><strong>file_gallery_shortcode( </strong><em>$arguments</em><strong> )</strong> will
+			fetch attachments from a post.
+			<p> Default <em>$arguments</em> are:</p>
 			<p class="tip">array(<br />
 				'order' =&gt; 'ASC',<br />
 				'orderby' =&gt; ”,<br />
@@ -386,41 +408,78 @@ strong
 			<p class="tip">If <em>attachment_ids</em> is left empty, the function
 				will fetch all attachments.</p>
 			<span class="tip"> If <em>tags</em> are specified, <em>attachment_ids</em> will
-			be ingored.</span></li>
+			be ignored.</span></li>
 	</ol>
 	<h2><a name="other_plugins" id="other_plugins"></a>Support for other plugins</h2>
 	<p>File Gallery will play nice with the following plugins:</p>
-	<p><strong><a href="http://wordpress.org/extend/plugins/media-tags/">Media tags</a></strong> -
-		if installed, File Gallery will use
+	<p><strong><a href="http://wordpress.org/extend/plugins/media-tags/">Media
+				tags</a></strong> - if installed, File Gallery will use
 		&quot;Media tags&quot;' taxonomy name for media tags. &quot;Media tags&quot; uses <em>media-tags</em> by
 		default, but user can enter a custom value on permalinks options page. &quot;File
-		Gallery&quot; uses <em>media_tag</em>.</p>
-	<p><a href="http://wordpress.org/extend/plugins/wordpress-mobile-edition/"><strong>WordPress Mobile Edition</strong></a> - your custom gallery templates
-		will work just fine in mobile edition.</p>
-	<p><strong><a href="http://wordpress.org/extend/plugins/sitepress-multilingual-cms/">WPML</a></strong> - if you have WPML plugin installed and you're
-		editing a post that is a <br />
+		Gallery&quot; uses <em>media_tag</em>. </p>
+	<p><a href="http://wordpress.org/extend/plugins/wordpress-mobile-edition/"><strong>WordPress
+				Mobile Edition</strong></a> - your custom gallery templates will work
+				just fine in mobile edition.</p>
+	<p><strong><a href="http://wordpress.org/extend/plugins/sitepress-multilingual-cms/">WPML</a></strong> -
+		if you have WPML plugin installed and you're editing a post that is a <br />
 		translation, you'll notice a bluish link at the bottom of the Language <br />
 		metabox. It allows you to copy all attachments from the original
 		post <br />
-		in just two clicks.	</p>
+		in just two clicks. </p>
 	<h2><a name="filters" id="filters"></a>Filters within File Gallery</h2>
 	<ul>
 		<li><strong>file_gallery_templates_folder_abspath</strong> - when you
-			hook on it, your
-			function will receive one argument: current absolute path to the file-gallery-templates
-			folder within your theme dir.</li>
-		<li><strong>file_gallery_templates_folder_url</strong> - same as above, but this time URL instead
-			of absolute path.</li>
-		<li><strong>file_gallery_parse_attachment_data</strong> - first argument is HTML, linked
-			or non-linked image representing an attachment. Second
-		argument is that attachment's ID.</li>
-		<li><strong>file_gallery_attachment_copy_title_extension</strong> - you can choose to add
-			an extension to attachment title when you
-			copy it from one post to another. Pretty useless, now that I think about
-		it, but it's there and you can use it :)</li>
+			hook on it, your function will receive one argument: current absolute
+			path to the file-gallery-templates folder within your theme dir.</li>
+		<li><strong>file_gallery_templates_folder_url</strong> - same as above,
+			but this time URL instead of absolute path.</li>
+		<li><strong>file_gallery_parse_attachment_data</strong> - first argument
+			is HTML, linked or non-linked image representing an attachment. Second
+			argument is that attachment's ID.</li>
+		<li><strong>file_gallery_attachment_copy_title_extension</strong> - you
+			can choose to add an extension to attachment title when you copy it from
+			one post to another. Pretty useless, now that I think about it, but it's
+			there and you can use it :)</li>
+		<li><strong>file_gallery_lightbox_classes</strong> - filter classes which trigger
+			auto enqueueing of lightbox scripts. One argument: array of classes.</li>
+		<li><strong>file_gallery_lightbox_linkrel</strong> - modify a link's rel
+			attribute when a lightbox script is enqueued. Params: 1) rel attribute,
+			2) gallery ID</li>
+		<li><strong>file_gallery_lightbox_linkclass</strong> - modify a link's
+			class when a lightbox script is enqueued. Params: 1) link class, 2) gallery
+			ID</li>
+		<li><strong>file_gallery_lightbox_imageclass</strong> - modify a image's
+			class when a lightbox script is enqueued. Params: 1) image class, 2)
+			link class, 3) gallery ID</li>
 	</ul>
-	<p class="tip">If you want me to add a new filter somewhere - just leave
-		a comment or e-mail me and I promise I'll add it as soon as humanly possible :)</p>
+	<p>&nbsp;</p>
+	<p><strong>== Example image class filtering for <a href="http://wordpress.org/extend/plugins/jquery-colorbox/">jQuery
+				Colorbox WordPress plugin</a>: ==</strong></p>
+	<p>On the media settings page, add <em><strong>colorbox</strong></em> under <em>File
+			Gallery =&gt; Auto enqueue lightbox scripts for which link classes</em>.</p>
+	<p>Now, either add <strong><em>colorbox</em></strong> onder <em>File Gallery
+			=&gt; Some default values for when inserting a gallery into a post...
+			=&gt; default link class</em>, or add it manually as the link class when
+			inserting a new gallery into a post.</p>
+	<p>Then add this filter to your theme's functions.php file, or create a
+		plugin for it:</p>
+	<p class="tip">function filter_file_gallery_imageclass( $imageclass, $linkclass,
+		$gallery_id )<br />
+		{<br />
+		&nbsp;&nbsp;&nbsp;&nbsp;if( false !== strpos($linkclass, &quot;colorbox&quot;)
+		)<br />
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$imageclass .= &quot; colorbox-&quot; .
+		$gallery_id;<br />
+		<br />
+		&nbsp;&nbsp;&nbsp;&nbsp;return $imageclass;<br />
+		}<br />
+		add_filter(&quot;file_gallery_lightbox_imageclass&quot;, &quot;filter_file_gallery_imageclass&quot;,
+		10, 3);</p>
+	<p>That number 3 at the end of last line is important - it tells the add_filter function
+		that your function expects three arguments - so be sure it's there :)</p>
+	<p class="tip"><strong>If you want me to add a new filter somewhere - just
+			leave a comment or e-mail me and I promise I'll add it as soon as humanly
+			possible :)</strong></p>
 	<h2>That's it!</h2>
 	<p>Please let me know If I've failed to explain something.</p>
 	<p>Thanks ;)</p>

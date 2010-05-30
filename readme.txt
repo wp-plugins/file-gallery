@@ -2,8 +2,8 @@
 Contributors: aesqe
 Donate link: http://www.amazon.com/gp/registry/wishlist/1IU6F22QPQX2Y/
 Tags: attachment, attachments, gallery, galleries, template, templates, shortcode, file, files, attach, detach, unattach, copy, media, tags, library
-Requires at least: 2.9
-Tested up to: 3.0-beta1
+Requires at least: 2.9.2
+Tested up to: 3.0-rc1
 Stable tag: trunk
 
 File Gallery extends WordPress media (attachments) capabilities 
@@ -60,6 +60,21 @@ more... Here's the full list of features:
 3.	You're done - go edit or add a new post to see how it works :)
 
 == Changelog ==
+
+= 1.5.2 =
+* May 30th, 2010
+* added image align options for single image inserts
+* added option to link images to parent post
+* muchly improved file_gallery_list_tags output
+* fixed the url to 'crystal' icons for non-image file types
+* added support for alt text for images
+* support for lightbox-type scripts:
+  - choose which link classes trigger auto-enqueueing of 
+    scripts and styles (a script should be registered beforehand 
+	for this to work)
+  - added filters to modify image class, link class, and link rel 
+    attribute
+* a bunch of bugfixes
 
 = 1.5.1 =
 * May 4th, 2010
@@ -182,6 +197,7 @@ Help file is included, you'll find it in the help subfolder :)
 
 sooner (before 1.6):
 
+- cleanup script for media tag database taxonomy name(s)
 - content type filtering
 - audio and video preview on editing screens
 

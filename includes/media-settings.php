@@ -55,6 +55,9 @@ function file_gallery_options_init()
 
 	add_settings_field("file_gallery_show_on_post_type", __("Display File Gallery on which post types?", 'file-gallery'), create_function("", 'return file_gallery_options_fields( array("name" => "file_gallery_show_on_post_type") );'), 'media', 'file_gallery_options');
 	
+	// auto enqueue which scripts based on link classes
+	add_settings_field("file_gallery_auto_enqueued_scripts", __("Auto enqueue lightbox scripts for which link classes (separate with commas)?", 'file-gallery'), create_function("", 'return file_gallery_options_fields( array("name" => "file_gallery_auto_enqueued_scripts") );'), 'media', 'file_gallery_options');
+	
 	// size
 	add_settings_field("file_gallery_default_image_size", "</th></tr><tr><td colspan=\"2\"><strong style=\"display: block; margin-top: -15px; font-size: 115%; color: #21759B;\">" . __("Some default values for when inserting a gallery into a post", 'file-gallery') . "...</strong></td></tr><tr valign=\"top\"><th scope=\"row\">" . __("size", 'file-gallery'), create_function("", 'return file_gallery_options_fields( array("name" => "file_gallery_default_image_size") );'), 'media', 'file_gallery_options');
 	
@@ -93,6 +96,9 @@ function file_gallery_options_init()
 	
 	// imageclass
 	add_settings_field("file_gallery_single_default_imageclass", __("image class", 'file-gallery'), create_function("", 'return file_gallery_options_fields( array("name" => "file_gallery_single_default_imageclass") );'), 'media', 'file_gallery_options');
+	
+	// align
+	add_settings_field("file_gallery_single_default_align", __("alignment", 'file-gallery'), create_function("", 'return file_gallery_options_fields( array("name" => "file_gallery_single_default_align") );'), 'media', 'file_gallery_options');
 	
 	
 	
@@ -136,8 +142,6 @@ function file_gallery_options_init()
 	
 	// delete options on deactivation
 	add_settings_field("file_gallery_del_options_on_deactivate", __("Delete all options on deactivation?", 'file-gallery'), create_function("", 'return file_gallery_options_fields( array("name" => "file_gallery_del_options_on_deactivate") );'), 'media', 'file_gallery_options');
-
-
 
 	/**/
 	
@@ -200,7 +204,8 @@ function file_gallery_options_fields( $args )
 	// linkto dropdowns
 	$file_gallery_linkto_options = array("none"			=> __("nothing (do not link)", "file-gallery"), 
 										 "file"			=> __("file", "file-gallery"), 
-										 "attachment"	=> __("attachment page", "file-gallery"));
+										 "attachment"	=> __("attachment page", "file-gallery"),
+										 "parent_post"	=> __("parent post", "file-gallery"));
 	
 	foreach( $file_gallery_linkto_options as $name => $description )
 	{
@@ -251,7 +256,7 @@ function file_gallery_options_fields( $args )
 		$order_dropdown .= '>' . __($description, 'file-gallery') . '</option>';
 	}
 
-	// create select dropdown lists
+	// size dropdown lists
 	foreach( $file_gallery_sizes as $size )
 	{
 		$sizes_dropdown .= '<option value="' . $size . '"';
@@ -270,14 +275,34 @@ function file_gallery_options_fields( $args )
 		$sizes_single_dropdown .= '>' . $size . '</option>';
 	}
 	
+	// align dropdowns
+	$file_gallery_align_options = array("none"		=> __("none", "file-gallery"), 
+										 "left"		=> __("left", "file-gallery"), 
+										 "right"	=> __("right", "file-gallery"),
+										 "center"	=> __("center", "file-gallery"));
+	
+	foreach( $file_gallery_align_options as $name => $description )
+	{
+		// for single option only
+		$align_single_dropdown .= '<option value="' . $name . '"';
+		
+		if( $file_gallery_options["single_default_align"] == $name )
+			$align_single_dropdown .= ' selected="selected"';
+		
+		$align_single_dropdown .= '>' . __($description, 'file-gallery') . '</option>';
+	}
+	
 	/* END SELECT DROPDOWNS */
 	
-	$types = get_post_types();
+	$types = get_post_types(false, 'objects');
 	
 	foreach( $types as $type )
 	{
-		if( ! in_array( $type, array("nav_menu_item", "revision", "attachment") ) )
-			$post_types .= '<input type="checkbox" name="file_gallery[show_on_post_type_' . $type . ']" id="file_gallery_show_on_post_type_' . $type . '" value="1" ' . checked('1', $file_gallery_options["show_on_post_type_" . $type], false) . ' /><label for="file_gallery_show_on_post_type_' . $type . '">' . $type . '</label>&nbsp;&nbsp;';
+		if( !isset($type->labels->name) )
+			$type->labels->name = $type->label;
+
+		if( ! in_array( $type->name, array("nav_menu_item", "revision", "attachment") ) )
+			$post_types .= '<input type="checkbox" name="file_gallery[show_on_post_type_' . $type->name . ']" id="file_gallery_show_on_post_type_' . $type->name . '" value="1" ' . checked('1', $file_gallery_options["show_on_post_type_" . $type->name], false) . ' /><label for="file_gallery_show_on_post_type_' . $type->name . '">' . $type->labels->name . '</label>&nbsp;&nbsp;';
 	}
 	
 	$checked = "";
@@ -328,6 +353,11 @@ function file_gallery_options_fields( $args )
 			case "file_gallery_single_default_linkto" :
 					$output = '<select name="file_gallery[single_default_linkto]" id="file_gallery_single_default_linkto" style="width: 415px;">
 						' . $linkto_single_dropdown . '
+					</select>';
+				break;
+			case "file_gallery_single_default_align" :
+					$output = '<select name="file_gallery[single_default_align]" id="file_gallery_single_default_align" style="width: 415px;">
+						' . $align_single_dropdown . '
 					</select>';
 				break;
 			case "file_gallery_default_orderby" :
@@ -396,7 +426,10 @@ function file_gallery_options_fields( $args )
 			case "file_gallery_library_filter_duplicates" :
 					$output = '<input type="checkbox" name="file_gallery[library_filter_duplicates]" id="file_gallery_library_filter_duplicates" value="1" ' . checked('1', $file_gallery_options["library_filter_duplicates"], false) . ' />';
 				break;
-				
+			case "file_gallery_auto_enqueued_scripts" :
+					$output = '<input type="text" name="file_gallery[auto_enqueued_scripts]" id="file_gallery_auto_enqueued_scripts" value="' . $file_gallery_options["auto_enqueued_scripts"] . '" size="63" />';
+				break;
+
 			/* non editable variables */
 			
 			case "folder" :

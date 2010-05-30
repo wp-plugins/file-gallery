@@ -1,24 +1,91 @@
-jQuery(document).ready(function()
+var file_gallery_current_gallery_content = "";
+
+
+
+/**
+ * main to be extended
+ */
+function file_gallery()
 {
-	
-	/* === INITIAL === */
+};
 
 
 
-	/**
-	 * main to be extended
-	 */
-	function file_gallery()
-	{
-	};
+/**
+ * TinyMCE execCommand callback
+ */
+function tiny_exec_callback(editor_id, elm, command, user_interface, value)
+{
+	if( "mceRepaint" == command )
+		setTimeout("file_gallery.tinymce()", 100);
+
+	return false;
+}
 
 
 
+jQuery(document).ready(function()
+{	
 	/**
 	 * extending the main function
 	 */
 	jQuery.extend( file_gallery,
 	{
+		/**
+		 * binds a click on image used as visual WordPress gallery representation 
+		 * in TinyMCE to the file_gallery.tinymce_gallery() function
+		 */
+		tinymce : function()
+		{
+			var iframe = jQuery('#content_ifr').contents().find("body");
+
+			if( iframe )
+			{
+				jQuery("img.wpGallery", iframe).bind("click.file_gallery", function(){ file_gallery.tinymce_gallery( jQuery(this) ); });
+				
+				//tinyMCE.activeEditor.onClick.add( function(tinymce_object, mouseEvent){ console.log(print_r(mouseEvent)) } );
+			}
+		},
+		
+		
+		
+		/**
+		 * sets up the file gallery options when clicked on a gallery already
+		 * inserted into visual editor
+		 */
+		tinymce_gallery : function( galleryImg )
+		{
+			var gallery = tinyMCE.activeEditor.selection.getContent(),
+				opt = gallery.replace("gallery ", "").replace(/"/g, "'"),
+				attachment_ids = opt.match(/attachment_ids='([^']+)'/);
+			
+			file_gallery_current_gallery_content = gallery;
+
+			if( attachment_ids )
+				attachment_ids = attachment_ids[1].split(",");
+			
+			if( 0 < jQuery('#file_gallery_list li').length )
+			{
+				jQuery("#file_gallery_uncheck_all").trigger("click");
+				
+				jQuery('#fg_container .sortableitem .checker').map(function()
+				{
+					id = jQuery(this).attr("id").replace("att-chk-", "");
+			
+					if( -1 != attachment_ids.indexOf(id) )
+						return this.checked = true;
+				});
+				
+				file_gallery.serialize();
+			}
+
+			//tinyMCE.activeEditor.selection.setContent(file_gallery_current_gallery_content.replace(/p>/, "div>"));
+			
+			//alert(tinyMCE.activeEditor.selection.getContent());
+		},
+		
+		
+		
 		/**
 		 * loads main file gallery data via ajax
 		 */
@@ -815,6 +882,7 @@ jQuery(document).ready(function()
 				linkto 		  : jQuery('#file_gallery_single_linkto').val(),
 				linkclass 	  : jQuery('#file_gallery_single_linkclass').val(),
 				imageclass 	  : jQuery('#file_gallery_single_imageclass').val(),
+				align 	      : jQuery('#file_gallery_single_align').val(),
 				post_id 	  : jQuery("#post_ID").val(),
 				_ajax_nonce	  : file_gallery_nonce
 			};
@@ -826,6 +894,7 @@ jQuery(document).ready(function()
 				function(response)
 				{
 					send_to_editor(response);
+					tiny_exec_callback();
 				},
 				"html"
 			);
@@ -912,52 +981,6 @@ jQuery(document).ready(function()
 			});
 			
 			return false;
-		},
-		
-		
-		
-		/**
-		 * binds a click on image used as visual WordPress gallery representation 
-		 * in TinyMCE to the file_gallery.tinymce_gallery() function
-		 */
-		tinymce : function()
-		{
-			var iframe = jQuery('#content_ifr').contents().find("body");
-			
-			if( iframe )
-			{
-				jQuery("img.wpGallery", iframe).bind("click.file_gallery", function(){ file_gallery.tinymce_gallery( jQuery(this).attr("title") ); });
-			}
-		},
-		
-		
-		
-		/**
-		 * sets up the file gallery options when clicked on a gallery already
-		 * inserted into visual editor
-		 */
-		tinymce_gallery : function( gallery )
-		{
-			var opt = gallery.replace("gallery ", "").replace(/"/g, "'"),
-				attachment_ids = opt.match(/attachment_ids='([^']+)'/);
-			
-			if( attachment_ids )
-				attachment_ids = attachment_ids[1].split(",");
-			
-			if( 0 < jQuery('#file_gallery_list li').length )
-			{
-				jQuery("#file_gallery_uncheck_all").trigger("click");
-				
-				jQuery('#fg_container .sortableitem .checker').map(function()
-				{
-					id = jQuery(this).attr("id").replace("att-chk-", "");
-			
-					if( -1 != attachment_ids.indexOf(id) )
-						return this.checked = true;
-				});
-				
-				file_gallery.serialize();
-			}
 		},
 		
 		
@@ -1493,3 +1516,82 @@ if( ! Array.indexOf )
 		return -1;
 	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/**
+ * Concatenates the values of a variable into an easily readable string
+ * by Matt Hackett [scriptnode.com]
+ * @param {Object} x The variable to debug
+ * @param {Number} max The maximum number of recursions allowed (keep low, around 5 for HTML elements to prevent errors) [default: 10]
+ * @param {String} sep The separator to use between [default: a single space ' ']
+ * @param {Number} l The current level deep (amount of recursion). Do not use this parameter: it's for the function's own use
+ */
+function print_r(x, max, sep, l) {
+
+	l = l || 0;
+	max = max || 10;
+	sep = sep || ' ';
+
+	if (l > max) {
+		return "[WARNING: Too much recursion]\n";
+	}
+
+	var
+		i,
+		r = '',
+		t = typeof x,
+		tab = '';
+
+	if (x === null) {
+		r += "(null)\n";
+	} else if (t == 'object') {
+
+		l++;
+
+		for (i = 0; i < l; i++) {
+			tab += sep;
+		}
+
+		if (x && x.length) {
+			t = 'array';
+		}
+
+		r += '(' + t + ") :\n";
+
+		for (i in x) {
+			try {
+				r += tab + '[' + i + '] : ' + print_r(x[i], max, sep, (l + 1));
+			} catch(e) {
+				return "[ERROR: " + e + "]\n";
+			}
+		}
+
+	} else {
+
+		if (t == 'string') {
+			if (x == '') {
+				x = '(empty)';
+			}
+		}
+
+		r += '(' + t + ') ' + x + "\n";
+
+	}
+
+	return r;
+
+};
+var_dump = print_r;

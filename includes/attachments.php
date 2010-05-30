@@ -20,22 +20,38 @@ function file_gallery_get_attachment_data()
 	$linkto 	= $_POST['linkto'];
 	$linkclass 	= $_POST['linkclass'];
 	$imageclass = $_POST['imageclass'];
+	$align      = $_POST['align'];
+	$rel        = false;
 	
-	if( "undefined" != $linkclass )
+	if( "undefined" != $linkclass && "" != $linkclass )
 		$linkclass = ' class="' . $linkclass . '"';
 	else
 		$linkclass = "";
 		
-	if( "undefined" != $imageclass )
+	if( "undefined" != $imageclass && "" != $imageclass )
 		$imageclass = ' ' . $imageclass;
 	else
 		$imageclass = "";
 	
+	if( "undefined" == $align )
+		$align = "none";
+	
 	$attachments = explode(",", $attachment);
+	
+	if( 1 < count($attachments) )
+	{
+		if( !isset($wp->file_gallery_gallery_id) )
+			$wp->file_gallery_gallery_id = 1;
+		else
+			$wp->file_gallery_gallery_id++;
+
+		$rel = ' rel="' . $linkclass . '[' . $wp->file_gallery_gallery_id . ']"';
+	}
 	
 	foreach( $attachments as $attachment )
 	{
-		echo file_gallery_parse_attachment_data( $attachment, $size, $linkto, $linkclass, $imageclass );
+		$imageclass .= " align" . $align ." size-" . $size . " wp-image-" . $attachment;
+		echo file_gallery_parse_attachment_data( $attachment, $size, $linkto, $linkclass, $imageclass, $rel );
 	}
 	
 	exit();
@@ -52,43 +68,48 @@ add_action('wp_ajax_file_gallery_send_single', 'file_gallery_get_attachment_data
  */
 function file_gallery_parse_attachment_data( $attachment_id, $size, $linkto, $linkclass, $imageclass )
 {
+	global $wpdb;
+	
 	if( !is_numeric($attachment_id) )
 		return false; // not a number, exiting
 	
 	$link = "";
-	$data = get_post($attachment_id);
+	$attachment = get_post($attachment_id);
 	
-	if( "" == $data->post_excerpt && "" == $data->post_content )
-		$title = $data->post_title;
-	elseif( "" == $data->post_excerpt )
-		$title = $data->post_content;
+	if( ! $thumb_alt = get_post_meta($attachment_id, "_wp_attachment_image_alt", true) )
+		$thumb_alt = $attachment->post_title;
+
+	if( "" == $attachment->post_excerpt && "" == $attachment->post_content )
+		$title = $attachment->post_title;
+	elseif( "" == $attachment->post_excerpt )
+		$title = $attachment->post_content;
 	else
-		$title = $data->post_excerpt;
+		$title = $attachment->post_excerpt;
 	
 	if( file_is_displayable_image( get_attached_file( $attachment_id ) ) )
 	{
-		$fullsize_src = wp_get_attachment_image_src( $attachment_id, "full", false );
-		$fullsize_src = $fullsize_src[0];
-		
-		$size_src	  = wp_get_attachment_image_src( $attachment_id, $size, false );
-		$width		  = $size_src[1];
-		$height		  = $size_src[2];
-		$size_src	  = $size_src[0];
+		$size_src = wp_get_attachment_image_src( $attachment_id, $size, false );
+		$width    = $size_src[1];
+		$height   = $size_src[2];
+		$size_src = $size_src[0];
 	}
 	else
 	{
-		$size_src = get_option('home') . "/wp-includes/images/crystal/" . file_gallery_get_file_type($attachment->post_mime_type) . ".png";
-		$attachment_width = "";
-		$attachment_height = "";
-		$non_image = " non_image";
+		$size_src          = get_bloginfo('wpurl') . "/" . WPINC . "/images/crystal/" . file_gallery_get_file_type($attachment->post_mime_type) . ".png";
+		$attachment_width  = "46";
+		$attachment_height = "60";
+		$imageclass       .= " non_image";
 	}
 	
-	$output = '<img src="' . $size_src . '" alt="' . $data->post_title . '" title="' . $title . '"  class="alignnone size-' . $size . ' wp-image-' . $attachment_id . $imageclass . '" width="' . $width . '" height="' . $height . '" />';
+	$output = '<img src="' . $size_src . '" alt="' . $thumb_alt . '" title="' . $title . '"  class="' . trim($imageclass) . '" width="' . $width . '" height="' . $height . '" />';
 	
 	switch( $linkto )
 	{
+		case "parent_post" :
+			$link = get_permalink( $wpdb->get_var("SELECT post_parent FROM $wpdb->posts WHERE ID = '" . $attachment_id . "'") );
+			break;
 		case "file" :
-			$link = $fullsize_src;
+			$link = wp_get_attachment_url( $attachment_id );
 			break;
 		case "attachment" :
 			$link = get_attachment_link( $attachment_id );
@@ -99,7 +120,7 @@ function file_gallery_parse_attachment_data( $attachment_id, $size, $linkto, $li
 	}
 	
 	if( "" != $link )
-		$output = '<a href="' . $link . '"' . $linkclass . '>' . $output . '</a>';
+		$output = '<a href="' . $link . '"' . $linkclass . $rel . '>' . $output . '</a>';
 
 	return apply_filters("file_gallery_parse_attachment_data", $output, $attachment_id);
 }
@@ -139,7 +160,7 @@ function file_gallery_edit_attachment()
 	else
 	{
 		$fullsize_src = wp_get_attachment_url( $attachment_id );
-		$size_src     = get_option('home') . "/wp-includes/images/crystal/" . file_gallery_get_file_type($attachment->post_mime_type) . ".png";
+		$size_src     = get_bloginfo('wpurl') . "/" . WPINC . "/images/crystal/" . file_gallery_get_file_type($attachment->post_mime_type) . ".png";
 		
 		$type = "document";
 	}

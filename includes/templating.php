@@ -105,8 +105,8 @@ function file_gallery_css_front( $mobile = false )
 	{
 		foreach( $wp_query->posts as $post )
 		{
-			$m = preg_match_all("#\[gallery[^\]]*\]#is", $post->post_content, $g);
-			
+			$m = preg_match_all("#\[gallery([^\]]*)\]#is", $post->post_content, $g);
+
 			// if there's a match...
 			if( false !== $m && 0 < $m )
 			{
@@ -124,14 +124,45 @@ function file_gallery_css_front( $mobile = false )
 		wp_enqueue_style( "file_gallery_columns", FILE_GALLERY_URL . "/templates/columns.css" );
 	else
 		$mobiles[] = FILE_GALLERY_URL . "/templates/columns.css";
+	
+	// automaticaly enqueue predefined scripts and styles
+	$aqs = explode(",", $options["auto_enqueued_scripts"]);
+	$aqs = array_filter($aqs, "trim");
+	$aq_linkclasses = array();
 
 	// collect template names
 	foreach($galleries as $gallery)
 	{
-		$tm = preg_match("#\stemplate=[\"']?([a-zA-Z0-9_-\s]+)[\"']?#is", $gallery, $gm);
+		$tm = preg_match("#\stemplate=(['\"])([^'\"]+)\\1#is", $gallery, $gm);
+
+		if( isset($gm[2]) )
+			$templates[] = $gm[2];
+
+		$gcm = preg_match("#\slinkclass=(['\"])([^'\"]+)\\1#is", $gallery, $gcg);
+		$glm = preg_match("#\slink=(['\"])([^'\"]+)\\1#is", $gallery, $glg);
 		
-		if( isset($gm[1]) )
-			$templates[] = $gm[1];
+		if( isset($gcg[2]) && "" != $gcg[2] && isset($glg[2]) && "file" == $glg[2] )
+		{
+			$glc = explode(" ", $gcg[2]);
+
+			foreach( $glc as $glcs )
+			{
+				$glcs = trim($glcs);
+				
+				if( false !== strpos( implode(" ", $aqs), $glcs) )
+					$aq_linkclasses[] = $glcs;
+			}
+		}
+	}
+
+	$aq_linkclasses = apply_filters("file_gallery_lightbox_classes", array_unique($aq_linkclasses));
+	
+	// auto enqueue scripts
+	if( ! empty($aq_linkclasses) )
+	{
+		define("FILE_GALLERY_LIGHTBOX_CLASSES", serialize($aq_linkclasses));
+
+		file_gallery_print_scripts( true );
 	}
 	
 	if( empty($templates) )
@@ -153,7 +184,7 @@ function file_gallery_css_front( $mobile = false )
 		foreach($templates as $template)
 		{
 			// check if file exists and enqueue it if it does
-			if( is_readable(FILE_GALLERY_THEME_ABSPATH . "/file-gallery-templates/" . $template . "/gallery.css") )
+			if( is_readable(FILE_GALLERY_THEME_TEMPLATES_ABSPATH . "/" . $template . "/gallery.css") )
 			{
 				if( ! $mobile )
 					wp_enqueue_style( "file_gallery_" . str_replace(" ", "-", $template), FILE_GALLERY_THEME_TEMPLATES_URL . "/" . str_replace(" ", "%20", $template) . "/gallery.css" );
@@ -181,19 +212,62 @@ function file_gallery_css_front( $mobile = false )
 add_action('wp_print_styles', 'file_gallery_css_front');
 
 
+/**
+ * prints scripts and styles for autoqueue linkclasses
+ */
+function file_gallery_print_scripts( $styles = false )
+{
+	if( defined("FILE_GALLERY_LIGHTBOX_CLASSES") )
+	{
+		$linkclasses = maybe_unserialize(FILE_GALLERY_LIGHTBOX_CLASSES);
+
+		if( !empty($linkclasses) )
+		{
+			foreach( $linkclasses as $lc )
+			{
+				if( $styles )
+				{
+					wp_enqueue_style( $lc );
+				}
+				else
+				{
+					if( "thickbox" == $lc )
+					{
+echo "\n" . 
+'<script type="text/javascript">
+	var tb_pathToImage = "' . includes_url() . 'js/thickbox/loadingAnimation.gif";
+	var tb_closeImage  = "' . includes_url() . 'js/thickbox/tb-close.png";
+</script>'
+. "\n";
+					}
+					
+					wp_enqueue_script( $lc );
+				}
+			}
+		}
+	}
+}
+add_action('wp_print_scripts', 'file_gallery_print_scripts');
+
+
 
 /**
  * Main shortcode function
  */
 function file_gallery_shortcode( $attr )
 {
-	global $wpdb, $post;
+	global $wp, $wpdb, $post;
+		
+	if( !isset($wp->file_gallery_gallery_id) )
+		$wp->file_gallery_gallery_id = 1;
+	else
+		$wp->file_gallery_gallery_id++;
 	
 	$options = get_option("file_gallery");
 
 	if( isset($options["cache"]) && true == $options["cache"] )
 	{
-		if( "html" == $attr["output_type"] || (isset($options["cache_non_html_output"]) && true == $options["cache_non_html_output"]) )
+		if( "html" == $attr["output_type"] || ( isset($options["cache_non_html_output"]) && true == $options["cache_non_html_output"] ) )
 		{
 			$transient = 'filegallery_' . md5( $post->ID . "_" . serialize($attr) );
 			$cache     = get_transient($transient);
@@ -243,7 +317,7 @@ function file_gallery_shortcode( $attr )
 			)
 	, $attr));
 	
-	$thelink = $link;
+	$linkto = $link;
 	
 	// start with tags because they negate attachment_ids
 	if( "" != $tags )
@@ -339,7 +413,7 @@ function file_gallery_shortcode( $attr )
 	}
 	
 	if( "file-gallery" != $template && "default" != $template && "list" != $template )
-		$template_file = FILE_GALLERY_THEME_ABSPATH . '/file-gallery-templates/' . $template . '/gallery.php';
+		$template_file = FILE_GALLERY_THEME_TEMPLATES_ABSPATH . '/' . $template . '/gallery.php';
 	else
 		$template_file = FILE_GALLERY_ABSPATH . '/templates/' . $template . '/gallery.php';
 	
@@ -356,51 +430,90 @@ function file_gallery_shortcode( $attr )
 	
 	if( "object" == $output_type || "array" == $output_type )
 		$gallery_items = array();
-
+	
+	$aqlc = array();
+	
+	if( defined("FILE_GALLERY_LIGHTBOX_CLASSES") )
+		$aqlc = maybe_unserialize(FILE_GALLERY_LIGHTBOX_CLASSES);
+	
 	// create output
 	foreach($attachments as $attachment)
 	{
-		$x      = "";
-		$endcol = "";
-		$param  = array();
-		
-		if( $output_params )
-		{
-			$param['link_class']  = " " . $linkclass;
-			$param['image_class'] = " " . $imageclass;
-			$param['link']        = '';
-			
-			if("none" != $thelink)
-				$param['link'] = $thelink;
-		}
-		
+		/*
+		//filter out duplicates?
 		if( !in_array($attachment->ID, $unique_ids) )
 			$unique_ids[] = $attachment->ID;
 		else
 			continue;
+		*/
+		
+		$param = array('image_class' => " " . $imageclass,
+					   'link_class' => " " . $linkclass,
+					   'rel' => "");
+
+		$attachment_file = get_attached_file($attachment->ID);
+		$attachment_is_image = file_is_displayable_image($attachment_file);
+		$endcol = "";
+		$x = "";
 		
 		if( $output_params )
 		{
-			// define parameters
-			$thumb_src = wp_get_attachment_image_src($attachment->ID, $size);
+			$plcai = array_intersect($aqlc, explode(" ", trim($linkclass)));
 			
-			$param['thumb_link'] 	= $thumb_src[0];
-			$param['thumb_width'] 	= 0 == $thumb_src[1] ? file_gallery_get_image_size($param['thumb_link']) : $thumb_src[1];
-			$param['thumb_height'] 	= 0 == $thumb_src[2] ? file_gallery_get_image_size($param['thumb_link'], true) : $thumb_src[2];
+			if( !empty($plcai) && "file" == $linkto )
+			{
+				if( $attachment_is_image )
+				{
+					$param['rel']         = apply_filters("file_gallery_lightbox_linkrel", $plcai[0] . "[" .  $wp->file_gallery_gallery_id . "]", $wp->file_gallery_gallery_id);
+					$param['link_class']  = apply_filters("file_gallery_lightbox_linkclass", $param['link_class'], $wp->file_gallery_gallery_id);
+					$param['image_class'] = apply_filters("file_gallery_lightbox_imageclass", $param['image_class'], $param['link_class'], $wp->file_gallery_gallery_id);
+				}
+				else
+				{
+					$param['link_class'] = str_replace( trim(implode(" ", $plcai)), "", trim($linkclass));
+				}
+			}
+			
+			switch( $linkto )
+			{
+				case "parent_post" :
+					$param['link'] = get_permalink( $wpdb->get_var("SELECT post_parent FROM $wpdb->posts WHERE ID = '" . $attachment->ID . "'") );
+					break;
+				case "file" :
+					$param['link'] = wp_get_attachment_url($attachment->ID);
+					break;
+				case "attachment" :
+					$param['link'] = get_attachment_link($attachment->ID);
+					break;
+				case "none" :
+				default :
+					$param['link'] = "";
+					break;
+			}
+						
 			$param['title'] 		= $attachment->post_title;
 			$param['caption'] 		= $attachment->post_excerpt;
 			$param['description'] 	= $attachment->post_content;
 			
-			if( "none" != $thelink )
-				$param['link'] = 'file' == $thelink ? wp_get_attachment_url($attachment->ID) : get_attachment_link($attachment->ID);
-			
 			// some "light" mime type differentiation, needs to be done properly
-			if( "" == $param['thumb_link'] )
+			if( $attachment_is_image )
 			{
-				$param['thumb_link']   = get_option('url') . "/wp-includes/images/crystal/" . file_gallery_get_file_type($attachment->post_mime_type) . ".png";
+				$thumb_src             = wp_get_attachment_image_src($attachment->ID, $size);
+				$param['thumb_link']   = $thumb_src[0];
+				$param['thumb_width']  = 0 == $thumb_src[1] ? file_gallery_get_image_size($param['thumb_link']) : $thumb_src[1];
+				$param['thumb_height'] = 0 == $thumb_src[2] ? file_gallery_get_image_size($param['thumb_link'], true) : $thumb_src[2];
+			}
+			else
+			{
+				$param['thumb_link']   = get_bloginfo('wpurl') . "/" . WPINC . "/images/crystal/" . file_gallery_get_file_type($attachment->post_mime_type) . ".png";
 				$param['thumb_width']  = "46";
 				$param['thumb_height'] = "60";
 			}
+			
+			$param['thumb_alt'] = false;
+			
+			if( $thumb_alt = get_post_meta($attachment->ID, "_wp_attachment_image_alt", true) )
+				$param['thumb_alt'] = $thumb_alt;
 		}
 		
 		if( "object" == $output_type )

@@ -2,7 +2,7 @@
 /*
 Plugin Name: File Gallery
 Plugin URI: http://skyphe.org/code/wordpress/file-gallery/
-Version: 1.5.1
+Version: 1.5.2
 Description: "File Gallery" extends WordPress' media (attachments) capabilities by adding a new gallery shortcode handler with templating support, a new interface for attachment handling when editing posts, and much more.
 Author: Bruno "Aesqe" Babic
 Author URI: http://skyphe.org
@@ -134,6 +134,7 @@ function file_gallery_activate()
 		'single_default_linkto' 	=> 'attachment', 
 		'single_default_linkclass' 	=> '', 
 		'single_default_imageclass' => '',
+		'single_default_align'      => 'none',
 		
 		'insert_options_states'		=> '1,1',
 		'display_insert_fieldsets'	=> true,
@@ -151,13 +152,17 @@ function file_gallery_activate()
 		'show_on_post_type_post'	=> true,
 		'show_on_post_type_page'	=> true,
 		
-		'library_filter_duplicates' => true
+		'library_filter_duplicates' => true,
+		
+		'auto_enqueued_scripts'		=> 'thickbox'
 	);
 	
 	if( $options = get_option("file_gallery") )
 		$defaults = shortcode_atts($defaults, $options);
 	
 	update_option("file_gallery", $defaults);
+	
+	file_gallery_clear_cache();
 }
 register_activation_hook( __FILE__, 'file_gallery_activate' );
 
@@ -202,8 +207,8 @@ function file_gallery_add_taxonomies()
 		"label" => __("Media tags", "file-gallery"),
 		"singular_label" => __("Media tag", "file-gallery"),
 		"public" => true,
-		"rewrite" => true,
-		"query_var" => FILE_GALLERY_MEDIA_TAG_NAME
+		"rewrite" => array("slug" => str_replace("_", "-", FILE_GALLERY_MEDIA_TAG_NAME)),
+		"query_var" => str_replace("_", "-", FILE_GALLERY_MEDIA_TAG_NAME)
 	);
 	
 	register_taxonomy( FILE_GALLERY_MEDIA_TAG_NAME, "attachment", $args );
@@ -628,6 +633,20 @@ function file_gallery_media_columns( $columns )
 	return $columns;
 }
 add_filter( 'manage_media_columns', 'file_gallery_media_columns' );
+
+
+
+
+
+function file_gallery_tiny_mce( $initArray )
+{
+	$initArray["execcommand_callback"] = "tiny_exec_callback";
+	$initArray["onchange_callback"]    = "tiny_exec_callback";
+	
+	return $initArray;
+}
+add_filter("tiny_mce_before_init", "file_gallery_tiny_mce");
+
 
 
 

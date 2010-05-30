@@ -1,6 +1,30 @@
 <?php
 
 /**
+ * copy of the standard WordPress function found in admin
+ *
+ * @since 1.5.2
+ */
+if( !is_admin() && !function_exists("file_is_displayable_image") )
+{
+	function file_is_displayable_image($path)
+	{
+		$path = preg_replace(array("#\\\#", "#/+#"), array("/", "/"), $path);		
+		$info = @getimagesize($path);
+
+		if ( empty($info) )
+			$result = false;
+		elseif ( !in_array($info[2], array(IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_PNG)) )    // only gif, jpeg and png images can reliably be displayed
+			$result = false;
+		else
+			$result = true;
+		
+		return apply_filters('file_is_displayable_image', $result, $path);
+	}
+}
+
+
+/**
  * saves attachment order using "menu_order" field
  *
  * @since 1.0
