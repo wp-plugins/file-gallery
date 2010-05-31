@@ -61,6 +61,11 @@ more... Here's the full list of features:
 
 == Changelog ==
 
+= 1.5.3 =
+* May 31st, 2010
+* fixed a bug where attachment class value would be appended to 
+  ad infinitum, when inserting multiple single attachments
+
 = 1.5.2 =
 * May 30th, 2010
 * added image align options for single image inserts
@@ -191,7 +196,7 @@ Mark James :)
 
 Plugin settings are integrated into media settings page.
 
-Help file is included, you'll find it in the help subfolder :)
+Help file is included, you'll find it in the "help" subfolder :)
 
 == Plans for the next version? ==
 

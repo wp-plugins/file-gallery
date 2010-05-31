@@ -48,9 +48,10 @@ function file_gallery_get_attachment_data()
 		$rel = ' rel="' . $linkclass . '[' . $wp->file_gallery_gallery_id . ']"';
 	}
 	
+	$imageclass .= " align" . $align ." size-" . $size;
+	
 	foreach( $attachments as $attachment )
 	{
-		$imageclass .= " align" . $align ." size-" . $size . " wp-image-" . $attachment;
 		echo file_gallery_parse_attachment_data( $attachment, $size, $linkto, $linkclass, $imageclass, $rel );
 	}
 	
@@ -88,17 +89,18 @@ function file_gallery_parse_attachment_data( $attachment_id, $size, $linkto, $li
 	
 	if( file_is_displayable_image( get_attached_file( $attachment_id ) ) )
 	{
-		$size_src = wp_get_attachment_image_src( $attachment_id, $size, false );
-		$width    = $size_src[1];
-		$height   = $size_src[2];
-		$size_src = $size_src[0];
+		$size_src    = wp_get_attachment_image_src( $attachment_id, $size, false );
+		$width       = $size_src[1];
+		$height      = $size_src[2];
+		$size_src    = $size_src[0];
+		$imageclass .= " wp-image-" . $attachment_id;
 	}
 	else
 	{
 		$size_src          = get_bloginfo('wpurl') . "/" . WPINC . "/images/crystal/" . file_gallery_get_file_type($attachment->post_mime_type) . ".png";
 		$attachment_width  = "46";
 		$attachment_height = "60";
-		$imageclass       .= " non_image";
+		$imageclass       .= " non-image";
 	}
 	
 	$output = '<img src="' . $size_src . '" alt="' . $thumb_alt . '" title="' . $title . '"  class="' . trim($imageclass) . '" width="' . $width . '" height="' . $height . '" />';
@@ -120,7 +122,7 @@ function file_gallery_parse_attachment_data( $attachment_id, $size, $linkto, $li
 	}
 	
 	if( "" != $link )
-		$output = '<a href="' . $link . '"' . $linkclass . $rel . '>' . $output . '</a>';
+		$output = '<a href="' . $link . '"' . trim($linkclass) . $rel . '>' . $output . '</a>';
 
 	return apply_filters("file_gallery_parse_attachment_data", $output, $attachment_id);
 }

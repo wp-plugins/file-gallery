@@ -539,7 +539,7 @@ function file_gallery_shortcode( $attr )
 			// parse template
 			ob_start();
 			
-				extract($param);
+				extract( array_filter($param, "trim") );
 				include($template_file);
 				$x = ob_get_contents();
 				

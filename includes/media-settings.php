@@ -166,7 +166,7 @@ function file_gallery_options_sections( $args )
 			$output = __("Here you can specify width, height and crop attributes for intermediate image sizes added by plugins and/or themes, as well as crop options for the default medium and large sizes", "file-gallery");
 			break;
 		case "file_gallery_options" :
-			$output = "";
+			$output = '<p style="margin: 5px 0 15px; background-color: #FFFFE8; border-color: #EEEED0; -moz-border-radius: 3px; -webkit-border-radius: 3px; border-radius: 3px; border-style: solid; border-width: 1px; margin: 5px 15px 2px; padding: 0.6em;">' . sprintf(__('File Gallery help file is located in the "help" subfolder of the plugin. You can <a href="%s/help/index.html" target="_blank">click here to open it in new window</a>.', "file-gallery"), FILE_GALLERY_URL) . '</p>';
 			break;
 	}
 	
