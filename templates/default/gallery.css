@@ -1,0 +1,34 @@
+.gallery.default
+{
+	margin: auto;
+	overflow: hidden;
+}
+
+.gallery.default .gallery-item
+{
+	float: left;
+	margin-top: 10px;
+	text-align: center;
+}
+
+.gallery.default img
+{
+	border: 2px solid #cfcfcf;
+}
+
+.gallery.default .gallery-caption
+{
+	margin-left: 0;
+}
+
+.gallery.default .gallery-description
+{
+	margin-left: 0;
+}
+
+.gallery.default br.clear
+{
+	clear: both;
+	height: 0.001px;
+	visibility: hidden;
+}
