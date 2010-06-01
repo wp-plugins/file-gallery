@@ -14,7 +14,7 @@ function file_gallery()
 /**
  * TinyMCE execCommand callback
  */
-function tiny_exec_callback(editor_id, elm, command, user_interface, value)
+function file_gallery_tiny_exec_callback(editor_id, elm, command, user_interface, value)
 {
 	if( "mceRepaint" == command )
 		setTimeout("file_gallery.tinymce()", 100);

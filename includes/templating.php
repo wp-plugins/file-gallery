@@ -452,7 +452,7 @@ function file_gallery_shortcode( $attr )
 					   'rel' => "");
 
 		$attachment_file = get_attached_file($attachment->ID);
-		$attachment_is_image = file_is_displayable_image($attachment_file);
+		$attachment_is_image = file_gallery_file_is_displayable_image($attachment_file);
 		$endcol = "";
 		$x = "";
 		

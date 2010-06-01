@@ -2,7 +2,7 @@
 /*
 Plugin Name: File Gallery
 Plugin URI: http://skyphe.org/code/wordpress/file-gallery/
-Version: 1.5.3
+Version: 1.5.4
 Description: "File Gallery" extends WordPress' media (attachments) capabilities by adding a new gallery shortcode handler with templating support, a new interface for attachment handling when editing posts, and much more.
 Author: Bruno "Aesqe" Babic
 Author URI: http://skyphe.org
@@ -636,17 +636,14 @@ add_filter( 'manage_media_columns', 'file_gallery_media_columns' );
 
 
 
-
-
 function file_gallery_tiny_mce( $initArray )
 {
-	$initArray["execcommand_callback"] = "tiny_exec_callback";
-	$initArray["onchange_callback"]    = "tiny_exec_callback";
+	$initArray["execcommand_callback"] = "file_gallery_tiny_exec_callback";
+	$initArray["onchange_callback"]    = "file_gallery_tiny_exec_callback";
 	
 	return $initArray;
 }
-add_filter("tiny_mce_before_init", "file_gallery_tiny_mce");
-
+//add_filter("tiny_mce_before_init", "file_gallery_tiny_mce");
 
 
 

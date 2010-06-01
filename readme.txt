@@ -61,6 +61,10 @@ more... Here's the full list of features:
 
 == Changelog ==
 
+= 1.5.4 =
+* June 1st, 2010
+* squashed some bugs, added forgotten global variables
+
 = 1.5.3 =
 * May 31st, 2010
 * fixed a bug where attachment class value would be appended to 

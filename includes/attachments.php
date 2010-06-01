@@ -13,6 +13,8 @@
  */
 function file_gallery_get_attachment_data()
 {
+	global $wp;
+
 	check_ajax_referer('file-gallery');
 
 	$attachment = $_POST['attachment_id'];
@@ -87,7 +89,7 @@ function file_gallery_parse_attachment_data( $attachment_id, $size, $linkto, $li
 	else
 		$title = $attachment->post_excerpt;
 	
-	if( file_is_displayable_image( get_attached_file( $attachment_id ) ) )
+	if( file_gallery_file_is_displayable_image( get_attached_file( $attachment_id ) ) )
 	{
 		$size_src    = wp_get_attachment_image_src( $attachment_id, $size, false );
 		$width       = $size_src[1];
@@ -97,10 +99,10 @@ function file_gallery_parse_attachment_data( $attachment_id, $size, $linkto, $li
 	}
 	else
 	{
-		$size_src          = get_bloginfo('wpurl') . "/" . WPINC . "/images/crystal/" . file_gallery_get_file_type($attachment->post_mime_type) . ".png";
-		$attachment_width  = "46";
-		$attachment_height = "60";
-		$imageclass       .= " non-image";
+		$size_src    = get_bloginfo('wpurl') . "/" . WPINC . "/images/crystal/" . file_gallery_get_file_type($attachment->post_mime_type) . ".png";
+		$width       = "46";
+		$height      = "60";
+		$imageclass .= " non-image";
 	}
 	
 	$output = '<img src="' . $size_src . '" alt="' . $thumb_alt . '" title="' . $title . '"  class="' . trim($imageclass) . '" width="' . $width . '" height="' . $height . '" />';
@@ -151,7 +153,7 @@ function file_gallery_edit_attachment()
 		exit();
 	}
 	
-	if( file_is_displayable_image( get_attached_file($attachment_id) ) )
+	if( file_gallery_file_is_displayable_image( get_attached_file($attachment_id) ) )
 	{
 		$fullsize_src = wp_get_attachment_image_src( $attachment_id, "large", false );
 		$fullsize_src = $fullsize_src[0];
@@ -531,7 +533,7 @@ function file_gallery_cancel_file_deletion_if_attachment_copies( $file )
 		$uploadpath = wp_upload_dir();
 		$file_path  = path_join($uploadpath['basedir'], $file);
 		
-		if( file_is_displayable_image($file_path) ) // if it's an image - regenerate its intermediate sizes
+		if( file_gallery_file_is_displayable_image($file_path) ) // if it's an image - regenerate its intermediate sizes
 			$regenerate = wp_update_attachment_metadata( $this_copies[0], wp_generate_attachment_metadata( $this_copies[0], $file_path ) );
 
 		return "";
