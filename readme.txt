@@ -61,6 +61,12 @@ more... Here's the full list of features:
 
 == Changelog ==
 
+= 1.5.5 =
+* June 2nd, 2010
+* fixed a bug where image caption for an image without a caption set
+  would be from previous image
+* added alternate text field in editor for image attachments
+
 = 1.5.4 =
 * June 1st, 2010
 * squashed some bugs, added forgotten global variables

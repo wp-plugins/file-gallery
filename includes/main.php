@@ -431,6 +431,7 @@ function file_gallery_main( $ajax = true )
 		$attachment_id = intval($_POST['attachment_id']);
 
 		$attachment_data['ID'] 			 = $attachment_id;
+		$attachment_data['post_alt']     = $_POST['post_alt'];
 		$attachment_data['post_title']   = $_POST['post_title'];
 		$attachment_data['post_content'] = $_POST['post_content'];
 		$attachment_data['post_excerpt'] = $_POST['post_excerpt'];
@@ -466,16 +467,26 @@ function file_gallery_main( $ajax = true )
 		// check if there were any changes
 		$old_attachment_data = get_object_vars( get_post($attachment_id) );
 		
-		if( $old_attachment_data['post_title']   != $attachment_data['post_title']   || 
+		if( file_gallery_file_is_displayable_image(  get_attached_file($attachment_id) ) )
+			$old_attachment_data['post_alt'] = get_post_meta($attachment_id, "_wp_attachment_image_alt", true);
+		
+		if( ( isset($old_attachment_data['post_alt']) 
+				&& $old_attachment_data['post_alt'] != $attachment_data['post_alt']) ||  
+		    $old_attachment_data['post_title']   != $attachment_data['post_title']   || 
 			$old_attachment_data['post_content'] != $attachment_data['post_content'] || 
 			$old_attachment_data['post_excerpt'] != $attachment_data['post_excerpt'] ||	
 			$old_attachment_data['menu_order']   != $attachment_data['menu_order']   ||
 			is_array($tax_input) )
 		{
 			if( 0 !== wp_update_post($attachment_data) )
+			{
+				update_post_meta($attachment_id, "_wp_attachment_image_alt", $attachment_data['post_alt']);
 				$output = __("Attachment data updated", "file-gallery");
+			}
 			else
+			{
 				$output = __("Error updating attachment data!", "file-gallery");
+			}
 		}
 		else
 		{

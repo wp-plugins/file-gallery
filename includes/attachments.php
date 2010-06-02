@@ -207,6 +207,11 @@ function file_gallery_edit_attachment()
 		<input type="hidden" name="checked_attachments" id="fgae_checked_attachments" value="<?php echo $_POST['checked_attachments']; ?>" />
 		<input type="hidden" name="action"  id="fgae_action"  value="update" />
 
+		<?php if( file_gallery_file_is_displayable_image(  get_attached_file($attachment->ID) ) ) : ?>
+		<label for="post_alt"><?php _e("Alternate text for this image", "file-gallery"); ?>: </label>
+		<input type="text" name="post_alt" id="fgae_post_alt" value="<?php echo get_post_meta($attachment->ID, "_wp_attachment_image_alt", true); ?>" class="roundborder"<?php if (!current_user_can('edit_post', $attachment->ID)){ echo ' readonly="readonly"';} ?> /><br />
+		<?php endif; ?>
+		
 		<label for="post_title"><?php _e("Title", "file-gallery"); ?>: </label>
 		<input type="text" name="post_title" id="fgae_post_title" value="<?php echo $attachment->post_title; ?>" class="roundborder"<?php if (!current_user_can('edit_post', $attachment->ID)){ echo ' readonly="readonly"';} ?> /><br />
 		

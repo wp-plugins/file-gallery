@@ -657,6 +657,7 @@ jQuery(document).ready(function()
 					post_id 			: jQuery("#post_ID").val(),
 					attachment_id 		: attachment_data.id, 
 					action 				: "file_gallery_main_update",
+					post_alt	   		: attachment_data.alt,
 					post_title   		: attachment_data.title,
 					post_content 		: attachment_data.content,
 					post_excerpt 		: attachment_data.excerpt,
@@ -922,7 +923,7 @@ jQuery(document).ready(function()
 			};
 			
 			jQuery("#fg_container")
-				.css({"height" : 466 })
+				.css({"height" : 505 })
 				.html("<p class=\"loading_image\"><img src=\"" + file_gallery_url + "/images/ajax-loader.gif\" /><br />" + fgL10n["loading_attachment_data"] + "</p>");
 			
 			jQuery.post
@@ -1235,6 +1236,7 @@ jQuery(document).ready(function()
 	{
 		var attachment_data = {
 								id         : jQuery('#fgae_attachment_id').val(),
+								alt        : jQuery('#fgae_post_alt').val(),
 								title      : jQuery('#fgae_post_title').val(),
 								excerpt    : jQuery('#fgae_post_excerpt').val(),
 								content    : jQuery('#fgae_post_content').val(),

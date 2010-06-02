@@ -449,7 +449,12 @@ function file_gallery_shortcode( $attr )
 		
 		$param = array('image_class' => " " . $imageclass,
 					   'link_class' => " " . $linkclass,
-					   'rel' => "");
+					   'rel' => "",
+					   'title'  => "",
+					   'cation'  => "",
+					   'description'  => "",
+					   'thumb_alt' => ""
+					   );
 
 		$attachment_file = get_attached_file($attachment->ID);
 		$attachment_is_image = file_gallery_file_is_displayable_image($attachment_file);
@@ -495,7 +500,6 @@ function file_gallery_shortcode( $attr )
 			$param['caption'] 		= $attachment->post_excerpt;
 			$param['description'] 	= $attachment->post_content;
 			
-			// some "light" mime type differentiation, needs to be done properly
 			if( $attachment_is_image )
 			{
 				$thumb_src             = wp_get_attachment_image_src($attachment->ID, $size);
@@ -509,12 +513,12 @@ function file_gallery_shortcode( $attr )
 				$param['thumb_width']  = "46";
 				$param['thumb_height'] = "60";
 			}
-			
-			$param['thumb_alt'] = false;
-			
+
 			if( $thumb_alt = get_post_meta($attachment->ID, "_wp_attachment_image_alt", true) )
 				$param['thumb_alt'] = $thumb_alt;
 		}
+		
+		$param = array_map("trim", $param);
 		
 		if( "object" == $output_type )
 		{
@@ -539,7 +543,7 @@ function file_gallery_shortcode( $attr )
 			// parse template
 			ob_start();
 			
-				extract( array_filter($param, "trim") );
+				extract( $param );
 				include($template_file);
 				$x = ob_get_contents();
 				
