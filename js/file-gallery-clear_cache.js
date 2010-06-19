@@ -24,7 +24,7 @@ jQuery(document).ready(function()
 		);
 	}
 	
-	jQuery("#file_gallery_clear_cache_manual").bind("click", function()
+	jQuery("#file_gallery_clear_cache_manual").live("click", function()
 	{
 		file_gallery_clear_cache_manual();
 		

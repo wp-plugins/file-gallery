@@ -3,7 +3,7 @@ Contributors: aesqe
 Donate link: http://www.amazon.com/gp/registry/wishlist/1IU6F22QPQX2Y/
 Tags: attachment, attachments, gallery, galleries, template, templates, shortcode, file, files, attach, detach, unattach, copy, media, tags, library
 Requires at least: 2.9.2
-Tested up to: 3.0-rc1
+Tested up to: 3.1-alpha
 Stable tag: trunk
 
 File Gallery extends WordPress media (attachments) capabilities 
@@ -36,7 +36,8 @@ more... Here's the full list of features:
 9.  different background colors for items in media library depending 
     on their status = completely unattached (white), attached to other 
     posts (red), or attached to current post (yellow)
-10. compatible with "WordPress Mobile Edition" and "Media Tags" plugins	
+10. compatible with "WordPress Mobile Edition", "Media Tags" and 
+    "WPML Multilingual CMS" plugins	
 11. basic caching of gallery output and frequent queries (transients)
 12. various smaller modifications described in help files (coming soon!) 
 
@@ -50,6 +51,8 @@ more... Here's the full list of features:
 6. Settings page
 7. Post thumb and number of attachments as extras in this view
 8. Copying attachments from media library
+9. With "WPML Multilingual CMS" plugin istalled, you'll be able to copy 
+   all attachments from the original post to translated one in two clicks
 
 == Installation == 
 
@@ -60,6 +63,15 @@ more... Here's the full list of features:
 3.	You're done - go edit or add a new post to see how it works :)
 
 == Changelog ==
+
+= 1.5.6 =
+* June 19th, 2010
+* added 'include' and 'exclude' parameters for compatibility with 
+  standard WP gallery shortcode function. 'include' is identical to
+  'attachment_ids' and will be used as the default parameter name 
+  from this version on
+* added columns parameter and "Clear File Gallery cache" button to 
+  the File Gallery UI
 
 = 1.5.5 =
 * June 2nd, 2010
@@ -112,10 +124,10 @@ more... Here's the full list of features:
 * when copying all attachments from another post, if current post has 
   no attachments of its own, automatically set post thumb to be the same 
   as for the post we're copying attachments from
-* if you have WPML plugin installed and you're editing a post that is a 
-  translation, you'll notice a bluish link at the bottom of the Language 
-  metabox. It allows you to copy all attachments from the original post 
-  in just two clicks :)
+* if you have "WPML Multilingual CMS" plugin installed and you're editing
+  a post that is a translation, you'll notice a bluish link at the bottom 
+  of the "Language" metabox. It allows you to copy all attachments from 
+  the original post in just two clicks :)
 * some minor improvements
 
 = 1.5b3 =

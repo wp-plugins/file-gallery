@@ -302,7 +302,12 @@ function file_gallery_shortcode( $attr )
 				'columns'    => 3,
 				'size'       => 'thumbnail',
 				'link'		 => 'attachment',
-				
+				// 'itemtag'    => 'dl',
+				// 'icontag'    => 'dt',
+				// 'captiontag' => 'dd',
+				'include'    => '',
+				'exclude'    => '',
+
 				/* added by file gallery: */
 				'template'	 => 'default',
 				'attachment_ids' => '',
@@ -312,14 +317,17 @@ function file_gallery_shortcode( $attr )
 				'tags_from' => 'current',
 				'output_type' => 'html',
 				'output_params' => true // needed when outputting html
-				//'limit' => '', //not implemented yet
-				//'content_type' => '', //not implemented yet
+				// 'limit' => '',       // not implemented yet
+				// 'mime_type' => '',   // not implemented yet
 			)
 	, $attr));
 	
+	if( "" != $include && "" == $attachment_ids )
+		$attachment_ids = $include;
+	
 	$linkto = $link;
 	
-	// start with tags because they negate attachment_ids
+	// start with tags because they negate everything else
 	if( "" != $tags )
 	{
 		$tags = str_replace(",", "','", $tags);
@@ -330,7 +338,8 @@ function file_gallery_shortcode( $attr )
 						LEFT JOIN $wpdb->term_taxonomy ON($wpdb->term_relationships.term_taxonomy_id = $wpdb->term_taxonomy.term_taxonomy_id)
 						LEFT JOIN $wpdb->terms ON($wpdb->term_taxonomy.term_id = $wpdb->terms.term_id)
 						WHERE $wpdb->posts.post_type = 'attachment' 
-						AND $wpdb->term_taxonomy.taxonomy='" . FILE_GALLERY_MEDIA_TAG_NAME . "'
+						AND $wpdb->posts.post_status != 'trash' 
+						AND $wpdb->term_taxonomy.taxonomy = '" . FILE_GALLERY_MEDIA_TAG_NAME . "'
 						AND ($wpdb->terms.name IN ('%s') OR $wpdb->terms.slug IN ('%s'))",
 						$tags, $tags);
 		
@@ -374,6 +383,7 @@ function file_gallery_shortcode( $attr )
 		$query = sprintf("SELECT * FROM $wpdb->posts 
 						  WHERE $wpdb->posts.ID IN (%s) 
 						  	AND $wpdb->posts.post_type = 'attachment' 
+							AND $wpdb->posts.post_status != 'trash' 
 						  ORDER BY %s %s 
 						  LIMIT %d", 
 					$attachment_ids, $orderby, $order, $sql_limit);
@@ -382,43 +392,47 @@ function file_gallery_shortcode( $attr )
 	}
 	else
 	{
-		// default orderby without attachment_ids is set here
 		if( "" == $orderby )
 			$orderby = "menu_order ID";
 		
-		$attachments = get_children(
-							array('post_parent' => $id, 
-								  'post_type' => 'attachment', 
-								  'order' => $order, 
-								  'orderby' => $orderby//,
-								  // 'post_status' => 'inherit', // is this really needed?
-								  // 'post_mime_type' => 'image' // gotta add "these filetypes only" option...
-		));
+		$attachment_args = array(
+			'post_parent' => $id,
+			'post_status' => 'inherit', 
+			'post_type' => 'attachment', 
+			'post_mime_type' => 'image', 
+			'order' => $order, 
+			'orderby' => $orderby
+		);
+
+		if ( !empty($exclude) )
+			$attachment_args['exclude'] = preg_replace( '/[^0-9,]+/', '', $exclude );
+
+		$attachments = get_children( $attachment_args );
 	}
 
 	if( empty($attachments) )
 		return '';
 
 	// feed
-	if ( is_feed() )
+	if( is_feed() )
 	{
 		$output = "\n";
 
-		foreach ( $attachments as $id => $attachment )
+		foreach ( $attachments as $attachment )
 		{
-			$output .= wp_get_attachment_link($id, $size, true) . "\n";
+			$output .= wp_get_attachment_link($attachment->ID, $size, true) . "\n";
 		}
 		
 		return $output;
 	}
 	
-	if( "file-gallery" != $template && "default" != $template && "list" != $template )
+	if( ! in_array($template, array("file-gallery", "default", "list")) )
 		$template_file = FILE_GALLERY_THEME_TEMPLATES_ABSPATH . '/' . $template . '/gallery.php';
 	else
 		$template_file = FILE_GALLERY_ABSPATH . '/templates/' . $template . '/gallery.php';
 	
 	// check if template exists and replace with default if it does not
-	if( !is_readable($template_file) )
+	if( ! is_readable($template_file) )
 	{
 		$template_file = FILE_GALLERY_ABSPATH . '/templates/default/gallery.php';
 		$template      = "default";

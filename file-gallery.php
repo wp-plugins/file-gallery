@@ -2,7 +2,7 @@
 /*
 Plugin Name: File Gallery
 Plugin URI: http://skyphe.org/code/wordpress/file-gallery/
-Version: 1.5.5
+Version: 1.5.6
 Description: "File Gallery" extends WordPress' media (attachments) capabilities by adding a new gallery shortcode handler with templating support, a new interface for attachment handling when editing posts, and much more.
 Author: Bruno "Aesqe" Babic
 Author URI: http://skyphe.org
@@ -129,6 +129,7 @@ function file_gallery_activate()
 		'default_template' 			=> 'default', 
 		'default_linkclass' 		=> '', 
 		'default_imageclass' 		=> '', 
+		'default_columns' 			=> 3, 
 		
 		'single_default_image_size' => 'thumbnail', 
 		'single_default_linkto' 	=> 'attachment', 
@@ -353,6 +354,7 @@ function file_gallery_js_admin()
 	global $pagenow, $current_screen, $wp_version;
 	
 	$nonce = wp_create_nonce('file-gallery');
+	$clear_cache_nonce = wp_create_nonce('file-gallery-clear_cache');
 	
 	if(
 	   "post.php" == $pagenow || "post-new.php" == $pagenow || 
@@ -386,6 +388,7 @@ function file_gallery_js_admin()
 				
 					var file_gallery_url 	 = "' . FILE_GALLERY_URL . '";
 					var file_gallery_nonce   = "' . $nonce . '";
+					var file_gallery_clear_cache_nonce   = "' . $clear_cache_nonce . '";
 					var file_gallery_mode    = "list";
 					var current_item_dragged = "";
 					var thumb_w 			 = '  . get_option("thumbnail_size_w") . ';
@@ -397,6 +400,9 @@ function file_gallery_js_admin()
 				</script>';
 
 		wp_enqueue_script( "file-gallery-main",  FILE_GALLERY_URL . "/js/file-gallery.js", array("jquery", "jquery-ui-core", "jquery-ui-draggable", "jquery-ui-sortable", "jquery-ui-dialog"), false, true );
+		
+		// clear cache js
+		wp_enqueue_script( "file-gallery-clear_cache",  FILE_GALLERY_URL . "/js/file-gallery-clear_cache.js" );
 	}
 	elseif( "media-upload.php" == $pagenow && "library" == $_GET["tab"] )
 	{

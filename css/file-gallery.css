@@ -330,7 +330,7 @@ a.img_edit
 {
 	float: right;
 	position:relative;
-	width: 276px;
+	/*width: 276px;*/
 	margin-right: 2px;
 	text-align: right;
 }
@@ -369,6 +369,7 @@ a.img_edit
 }
 
 
+
 #file_gallery_refresh
 {
 	background-image: url(../images/famfamfam_silk/arrow_refresh.png);
@@ -403,6 +404,19 @@ a.img_edit
 {
 	background-image: url(../images/famfamfam_silk/images.png);
 }
+
+#file_gallery_clear_cache_manual
+{
+	background-image: url(../images/famfamfam_silk/lock_open.png);
+	opacity: 0.75;
+}
+
+#file_gallery_clear_cache_manual:hover
+{
+	opacity: 1;
+}
+
+
 
 #fg_loading_on_bar
 {

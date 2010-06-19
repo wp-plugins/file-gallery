@@ -23,6 +23,7 @@
 		<input type="button" value="<?php _e("Copy all attachments from another post", "file-gallery"); ?>" title="<?php _e("Copy all attachments from another post", "file-gallery"); ?>" class="button" id="file_gallery_copy_all" />
 		<input type="button" value="<?php _e("Delete all checked", "file-gallery"); ?>" title="<?php _e("Delete all checked", "file-gallery"); ?>" class="button" id="file_gallery_delete_checked" />
 		<input type="button" value="<?php _e("Detach all checked", "file-gallery"); ?>" title="<?php _e("Detach all checked", "file-gallery"); ?>" class="button" id="file_gallery_detach_checked" />
+		<input type="button" value="<?php _e("Clear File Gallery cache", "file-gallery"); ?>" title="<?php _e("Clear File Gallery cache", "file-gallery"); ?>" class="button" id="file_gallery_clear_cache_manual" />
 	</div>
 
 	<p id="fg_info">
@@ -103,6 +104,26 @@
 			<p>
 				<label for="file_gallery_imageclass"><?php _e("image class", "file-gallery"); ?>:</label>
 				<input type="text" name="file_gallery_imageclass" id="file_gallery_imageclass" value="<?php echo $file_gallery_options["default_imageclass"]; ?>" />
+			</p>
+			
+			<p>
+				<label for="file_gallery_columns"><?php _e("columns", "file-gallery"); ?>:</label>
+				<select name="file_gallery_columns" id="file_gallery_columns">
+				<?php
+					$col_def = $file_gallery_options["default_columns"];
+					
+					for( $i=1; $i < 10; $i++ )
+					{
+						$selected = "";
+
+						if( $i == $col_def )
+							$selected = ' selected="selected"';
+						
+						echo '<option value="' . $i . '"' . $selected . '>' . $i . "</option>\n";
+					}
+					
+				?>
+				</select>
 			</p>
 			
 			<br />

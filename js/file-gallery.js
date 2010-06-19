@@ -57,12 +57,15 @@ jQuery(document).ready(function()
 		{
 			var gallery = tinyMCE.activeEditor.selection.getContent(),
 				opt = gallery.replace("gallery ", "").replace(/"/g, "'"),
-				attachment_ids = opt.match(/attachment_ids='([^']+)'/);
+				attachment_ids = opt.match(/attachment_ids='([^']+)'/),
+				attachment_includes = opt.match(/include='([^']+)'/);
 			
 			file_gallery_current_gallery_content = gallery;
 
 			if( attachment_ids )
 				attachment_ids = attachment_ids[1].split(",");
+			else if( attachment_includes )
+				attachment_ids = attachment_includes[1].split(",");
 			
 			if( 0 < jQuery('#file_gallery_list li').length )
 			{
@@ -220,6 +223,7 @@ jQuery(document).ready(function()
 				orderby = "",
 				linkclass = "",
 				imageclass = "",
+				columns = "",
 				tags = "",
 				tags_from = "",
 				ctlen = ""
@@ -327,7 +331,7 @@ jQuery(document).ready(function()
 			if( "" != tags )
 				serial = '[gallery tags="' + tags + '"' + tags_from;
 			else if( "" != serial )
-				serial = '[gallery attachment_ids="' + serial + '"';
+				serial = '[gallery include="' + serial + '"';
 			else
 				serial = '[gallery';
 		
@@ -346,7 +350,10 @@ jQuery(document).ready(function()
 			if( "" != jQuery("#file_gallery_imageclass").val() )
 				imageclass = ' imageclass="' + jQuery("#file_gallery_imageclass").val() + '"';
 			
-			serial += size + linkto + linkclass + imageclass + order + orderby + template + "]\n";
+			if( "" != jQuery("#file_gallery_columns").val() && "3" != jQuery("#file_gallery_columns").val() )
+				columns = ' columns="' + jQuery("#file_gallery_columns").val() + '"';
+			
+			serial += size + linkto + linkclass + imageclass + order + orderby + template + columns + "]\n";
 			
 			jQuery("#data_collector").val(serial);
 		},
@@ -1423,7 +1430,7 @@ jQuery(document).ready(function()
 	});
 		
 	// bind dropdown select boxes change to serialize attachments list
-	jQuery("#file_gallery_size, #file_gallery_linkto, #file_gallery_orderby, #file_gallery_order, #file_gallery_template, #file_gallery_single_linkto, #fg_container .sortableitem .checker").live("change", function()
+	jQuery("#file_gallery_size, #file_gallery_linkto, #file_gallery_orderby, #file_gallery_order, #file_gallery_template, #file_gallery_single_linkto, #fg_container .sortableitem .checker, #file_gallery_columns").live("change", function()
 	{
 		file_gallery.serialize();
 	});

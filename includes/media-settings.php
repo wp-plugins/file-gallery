@@ -79,6 +79,9 @@ function file_gallery_options_init()
 	// template
 	add_settings_field("file_gallery_default_template", __("template", 'file-gallery'), create_function("", 'return file_gallery_options_fields( array("name" => "file_gallery_default_template") );'), 'media', 'file_gallery_options');
 	
+	// column count
+	add_settings_field("file_gallery_default_columns", __("columns", 'file-gallery'), create_function("", 'return file_gallery_options_fields( array("name" => "file_gallery_default_columns") );'), 'media', 'file_gallery_options');
+	
 	
 	
 	/* for single images */
@@ -292,6 +295,17 @@ function file_gallery_options_fields( $args )
 		$align_single_dropdown .= '>' . __($description, 'file-gallery') . '</option>';
 	}
 	
+	// column count
+	for( $i=1; $i < 10; $i++ )
+	{
+		$columns_dropdown .= '<option value="' . $i . '"';
+		
+		if( $file_gallery_options["default_columns"] == $i )
+			$columns_dropdown .= ' selected="selected"';
+		
+		$columns_dropdown .= '>' . __($i, 'file-gallery') . '</option>';
+	}
+	
 	/* END SELECT DROPDOWNS */
 	
 	$types = get_post_types(false, 'objects');
@@ -373,6 +387,11 @@ function file_gallery_options_fields( $args )
 			case "file_gallery_default_template" :
 					$output = '<select name="file_gallery[default_template]" id="file_gallery_default_template" style="width: 415px;">
 						' . $templates_dropdown . '			
+					</select>';
+				break;
+			case "file_gallery_default_columns" :
+					$output = '<select name="file_gallery[default_columns]" id="file_gallery_default_columns" style="width: 45px;">
+						' . $columns_dropdown . '			
 					</select>';
 				break;
 			case "file_gallery_in_excerpt" :
