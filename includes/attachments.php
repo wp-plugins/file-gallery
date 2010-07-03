@@ -17,13 +17,17 @@ function file_gallery_get_attachment_data()
 
 	check_ajax_referer('file-gallery');
 
-	$attachment = $_POST['attachment_id'];
-	$size 		= $_POST['size'];
-	$linkto 	= $_POST['linkto'];
-	$linkclass 	= $_POST['linkclass'];
-	$imageclass = $_POST['imageclass'];
-	$align      = $_POST['align'];
-	$rel        = false;
+	$attachment   = $_POST['attachment_id'];
+	$size 		  = $_POST['size'];
+	$linkto 	  = $_POST['linkto'];
+	$external_url = $_POST['external_url'];
+	$linkclass 	  = $_POST['linkclass'];
+	$imageclass   = $_POST['imageclass'];
+	$align        = $_POST['align'];
+	$rel          = false;
+	
+	if( "undefined" != $external_url && "" != $external_url )
+		$linkto = $external_url;
 	
 	if( "undefined" != $linkclass && "" != $linkclass )
 		$linkclass = ' class="' . $linkclass . '"';
@@ -120,6 +124,9 @@ function file_gallery_parse_attachment_data( $attachment_id, $size, $linkto, $li
 			break;
 		case "none" :
 			$link = "";
+			break;
+		default : // external url
+			$link = urldecode($linkto);
 			break;
 	}
 	
@@ -595,6 +602,7 @@ add_action("delete_attachment",              "file_gallery_handle_deleted_attach
 add_action("file_gallery_delete_attachment", "file_gallery_handle_deleted_attachment");
 
 
+
 /**
  * Promotes the first copy of an attachment (probably to be deleted)
  * into the original (with other copies becoming its copies now)
@@ -620,25 +628,5 @@ function file_gallery_promote_first_attachment_copy( $attachment_id )
 	// no copies
 	return false;
 }
-
-
-
-/**
- * Adds a button to the edit/insert attachment form
- * to link the attachment to the parent post
- * in addition to itself, the actual file, or nothing
- */
-function file_gallery_add_media_fields( $form_fields )
-{
-	global $wpdb;
-	
-	preg_match("#attachments\[([\d]+)\]\[url\]#", $form_fields["image_url"]["html"], $m);
-	
-	$form_fields["url"]["html"] = str_replace( __("Post URL"), __("Attachment URL"), $form_fields["url"]["html"]);
-	$form_fields["url"]["html"] .= "<button type='button' class='button urlparent' title='" . get_permalink( $wpdb->get_var( $wpdb->prepare("SELECT `post_parent` FROM $wpdb->posts WHERE `ID`='%d'", $m[1]) ) ) . "'>Parent Post URL</button>";
-	
-	return $form_fields;
-}
-add_filter("attachment_fields_to_edit", "file_gallery_add_media_fields");
 
 ?>

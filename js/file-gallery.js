@@ -172,8 +172,8 @@ jQuery(document).ready(function()
 				jQuery("#file_gallery_upload_files").hide();
 			}
 			
-			if( 0 === num_attachments || 0 == jQuery("#file_gallery_list .post_thumb").length )
-				WPRemoveThumbnail();
+			if( (0 === num_attachments || 0 == jQuery("#file_gallery_list .post_thumb").length) && 0 < jQuery("#set-post-thumbnail").length && 0 < jQuery("#remove-post-thumbnail").length )
+				WPRemoveThumbnail(post_thumb_nonce);
 			
 			// tags from current post only checkbox
 			if( "false" == tags_from )
@@ -218,6 +218,8 @@ jQuery(document).ready(function()
 			var serial = "",
 				size = "",
 				linkto = "",
+				linkto_val = jQuery("#file_gallery_linkto").val(),
+				external_url = jQuery("#file_gallery_external_url").val(),
 				template = "",
 				order = "",
 				orderby = "",
@@ -235,6 +237,9 @@ jQuery(document).ready(function()
 				file_gallery_order = "",
 				file_gallery_orderby = "",
 				fg_gallery_tags = jQuery("#fg_gallery_tags");
+			
+			if( "external_url" == linkto_val )
+				linkto_val = encodeURIComponent(external_url);
 			
 			if( "undefined" == typeof( fg_gallery_tags.val() ) || "undefined" == fg_gallery_tags.val() )
 				fg_gallery_tags.val("");
@@ -313,10 +318,20 @@ jQuery(document).ready(function()
 				orderby = "";
 			}
 			
-			if("none" == jQuery("#file_gallery_linkto").val())
-				jQuery("#file_gallery_linkclass, #file_gallery_linkclass_label").css({"display" : "none"});
+			if( "external_url" == jQuery("#file_gallery_linkto").val() )
+				jQuery("#file_gallery_external_url_label").show();
 			else
-				jQuery("#file_gallery_linkclass, #file_gallery_linkclass_label").css({"display" : "inline"});
+				jQuery("#file_gallery_external_url_label").hide();
+			
+			if( "external_url" == jQuery("#file_gallery_single_linkto").val() )
+				jQuery("#file_gallery_single_external_url_label").show();
+			else
+				jQuery("#file_gallery_single_external_url_label").hide();
+
+			if( "none" == jQuery("#file_gallery_linkto").val() )
+				jQuery("#file_gallery_linkclass_label").hide();
+			else
+				jQuery("#file_gallery_linkclass_label").show();
 			
 			if( "none" == jQuery("#file_gallery_single_linkto").val() )
 				jQuery("#file_gallery_single_linkclass_label").hide();
@@ -339,7 +354,7 @@ jQuery(document).ready(function()
 				size = ' size="' + jQuery("#file_gallery_size").val() + '"';
 			
 			if( "attachment" != jQuery("#file_gallery_linkto").val() )
-				linkto = ' link="' + jQuery("#file_gallery_linkto").val() + '"';
+				linkto = ' link="' + linkto_val + '"';
 		
 			if( "default" != jQuery("#file_gallery_template").val() )
 				template = ' template="' + jQuery("#file_gallery_template").val() + '"';
@@ -888,6 +903,7 @@ jQuery(document).ready(function()
 				attachment_id : attachment_id,
 				size 		  : jQuery('#file_gallery_single_size').val(),
 				linkto 		  : jQuery('#file_gallery_single_linkto').val(),
+				external_url  : jQuery('#file_gallery_single_external_url').val(),
 				linkclass 	  : jQuery('#file_gallery_single_linkclass').val(),
 				imageclass 	  : jQuery('#file_gallery_single_imageclass').val(),
 				align 	      : jQuery('#file_gallery_single_align').val(),
@@ -1109,7 +1125,7 @@ jQuery(document).ready(function()
 					}
 					else
 					{
-						WPRemoveThumbnail();
+						WPRemoveThumbnail(post_thumb_nonce);
 						
 						response = fgL10n["post_thumb_unset"];
 						
@@ -1442,7 +1458,7 @@ jQuery(document).ready(function()
 	});
 	
 	// blur binding for text inputs and dropdown selects
-	jQuery("#fg_gallery_tags, #file_gallery_linkclass, #file_gallery_imageclass, #file_gallery_single_linkclass, #file_gallery_single_imageclass").live("blur", function()
+	jQuery("#fg_gallery_tags, #file_gallery_linkclass, #file_gallery_imageclass, #file_gallery_single_linkclass, #file_gallery_single_imageclass, #file_gallery_single_external_url, #file_gallery_external_url").live("blur", function()
 	{
 		file_gallery.serialize();
 	});

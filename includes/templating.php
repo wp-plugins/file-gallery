@@ -67,6 +67,11 @@ function file_gallery_get_templates()
  */
 function file_gallery_mobile_css( $stylesheet_url )
 {
+	$options = get_option("file_gallery");
+	
+	if( true == $options['disable_shortcode_handler'] )
+		return;
+
 	file_gallery_css_front( true );
 	
 	$mobiles = maybe_unserialize(FILE_GALLERY_MOBILE_STYLESHEETS);
@@ -88,6 +93,11 @@ function file_gallery_mobile_css( $stylesheet_url )
  */
 function file_gallery_css_front( $mobile = false )
 {
+	$options = get_option("file_gallery");
+	
+	if( true == $options['disable_shortcode_handler'] )
+		return;
+
 	global $wp_query;
 
 	$options = get_option("file_gallery");
@@ -217,6 +227,11 @@ add_action('wp_print_styles', 'file_gallery_css_front');
  */
 function file_gallery_print_scripts( $styles = false )
 {
+	$options = get_option("file_gallery");
+	
+	if( true == $options['disable_shortcode_handler'] )
+		return;
+
 	if( defined("FILE_GALLERY_LIGHTBOX_CLASSES") )
 	{
 		$linkclasses = maybe_unserialize(FILE_GALLERY_LIGHTBOX_CLASSES);
@@ -505,8 +520,10 @@ function file_gallery_shortcode( $attr )
 					$param['link'] = get_attachment_link($attachment->ID);
 					break;
 				case "none" :
-				default :
 					$param['link'] = "";
+					break;
+				default : // external url
+					$param['link'] = urldecode($linkto);
 					break;
 			}
 						
@@ -601,6 +618,16 @@ function file_gallery_shortcode( $attr )
 	
 	return $output;
 }
-add_shortcode('gallery', 'file_gallery_shortcode');
+
+function file_gallery_register_shortcode_handler()
+{
+	$options = get_option("file_gallery");
+	
+	if( true == $options['disable_shortcode_handler'] )
+		return;
+		
+	add_shortcode('gallery', 'file_gallery_shortcode');
+}
+add_action('init', 'file_gallery_register_shortcode_handler');
 
 ?>

@@ -666,3 +666,12 @@ textarea, input, select
 	color: #b37458;
 	background: #fdf9da;
 }
+
+
+
+/* attachment custom fields */
+
+#postcustomstuff.attachmentcustomstuff
+{
+	width: 630px;
+}

@@ -57,7 +57,13 @@
 					<option value="file"<?php if( "file" == $file_gallery_options["default_linkto"]){ ?> selected="selected"<?php } ?>><?php _e("file", "file-gallery"); ?></option>
 					<option value="attachment"<?php if( "attachment" == $file_gallery_options["default_linkto"]){ ?> selected="selected"<?php } ?>><?php _e("attachment page", "file-gallery"); ?></option>
 					<option value="parent_post"<?php if( "parent_post" == $file_gallery_options["default_linkto"]){ ?> selected="selected"<?php } ?>><?php _e("parent post", "file-gallery"); ?></option>
+					<option value="external_url"<?php if( "external_url" == $file_gallery_options["default_external_url"]){ ?> selected="selected"<?php } ?>><?php _e("external url", "file-gallery"); ?></option>
 				</select>
+			</p>
+			
+			<p id="file_gallery_external_url_label">
+				<label for="file_gallery_external_url"><?php _e("external url", "file-gallery"); ?>:</label>
+				<input type="text" name="file_gallery_external_url" id="file_gallery_external_url" value="<?php echo $file_gallery_options["default_external_url"]; ?>" />
 			</p>
 			
 			<p id="file_gallery_linkclass_label">
@@ -168,7 +174,13 @@
 					<option value="file"<?php if( "file" == $file_gallery_options["single_default_linkto"]){ ?> selected="selected"<?php } ?>><?php _e("file", "file-gallery"); ?></option>
 					<option value="attachment"<?php if( "attachment" == $file_gallery_options["single_default_linkto"]){ ?> selected="selected"<?php } ?>><?php _e("attachment page", "file-gallery"); ?></option>
 					<option value="parent_post"<?php if( "parent_post" == $file_gallery_options["single_default_linkto"]){ ?> selected="selected"<?php } ?>><?php _e("parent post", "file-gallery"); ?></option>
+					<option value="external_url"<?php if( "external_url" == $file_gallery_options["single_default_external_url"]){ ?> selected="selected"<?php } ?>><?php _e("external url", "file-gallery"); ?></option>
 				</select>
+			</p>
+			
+			<p id="file_gallery_single_external_url_label">
+				<label for="file_gallery_single_external_url"><?php _e("external url", "file-gallery"); ?>:</label>
+				<input type="text" name="file_gallery_single_external_url" id="file_gallery_single_external_url" value="<?php echo $file_gallery_options["single_default_external_url"]; ?>" />
 			</p>
 			
 			<p id="file_gallery_single_linkclass_label">

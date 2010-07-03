@@ -51,8 +51,10 @@ function file_gallery_options_init()
 	
 	register_setting('media', "file_gallery");
 	
+	// disable shortcode handler
+	add_settings_field("file_gallery_disable_shortcode_handler", __("Disable 'File Gallery' handling of [gallery] shortcode?", 'file-gallery'), create_function("", 'return file_gallery_options_fields( array("name" => "file_gallery_disable_shortcode_handler") );'), 'media', 'file_gallery_options');
+	
 	// post types
-
 	add_settings_field("file_gallery_show_on_post_type", __("Display File Gallery on which post types?", 'file-gallery'), create_function("", 'return file_gallery_options_fields( array("name" => "file_gallery_show_on_post_type") );'), 'media', 'file_gallery_options');
 	
 	// auto enqueue which scripts based on link classes
@@ -63,6 +65,9 @@ function file_gallery_options_init()
 	
 	// link
 	add_settings_field("file_gallery_default_linkto", __("link", 'file-gallery'), create_function("", 'return file_gallery_options_fields( array("name" => "file_gallery_default_linkto") );'), 'media', 'file_gallery_options');
+	
+	// external url
+	add_settings_field("file_gallery_default_external_url", __("external url", 'file-gallery'), create_function("", 'return file_gallery_options_fields( array("name" => "file_gallery_default_external_url") );'), 'media', 'file_gallery_options');
 	
 	// linkclass
 	add_settings_field("file_gallery_default_linkclass", __("link class", 'file-gallery'), create_function("", 'return file_gallery_options_fields( array("name" => "file_gallery_default_linkclass") );'), 'media', 'file_gallery_options');
@@ -93,6 +98,9 @@ function file_gallery_options_init()
 	
 	// link
 	add_settings_field("file_gallery_single_default_linkto", __("link", 'file-gallery'), create_function("", 'return file_gallery_options_fields( array("name" => "file_gallery_single_default_linkto") );'), 'media', 'file_gallery_options');
+	
+	// external url
+	add_settings_field("file_gallery_single_default_external_url", __("external url", 'file-gallery'), create_function("", 'return file_gallery_options_fields( array("name" => "file_gallery_single_default_external_url") );'), 'media', 'file_gallery_options');
 	
 	// linkclass
 	add_settings_field("file_gallery_single_default_linkclass", __("link class", 'file-gallery'), create_function("", 'return file_gallery_options_fields( array("name" => "file_gallery_single_default_linkclass") );'), 'media', 'file_gallery_options');
@@ -208,7 +216,8 @@ function file_gallery_options_fields( $args )
 	$file_gallery_linkto_options = array("none"			=> __("nothing (do not link)", "file-gallery"), 
 										 "file"			=> __("file", "file-gallery"), 
 										 "attachment"	=> __("attachment page", "file-gallery"),
-										 "parent_post"	=> __("parent post", "file-gallery"));
+										 "parent_post"	=> __("parent post", "file-gallery"),
+										 "external_url"	=> __("external url", "file-gallery"));
 	
 	foreach( $file_gallery_linkto_options as $name => $description )
 	{
@@ -403,8 +412,14 @@ function file_gallery_options_fields( $args )
 			case "file_gallery_single_default_linkclass" :
 					$output = '<input type="text" name="file_gallery[single_default_linkclass]" id="file_gallery_single_default_linkclass" value="' . $file_gallery_options["single_default_linkclass"] . '" size="63" />';
 				break;
+			case "file_gallery_single_default_external_url" :
+					$output = '<input type="text" name="file_gallery[single_default_external_url]" id="file_gallery_single_default_external_url" value="' . $file_gallery_options["single_default_external_url"] . '" size="63" />';
+				break;
 			case "file_gallery_default_linkclass" :
 					$output = '<input type="text" name="file_gallery[default_linkclass]" id="file_gallery_default_linkclass" value="' . $file_gallery_options["default_linkclass"] . '" size="63" />';
+				break;
+			case "file_gallery_default_external_url" :
+					$output = '<input type="text" name="file_gallery[default_external_url]" id="file_gallery_default_external_url" value="' . $file_gallery_options["default_external_url"] . '" size="63" />';
 				break;
 			case "file_gallery_single_default_imageclass" :
 					$output = '<input type="text" name="file_gallery[single_default_imageclass]" id="file_gallery_single_default_imageclass" value="' . $file_gallery_options["single_default_imageclass"] . '" size="63" />';
@@ -448,7 +463,10 @@ function file_gallery_options_fields( $args )
 			case "file_gallery_auto_enqueued_scripts" :
 					$output = '<input type="text" name="file_gallery[auto_enqueued_scripts]" id="file_gallery_auto_enqueued_scripts" value="' . $file_gallery_options["auto_enqueued_scripts"] . '" size="63" />';
 				break;
-
+			case "file_gallery_disable_shortcode_handler" :
+					$output = '<input type="checkbox" name="file_gallery[disable_shortcode_handler]" id="file_gallery_disable_shortcode_handler" value="1" ' . checked('1', $file_gallery_options["disable_shortcode_handler"], false) . ' />';
+				break;
+				
 			/* non editable variables */
 			
 			case "folder" :

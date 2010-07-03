@@ -64,6 +64,13 @@ more... Here's the full list of features:
 
 == Changelog ==
 
+= 1.5.7 =
+* July 3rd, 2010
+* added option to disable file gallery shortcode handler (if you want  
+  to use File Gallery functionality in backend only)
+* added options to link a gallery or single images to some external url
+* fixed the post thumb -1 (WPRemoveThumbnail nonce) bug
+
 = 1.5.6 =
 * June 19th, 2010
 * added 'include' and 'exclude' parameters for compatibility with 
