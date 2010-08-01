@@ -33,10 +33,6 @@ function file_gallery_get_templates()
 		
 		$file_gallery_templates = array_unique($file_gallery_templates);
 	}
-	else
-	{
-		file_gallery_write_log( __("No templates found in theme folder (or in user supplied folder via filter). Provided location: ") . FILE_GALLERY_THEME_TEMPLATES_ABSPATH);
-	}
 	
 	// check whether gallery.php and gallery.css exist within each template folder
 	foreach( $file_gallery_templates as $key => $file_gallery_template )
@@ -222,8 +218,9 @@ function file_gallery_css_front( $mobile = false )
 add_action('wp_print_styles', 'file_gallery_css_front');
 
 
+
 /**
- * prints scripts and styles for autoqueue linkclasses
+ * prints scripts and styles for auto enqueued linkclasses
  */
 function file_gallery_print_scripts( $styles = false )
 {
@@ -311,68 +308,95 @@ function file_gallery_shortcode( $attr )
 		shortcode_atts(
 			array(
 				/* default values: */
-				'order'      => 'ASC',
-				'orderby'    => '',
-				'id'         => $post->ID,
-				'columns'    => 3,
-				'size'       => 'thumbnail',
-				'link'		 => 'attachment',
-				// 'itemtag'    => 'dl',
-				// 'icontag'    => 'dt',
-				// 'captiontag' => 'dd',
-				'include'    => '',
-				'exclude'    => '',
+			//  'itemtag'    => 'dl',
+			//  'icontag'    => 'dt',
+			//  'captiontag' => 'dd',
+
+				'order'				=> 'ASC',
+				'orderby'			=> '',
+				'id'				=> $post->ID,
+				'columns'			=> 3,
+				'size'				=> 'thumbnail',
+				'link'				=> 'attachment',
+				'include'			=> '',
+				'exclude'			=> '',
 
 				/* added by file gallery: */
-				'template'	 => 'default',
-				'attachment_ids' => '',
-				'linkclass' => '',
-				'imageclass' => '',
-				'tags' => '',
-				'tags_from' => 'current',
-				'output_type' => 'html',
-				'output_params' => true // needed when outputting html
-				// 'limit' => '',       // not implemented yet
-				// 'mime_type' => '',   // not implemented yet
+				'template'			=> 'default',
+				'linkclass'			=> '',
+				'imageclass'		=> '',
+				'rel'				=> 1,
+				'tags'				=> '',
+				'tags_from'			=> 'current',
+				'output_type'		=> 'html',
+				'output_params'		=> 1,	// needed when outputting html
+				'attachment_ids'	=> '',
+				'mimetype'			=> '',
+				'limit' 			=> -1
 			)
 	, $attr));
-	
+
+	if( 'false' == $rel || '0' == $rel )
+		$rel = false;
+	else
+		$rel = true;
+
+	if( 'false' == $output_params || '0' == $output_params )
+		$output_params = false;
+	else
+		$output_params = true;
+
 	if( "" != $include && "" == $attachment_ids )
 		$attachment_ids = $include;
 	
 	$linkto = $link;
 	
+	$limit = intval($limit);
+	
+	$sql_mimetype = "";
+	
+	if(  '' != $mimetype )
+	{
+		$mimetype     = file_gallery_get_mime_type($mimetype);
+		$sql_mimetype = wp_post_mime_type_where($mimetype);
+	}
+
 	// start with tags because they negate everything else
 	if( "" != $tags )
 	{
 		$tags = str_replace(",", "','", $tags);
 		
-		$fg_my_query = 
-			   sprintf("SELECT * FROM $wpdb->posts 
+		$query = "SELECT * FROM $wpdb->posts 
 						LEFT JOIN $wpdb->term_relationships ON($wpdb->posts.ID = $wpdb->term_relationships.object_id)
 						LEFT JOIN $wpdb->term_taxonomy ON($wpdb->term_relationships.term_taxonomy_id = $wpdb->term_taxonomy.term_taxonomy_id)
 						LEFT JOIN $wpdb->terms ON($wpdb->term_taxonomy.term_id = $wpdb->terms.term_id)
 						WHERE $wpdb->posts.post_type = 'attachment' 
+						" . $sql_mimetype . "
 						AND $wpdb->posts.post_status != 'trash' 
-						AND $wpdb->term_taxonomy.taxonomy = '" . FILE_GALLERY_MEDIA_TAG_NAME . "'
+						AND $wpdb->term_taxonomy.taxonomy = '" . FILE_GALLERY_MEDIA_TAG_NAME . "'";
+		
+		$query .= sprintf("
 						AND ($wpdb->terms.name IN ('%s') OR $wpdb->terms.slug IN ('%s'))",
-						$tags, $tags);
+		$tags, $tags);
 		
 		if( "current" == $tags_from )
-			$fg_my_query .= sprintf(" AND $wpdb->posts.post_parent = '%d' ", $id);
+			$query .= sprintf(" AND $wpdb->posts.post_parent = '%d' ", $id);
 		
 		if( "" != $orderby )
 		{
 			if( "rand" == $orderby )
 			{
 				$orderby = "RAND()";
-				$order = "";
+				$order   = "";
 			}
 			
-			$fg_my_query .= sprintf(" ORDER BY %s %s", $orderby, $order); // beats array shuffle only if LIMIT isn't set
+			$query .= sprintf(" ORDER BY %s %s", $orderby, $order); // beats array shuffle only if LIMIT isn't set
 		}
 		
-		$attachments = $wpdb->get_results( $fg_my_query );
+		if( 0 < $limit )
+			$query .= " LIMIT " . $limit;
+		
+		$attachments = $wpdb->get_results( $query );
 	}
 	elseif( "" != $attachment_ids )
 	{
@@ -398,12 +422,17 @@ function file_gallery_shortcode( $attr )
 		$query = sprintf("SELECT * FROM $wpdb->posts 
 						  WHERE $wpdb->posts.ID IN (%s) 
 						  	AND $wpdb->posts.post_type = 'attachment' 
-							AND $wpdb->posts.post_status != 'trash' 
+							AND $wpdb->posts.post_status != 'trash' ", 
+		$attachment_ids);
+		
+		$query .= $sql_mimetype;
+		
+		$query .= sprintf("
 						  ORDER BY %s %s 
 						  LIMIT %d", 
-					$attachment_ids, $orderby, $order, $sql_limit);
+		$orderby, $order, $sql_limit);
 		
-		$attachments = $wpdb->get_results($query);
+		$attachments = $wpdb->get_results( $query );
 	}
 	else
 	{
@@ -411,18 +440,19 @@ function file_gallery_shortcode( $attr )
 			$orderby = "menu_order ID";
 		
 		$attachment_args = array(
-			'post_parent' => $id,
-			'post_status' => 'inherit', 
-			'post_type' => 'attachment', 
-			'post_mime_type' => 'image', 
-			'order' => $order, 
-			'orderby' => $orderby
+			'post_parent'		=> $id,
+			'post_status'		=> 'inherit', 
+			'post_type'			=> 'attachment', 
+			'order'				=> $order, 
+			'orderby'			=> $orderby,
+			'numberposts'		=> $limit,
+			'post_mime_type'	=> $mimetype
 		);
 
-		if ( !empty($exclude) )
+		if ( ! empty($exclude) )
 			$attachment_args['exclude'] = preg_replace( '/[^0-9,]+/', '', $exclude );
 
-		$attachments = get_children( $attachment_args );
+		$attachments = get_posts( $attachment_args );
 	}
 
 	if( empty($attachments) )
@@ -433,7 +463,7 @@ function file_gallery_shortcode( $attr )
 	{
 		$output = "\n";
 
-		foreach ( $attachments as $attachment )
+		foreach( $attachments as $attachment )
 		{
 			$output .= wp_get_attachment_link($attachment->ID, $size, true) . "\n";
 		}
@@ -460,30 +490,23 @@ function file_gallery_shortcode( $attr )
 	if( "object" == $output_type || "array" == $output_type )
 		$gallery_items = array();
 	
-	$aqlc = array();
+	$autoqueueclasses = array();
 	
 	if( defined("FILE_GALLERY_LIGHTBOX_CLASSES") )
-		$aqlc = maybe_unserialize(FILE_GALLERY_LIGHTBOX_CLASSES);
+		$autoqueueclasses = maybe_unserialize(FILE_GALLERY_LIGHTBOX_CLASSES);
 	
 	// create output
 	foreach($attachments as $attachment)
 	{
-		/*
-		//filter out duplicates?
-		if( !in_array($attachment->ID, $unique_ids) )
-			$unique_ids[] = $attachment->ID;
-		else
-			continue;
-		*/
-		
-		$param = array('image_class' => " " . $imageclass,
-					   'link_class' => " " . $linkclass,
-					   'rel' => "",
-					   'title'  => "",
-					   'cation'  => "",
-					   'description'  => "",
-					   'thumb_alt' => ""
-					   );
+		$param = array(
+			'image_class' => " " . $imageclass,
+			'link_class'  => " " . $linkclass,
+			'rel'         => $rel,
+			'title'       => "",
+			'cation'      => "",
+			'description' => "",
+			'thumb_alt'   => ""
+		);
 
 		$attachment_file = get_attached_file($attachment->ID);
 		$attachment_is_image = file_gallery_file_is_displayable_image($attachment_file);
@@ -492,15 +515,27 @@ function file_gallery_shortcode( $attr )
 		
 		if( $output_params )
 		{
-			$plcai = array_intersect($aqlc, explode(" ", trim($linkclass)));
+			$plcai = array_intersect($autoqueueclasses, explode(" ", trim($linkclass)));
 			
-			if( !empty($plcai) && "file" == $linkto )
+			if( ! empty($plcai) && "file" == $linkto )
 			{
 				if( $attachment_is_image )
 				{
-					$param['rel']         = apply_filters("file_gallery_lightbox_linkrel", $plcai[0] . "[" .  $wp->file_gallery_gallery_id . "]", $wp->file_gallery_gallery_id);
-					$param['link_class']  = apply_filters("file_gallery_lightbox_linkclass", $param['link_class'], $wp->file_gallery_gallery_id);
-					$param['image_class'] = apply_filters("file_gallery_lightbox_imageclass", $param['image_class'], $param['link_class'], $wp->file_gallery_gallery_id);
+					if( false !== $param['rel'] )
+						$param['rel'] = $plcai[0] . "[" .  $wp->file_gallery_gallery_id . "]";
+					
+					$filter_args = array(
+						'gallery_id' => $wp->file_gallery_gallery_id, 
+						'linkrel'    => $param['rel'],
+						'linkclass'  => $param['link_class'],
+						'imageclass' => $param['image_class']
+					);
+					
+					if( false !== $param['rel'] )
+						$param['rel']     = apply_filters("file_gallery_lightbox_linkrel",    $param['rel'],         'linkrel',    $filter_args);
+					
+					$param['link_class']  = apply_filters("file_gallery_lightbox_linkclass",  $param['link_class'],  'linkclass',  $filter_args);
+					$param['image_class'] = apply_filters("file_gallery_lightbox_imageclass", $param['image_class'], 'imageclass', $filter_args);
 				}
 				else
 				{
@@ -535,12 +570,13 @@ function file_gallery_shortcode( $attr )
 			{
 				$thumb_src             = wp_get_attachment_image_src($attachment->ID, $size);
 				$param['thumb_link']   = $thumb_src[0];
-				$param['thumb_width']  = 0 == $thumb_src[1] ? file_gallery_get_image_size($param['thumb_link']) : $thumb_src[1];
+				$param['thumb_width']  = 0 == $thumb_src[1] ? file_gallery_get_image_size($param['thumb_link'])       : $thumb_src[1];
 				$param['thumb_height'] = 0 == $thumb_src[2] ? file_gallery_get_image_size($param['thumb_link'], true) : $thumb_src[2];
 			}
 			else
 			{
 				$param['thumb_link']   = get_bloginfo('wpurl') . "/" . WPINC . "/images/crystal/" . file_gallery_get_file_type($attachment->post_mime_type) . ".png";
+				$param['thumb_link']   = apply_filters('file_gallery_non_image_thumb_link', $param['thumb_link'], $attachment->post_mime_type, $attachment->ID);
 				$param['thumb_width']  = "46";
 				$param['thumb_height'] = "60";
 			}

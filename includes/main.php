@@ -25,9 +25,9 @@ function file_gallery_list_attachments(&$count_attachments, $post_id, $attachmen
 							array('post_parent' => $post_id, 
 								  'post_type' => 'attachment', 
 								  'order' => 'ASC', 
-								  'orderby' => 'menu_order'
-								  //'post_status' => 'inherit' // is this really needed?
-								  //'post_mime_type' => 'image', // gotta add "images only" option, until then this is out
+								  'orderby' => 'menu_order',
+								  'post_status' => 'inherit'
+							 // , 'post_mime_type' => 'image' // gotta add "images only" option, until then this is out
 		));
 	}
 
@@ -98,7 +98,7 @@ function file_gallery_list_attachments(&$count_attachments, $post_id, $attachmen
 		
 			if (current_user_can('edit_post', $attachment->ID)) :
 				
-				if( "" == $non_image ) :
+				if( "" == $non_image && function_exists('current_theme_supports') && current_theme_supports('post-thumbnails') ) :
 				
 					$attached_files .= '<a href="#" class="post_thumb_status" rel="' . $attachment->ID . '">
 							<img src="' . FILE_GALLERY_URL . '/images/famfamfam_silk/bell_' . $post_thumb_link . '.png" alt="' . __(ucfirst($post_thumb_link) . " as post thumb", "file-gallery") . '" title="' . __(ucfirst($post_thumb_link) . " as featured image", "file-gallery") . '" />

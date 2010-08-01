@@ -75,6 +75,9 @@ function file_gallery_options_init()
 	// imageclass
 	add_settings_field("file_gallery_default_imageclass", __("image class", 'file-gallery'), create_function("", 'return file_gallery_options_fields( array("name" => "file_gallery_default_imageclass") );'), 'media', 'file_gallery_options');
 	
+	// mimetype
+	add_settings_field("file_gallery_default_mimetype", __("mime type", 'file-gallery'), create_function("", 'return file_gallery_options_fields( array("name" => "file_gallery_default_mimetype") );'), 'media', 'file_gallery_options');
+	
 	// orderby
 	add_settings_field("file_gallery_default_orderby", __("order by", 'file-gallery'), create_function("", 'return file_gallery_options_fields( array("name" => "file_gallery_default_orderby") );'), 'media', 'file_gallery_options');
 	
@@ -426,6 +429,9 @@ function file_gallery_options_fields( $args )
 				break;
 			case "file_gallery_default_imageclass" :
 					$output = '<input type="text" name="file_gallery[default_imageclass]" id="file_gallery_default_imageclass" value="' . $file_gallery_options["default_imageclass"] . '" size="63" />';
+				break;
+			case "file_gallery_default_mimetype" :
+					$output = '<input type="text" name="file_gallery[default_mimetype]" id="file_gallery_default_mimetype" value="' . $file_gallery_options["default_mimetype"] . '" size="63" />';
 				break;
 			case "file_gallery_display_insert_fieldsets" :
 					$output = '<input type="checkbox" name="file_gallery[display_insert_fieldsets]" id="file_gallery_display_insert_fieldsets" value="1" ' . checked('1', $file_gallery_options["display_insert_fieldsets"], false) . ' />';

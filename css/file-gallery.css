@@ -512,6 +512,8 @@ textarea, input, select
 }
 
 #file_gallery_imageclass,
+#file_gallery_mimetype,
+#file_gallery_limit,
 #file_gallery_linkclass,
 #file_gallery_single_imageclass,
 #file_gallery_single_linkclass

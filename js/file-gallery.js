@@ -1,4 +1,5 @@
-var file_gallery_current_gallery_content = "";
+var file_gallery_gallery_img_clicked = false,
+	file_gallery_tmp = 1;
 
 
 
@@ -11,19 +12,6 @@ function file_gallery()
 
 
 
-/**
- * TinyMCE execCommand callback
- */
-function file_gallery_tiny_exec_callback(editor_id, elm, command, user_interface, value)
-{
-	if( "mceRepaint" == command )
-		setTimeout("file_gallery.tinymce()", 100);
-
-	return false;
-}
-
-
-
 jQuery(document).ready(function()
 {	
 	/**
@@ -32,18 +20,72 @@ jQuery(document).ready(function()
 	jQuery.extend( file_gallery,
 	{
 		/**
-		 * binds a click on image used as visual WordPress gallery representation 
-		 * in TinyMCE to the file_gallery.tinymce_gallery() function
+		 * takes care of communication with tinyMCE
 		 */
 		tinymce : function()
 		{
-			var iframe = jQuery('#content_ifr').contents().find("body");
-
-			if( iframe )
+			// alert( tinymce.majorVersion + "." + tinymce.minorVersion );
+			
+			// get editor instance
+			var ed = tinymce.EditorManager.get('content');
+			
+			if( ! ed )
 			{
-				jQuery("img.wpGallery", iframe).bind("click.file_gallery", function(){ file_gallery.tinymce_gallery( jQuery(this) ); });
+				setTimeout(function(){ file_gallery.tinymce(); }, 200);
+				return false;
+			}
+			
+			// trigger file_gallery.tinymce_gallery() if clicked-on image
+			// has a wpGallery class
+			ed.onClick.add( function(tinymce_object, mouseEvent)
+			{
+				if( mouseEvent.target.className.match(/wpGallery/) )
+				{
+					file_gallery.tinymce_gallery( mouseEvent.target.title );
+					file_gallery_gallery_img_clicked = true;
+				}
+				else
+				{
+					// uncheck all items and serialize()
+					jQuery("#file_gallery_uncheck_all").trigger("click");
+					file_gallery_gallery_img_clicked = false;
+				}
+			});
+
+			// clear options on delete
+			ed.onEvent.add(function(ed, e)
+			{
+				if( 46 === e.keyCode && 'keyup' == e.type && file_gallery_gallery_img_clicked )
+				{					
+					jQuery("#file_gallery_uncheck_all").trigger("click");
+					file_gallery_gallery_img_clicked = false;
+				}
+			});
+			
+		},
+		
+		
+		
+		/**
+		 * updates the contents of [gallery] shortcode
+		 */
+		tinymce_change_gallery_content : function( serial )
+		{
+			// skips setContent for webkit browsers if tinyMCE version is below 3.3.6
+			if( (! jQuery.browser.webkit && ! jQuery.browser.safari) || (3 <= parseFloat(tinymce.majorVersion) && 3.6 <= parseFloat(tinymce.minorVersion)) )
+			{
+				var ed = tinymce.EditorManager.get('content'),
+					new_serial = serial.replace(/\[gallery([^\]]*)\]/g, function(a,b)
+					{
+						return "<img src='" + tinymce.baseURL + "/plugins/wpgallery/img/t.gif' class='wpGallery mceItem' title='gallery" + tinymce.DOM.encode(b) + "' id='file_gallery_tmp_" + file_gallery_tmp + "' />";
+					});
 				
-				//tinyMCE.activeEditor.onClick.add( function(tinymce_object, mouseEvent){ console.log(print_r(mouseEvent)) } );
+				ed.selection.setContent(new_serial);
+				
+				ed.selection.select(ed.getDoc().getElementById('file_gallery_tmp_' + file_gallery_tmp));
+				tinyMCE.execCommand('mceFocus', false, 'content');
+				
+				file_gallery_tmp++;
 			}
 		},
 		
@@ -53,38 +95,108 @@ jQuery(document).ready(function()
 		 * sets up the file gallery options when clicked on a gallery already
 		 * inserted into visual editor
 		 */
-		tinymce_gallery : function( galleryImg )
+		tinymce_gallery : function( title )
 		{
-			var gallery = tinyMCE.activeEditor.selection.getContent(),
-				opt = gallery.replace("gallery ", "").replace(/"/g, "'"),
+			var opt = title.replace("gallery ", "").replace(/"/g, "'"),
 				attachment_ids = opt.match(/attachment_ids='([^']+)'/),
-				attachment_includes = opt.match(/include='([^']+)'/);
-			
-			file_gallery_current_gallery_content = gallery;
+				attachment_includes = opt.match(/include='([^']+)'/),
+				size = opt.match(/size='([^']+)'/),
+				linkto = opt.match(/link='([^']+)'/),
+				thelink = linkto ? linkto[1] : 'attachment',
+				linkrel = opt.match(/rel='([^']+)'/),
+				external_url = '',
+				template = opt.match(/template='([^']+)'/),
+				order = opt.match(/order='([^']+)'/),
+				orderby = opt.match(/orderby='([^']+)'/),
+				linkclass = opt.match(/linkclass='([^']+)'/),
+				imageclass = opt.match(/imageclass='([^']+)'/),
+				mimetype = opt.match(/mimetype='([^']+)'/),
+				limit = opt.match(/limit='([^']+)'/),
+				columns = opt.match(/columns='([^']+)'/),
+				tags = opt.match(/tags='([^']+)'/),
+				tags_from = opt.match(/tags_from='([^']+)'/);
 
-			if( attachment_ids )
+			if( linkto && 'none' != thelink && 'file' != thelink && 'parent_post' != thelink )
+			{
+				external_url = decodeURIComponent(thelink);
+				thelink = 'external_url';
+			}
+			
+			jQuery("#file_gallery_size").val(size ? size[1] : 'thumbnail' );
+			jQuery("#file_gallery_linkto").val( thelink );
+			jQuery("#file_gallery_linkrel").val(linkrel ? linkrel[1] : 'true' );
+			jQuery("#file_gallery_external_url").val( external_url );
+			jQuery("#file_gallery_template").val(template ? template[1] : 'default' );
+			jQuery("#file_gallery_order").val(order ? order[1] : 'ASC' );
+			jQuery("#file_gallery_orderby").val(orderby ? orderby[1] : 'file gallery' );
+			jQuery("#file_gallery_linkclass").val(linkclass ? linkclass[1] : '' );
+			jQuery("#file_gallery_imageclass").val(imageclass ? imageclass[1] : '' );
+			jQuery("#file_gallery_mimetype").val(mimetype ? mimetype[1] : '' );
+			jQuery("#file_gallery_limit").val(limit ? limit[1] : '' );
+			jQuery("#file_gallery_columns").val(columns ? columns[1] : '3' );
+						
+			if( tags )
+			{
+				jQuery("#fg_gallery_tags").val(tags[1]);
+				jQuery("#files_or_tags").val("tags");
+				file_gallery.files_or_tags( false );
+				
+				if( tags_from )
+					jQuery("#fg_gallery_tags_from").attr("checked", false);
+				else
+					jQuery("#fg_gallery_tags_from").attr("checked", true);
+				
+				jQuery("#file_gallery_toggler").show();
+			}
+			else
+			{
+				jQuery("#files_or_tags").val("files");
+				file_gallery.files_or_tags( false );
+			}
+
+			if( null !== attachment_ids )
 				attachment_ids = attachment_ids[1].split(",");
-			else if( attachment_includes )
+			else if( null !== attachment_includes )
 				attachment_ids = attachment_includes[1].split(",");
+			else
+				attachment_ids = 'all';
 			
 			if( 0 < jQuery('#file_gallery_list li').length )
 			{
-				jQuery("#file_gallery_uncheck_all").trigger("click");
+				jQuery("#file_gallery_uncheck_all").trigger("click_tinymce_gallery");
 				
 				jQuery('#fg_container .sortableitem .checker').map(function()
 				{
+					if( 'all' === attachment_ids )
+						return this.checked = true;
+
 					id = jQuery(this).attr("id").replace("att-chk-", "");
 			
 					if( -1 != attachment_ids.indexOf(id) )
 						return this.checked = true;
 				});
 				
-				file_gallery.serialize();
+				file_gallery.serialize('tinymce_gallery');
 			}
-
-			//tinyMCE.activeEditor.selection.setContent(file_gallery_current_gallery_content.replace(/p>/, "div>"));
+		},
+		
+		
+		
+		is_all_checked : function()
+		{
+			var all_checked = true;
 			
-			//alert(tinyMCE.activeEditor.selection.getContent());
+			jQuery('#fg_container .sortableitem .checker').map(function()
+			{
+				if( ! this.checked )
+				{
+					all_checked = false;
+					
+					return;
+				}
+			});
+			
+			return all_checked;
 		},
 		
 		
@@ -150,6 +262,9 @@ jQuery(document).ready(function()
 		{
 			var container = jQuery("#fg_container"),
 				files_or_tags = jQuery("#files_or_tags");
+				
+			if( 0 === container.length || 0 === files_or_tags.length  )
+				return;
 			
 			num_attachments = jQuery("#fg_container #file_gallery_list li").length;
 			
@@ -172,8 +287,10 @@ jQuery(document).ready(function()
 				jQuery("#file_gallery_upload_files").hide();
 			}
 			
+			/* not taking non-attached files into consideration...
 			if( (0 === num_attachments || 0 == jQuery("#file_gallery_list .post_thumb").length) && 0 < jQuery("#set-post-thumbnail").length && 0 < jQuery("#remove-post-thumbnail").length )
 				WPRemoveThumbnail(post_thumb_nonce);
+			*/
 			
 			// tags from current post only checkbox
 			if( "false" == tags_from )
@@ -213,11 +330,12 @@ jQuery(document).ready(function()
 		/**
 		 * processes attachments data, builds the [gallery] shortcode
 		 */
-		serialize : function()
+		serialize : function( internal_event )
 		{
 			var serial = "",
 				size = "",
 				linkto = "",
+				linkrel = "",
 				linkto_val = jQuery("#file_gallery_linkto").val(),
 				external_url = jQuery("#file_gallery_external_url").val(),
 				template = "",
@@ -225,6 +343,8 @@ jQuery(document).ready(function()
 				orderby = "",
 				linkclass = "",
 				imageclass = "",
+				mimetype = "",
+				limit = "",
 				columns = "",
 				tags = "",
 				tags_from = "",
@@ -237,6 +357,13 @@ jQuery(document).ready(function()
 				file_gallery_order = "",
 				file_gallery_orderby = "",
 				fg_gallery_tags = jQuery("#fg_gallery_tags");
+			
+			
+			if( 'undefined' == typeof(internal_event) )
+				internal_event = 'normal';
+			
+			if( 'false' == jQuery("#file_gallery_linkrel").val() )
+				linkrel = ' rel=false';
 			
 			if( "external_url" == linkto_val )
 				linkto_val = encodeURIComponent(external_url);
@@ -332,7 +459,12 @@ jQuery(document).ready(function()
 				jQuery("#file_gallery_linkclass_label").hide();
 			else
 				jQuery("#file_gallery_linkclass_label").show();
-			
+				
+			if( "file" == jQuery("#file_gallery_linkto").val() || "external_url" == jQuery("#file_gallery_linkto").val())
+				jQuery("#file_gallery_linkrel_label").show();
+			else
+				jQuery("#file_gallery_linkrel_label").hide();
+
 			if( "none" == jQuery("#file_gallery_single_linkto").val() )
 				jQuery("#file_gallery_single_linkclass_label").hide();
 			else
@@ -345,7 +477,7 @@ jQuery(document).ready(function()
 		
 			if( "" != tags )
 				serial = '[gallery tags="' + tags + '"' + tags_from;
-			else if( "" != serial )
+			else if( "" != serial && false === file_gallery.is_all_checked() )
 				serial = '[gallery include="' + serial + '"';
 			else
 				serial = '[gallery';
@@ -359,18 +491,31 @@ jQuery(document).ready(function()
 			if( "default" != jQuery("#file_gallery_template").val() )
 				template = ' template="' + jQuery("#file_gallery_template").val() + '"';
 			
-			if( "" != jQuery("#file_gallery_linkclass").val() )
+			if( "" != jQuery("#file_gallery_linkclass").val() && "none" != jQuery("#file_gallery_linkto").val() )
 				linkclass = ' linkclass="' + jQuery("#file_gallery_linkclass").val() + '"';
 			
 			if( "" != jQuery("#file_gallery_imageclass").val() )
 				imageclass = ' imageclass="' + jQuery("#file_gallery_imageclass").val() + '"';
 			
+			if( "" != jQuery("#file_gallery_mimetype").val() )
+				mimetype = ' mimetype="' + jQuery("#file_gallery_mimetype").val() + '"';
+				
+			if( "" != jQuery("#file_gallery_limit").val() )
+				limit = ' limit="' + jQuery("#file_gallery_limit").val() + '"';
+			
 			if( "" != jQuery("#file_gallery_columns").val() && "3" != jQuery("#file_gallery_columns").val() )
 				columns = ' columns="' + jQuery("#file_gallery_columns").val() + '"';
 			
-			serial += size + linkto + linkclass + imageclass + order + orderby + template + columns + "]\n";
+			serial += size + linkto + linkclass + imageclass + mimetype + limit + order + orderby + template + columns + linkrel + "]\n";
 			
 			jQuery("#data_collector").val(serial);
+			
+			if( file_gallery_gallery_img_clicked && '' != tinymce.EditorManager.get('content').selection.getContent() && 'normal' == internal_event )
+			{
+				file_gallery.tinymce_change_gallery_content( serial );
+			
+				jQuery('#file_gallery_response').html("Gallery contents updated").show().fadeOut(1000);
+			}
 		},
 		
 		
@@ -650,6 +795,7 @@ jQuery(document).ready(function()
 				jQuery("#file_gallery_switch_to_tags").attr("value", fgL10n["switch_to_tags"]);
 				jQuery("#file_gallery_attachment_list").fadeIn();
 				jQuery("#fg_gallery_tags_container, #file_gallery_tag_list").fadeOut();
+				jQuery("#fg_gallery_tags").val('');
 				files_or_tags.val("tags");
 			}
 			else if( "tags" == jQuery("#files_or_tags").val() )
@@ -659,6 +805,9 @@ jQuery(document).ready(function()
 				jQuery("#fg_gallery_tags_container, #file_gallery_tag_list").fadeIn();
 				files_or_tags.val("files");
 			}
+			
+			if( 'undefined' == typeof(do_switch) || false === do_switch )
+				file_gallery.serialize('files_or_tags');
 		},
 		
 		
@@ -918,7 +1067,6 @@ jQuery(document).ready(function()
 				function(response)
 				{
 					send_to_editor(response);
-					tiny_exec_callback();
 				},
 				"html"
 			);
@@ -1195,8 +1343,27 @@ jQuery(document).ready(function()
 
 	/* === BINDINGS === */
 	
+	jQuery("#file_gallery_linkclass, #file_gallery_imageclass, #file_gallery_mimetype, #file_gallery_limit, #file_gallery_external_url, #file_gallery_single_linkclass, #file_gallery_single_imageclass, #file_gallery_single_external_url, #fg_gallery_tags").live('keypress keyup', function(e)
+	{
+		if ( 13 === e.which || 13 === e.keyCode )
+		{
+			file_gallery.serialize();
+			return false;
+		}
+		
+		return;
+	});
 	
-	
+	jQuery("#fgae_post_alt, #fgae_post_title, #fgae_post_excerpt, #fgae_tax_input, #fgae_menu_order").live('keypress keyup', function(e)
+	{
+		if ( 13 === e.which || 13 === e.keyCode )
+			jQuery("#file_gallery_edit_attachment_save").trigger("click");
+		else if( 27 === e.which || 27 === e.keyCode )
+			jQuery("#file_gallery_edit_attachment_cancel").trigger("click");
+
+		return false;
+	});
+
 	jQuery("a.post_thumb_status").live("click", function()
 	{
 		var what = false;
@@ -1446,7 +1613,7 @@ jQuery(document).ready(function()
 	});
 		
 	// bind dropdown select boxes change to serialize attachments list
-	jQuery("#file_gallery_size, #file_gallery_linkto, #file_gallery_orderby, #file_gallery_order, #file_gallery_template, #file_gallery_single_linkto, #fg_container .sortableitem .checker, #file_gallery_columns").live("change", function()
+	jQuery("#file_gallery_size, #file_gallery_linkto, #file_gallery_orderby, #file_gallery_order, #file_gallery_template, #file_gallery_single_linkto, #fg_container .sortableitem .checker, #file_gallery_columns, #file_gallery_linkrel").live("change", function()
 	{
 		file_gallery.serialize();
 	});
@@ -1492,7 +1659,7 @@ jQuery(document).ready(function()
 	});
 		
 	// uncheck all attachments button click
-	jQuery("#file_gallery_uncheck_all").live("click", function()
+	jQuery("#file_gallery_uncheck_all").live("click", function(e)
 	{
 		if( "" != jQuery("#data_collector_checked").val() )
 		{
@@ -1500,8 +1667,21 @@ jQuery(document).ready(function()
 			{
 				return this.checked = false;
 			});
-			
-			file_gallery.serialize();
+		}
+		
+		file_gallery.serialize();
+	});
+	
+	
+	
+	jQuery("#file_gallery_uncheck_all").live("click_tinymce_gallery", function(e)
+	{
+		if( "" != jQuery("#data_collector_checked").val() )
+		{
+			jQuery('#fg_container .sortableitem .checker').map(function()
+			{
+				return this.checked = false;
+			});
 		}
 	});
 
@@ -1541,82 +1721,3 @@ if( ! Array.indexOf )
 		return -1;
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/**
- * Concatenates the values of a variable into an easily readable string
- * by Matt Hackett [scriptnode.com]
- * @param {Object} x The variable to debug
- * @param {Number} max The maximum number of recursions allowed (keep low, around 5 for HTML elements to prevent errors) [default: 10]
- * @param {String} sep The separator to use between [default: a single space ' ']
- * @param {Number} l The current level deep (amount of recursion). Do not use this parameter: it's for the function's own use
- */
-function print_r(x, max, sep, l) {
-
-	l = l || 0;
-	max = max || 10;
-	sep = sep || ' ';
-
-	if (l > max) {
-		return "[WARNING: Too much recursion]\n";
-	}
-
-	var
-		i,
-		r = '',
-		t = typeof x,
-		tab = '';
-
-	if (x === null) {
-		r += "(null)\n";
-	} else if (t == 'object') {
-
-		l++;
-
-		for (i = 0; i < l; i++) {
-			tab += sep;
-		}
-
-		if (x && x.length) {
-			t = 'array';
-		}
-
-		r += '(' + t + ") :\n";
-
-		for (i in x) {
-			try {
-				r += tab + '[' + i + '] : ' + print_r(x[i], max, sep, (l + 1));
-			} catch(e) {
-				return "[ERROR: " + e + "]\n";
-			}
-		}
-
-	} else {
-
-		if (t == 'string') {
-			if (x == '') {
-				x = '(empty)';
-			}
-		}
-
-		r += '(' + t + ') ' + x + "\n";
-
-	}
-
-	return r;
-
-};
-var_dump = print_r;

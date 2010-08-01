@@ -2,7 +2,7 @@
 /*
 Plugin Name: File Gallery
 Plugin URI: http://skyphe.org/code/wordpress/file-gallery/
-Version: 1.5.7
+Version: 1.5.8
 Description: "File Gallery" extends WordPress' media (attachments) capabilities by adding a new gallery shortcode handler with templating support, a new interface for attachment handling when editing posts, and much more.
 Author: Bruno "Aesqe" Babic
 Author URI: http://skyphe.org
@@ -125,6 +125,7 @@ function file_gallery_activate()
 		'default_linkclass' 		  => '', 
 		'default_imageclass' 		  => '', 
 		'default_columns' 			  => 3, 
+		'default_mimetype'			  => '',
 		
 		'single_default_image_size'   => 'thumbnail', 
 		'single_default_linkto'		  => 'attachment', 
@@ -182,6 +183,7 @@ function file_gallery_deactivate()
 register_deactivation_hook( __FILE__, 'file_gallery_deactivate' );
 
 
+
 /**
  * Adds a link to plugin's settings page (shows up next to the 
  * deactivation link on the plugins management page)
@@ -202,15 +204,17 @@ add_filter("plugin_action_links_" . plugin_basename(__FILE__), 'file_gallery_add
 function file_gallery_add_taxonomies()
 {
 	$args = array(
+		"public"                => true,
+		"query_var"             => str_replace("_", "-", FILE_GALLERY_MEDIA_TAG_NAME),
 		"update_count_callback" => "file_gallery_update_media_tag_term_count",
-		"label" => __("Media tags", "file-gallery"),
-		"singular_label" => __("Media tag", "file-gallery"),
-		"labels" => array(
-			"singular_label" => __("Media tag", "file-gallery")
+		"label"                 => __("Media tags", "file-gallery"),
+		"singular_label"        => __("Media tag", "file-gallery"),
+		"rewrite"               => array(
+									"slug" => str_replace("_", "-", FILE_GALLERY_MEDIA_TAG_NAME)
 		),
-		"public" => true,
-		"rewrite" => array("slug" => str_replace("_", "-", FILE_GALLERY_MEDIA_TAG_NAME)),
-		"query_var" => str_replace("_", "-", FILE_GALLERY_MEDIA_TAG_NAME)
+		"labels"                => array(
+									"singular_label" => __("Media tag", "file-gallery")
+		)
 	);
 	
 	register_taxonomy( FILE_GALLERY_MEDIA_TAG_NAME, "attachment", $args );
@@ -230,12 +234,14 @@ function file_gallery_update_media_tag_term_count( $terms )
 
 	foreach ( (array) $terms as $term )
 	{
-		$count = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM $wpdb->term_relationships, $wpdb->posts 
-												  WHERE $wpdb->posts.ID = $wpdb->term_relationships.object_id 
-												  AND post_type = 'attachment' 
-												  AND term_taxonomy_id = %d",
-												  $term )
-								);
+		$count = $wpdb->get_var(
+					$wpdb->prepare(
+						"SELECT COUNT(*) FROM $wpdb->term_relationships, $wpdb->posts 
+						 WHERE $wpdb->posts.ID = $wpdb->term_relationships.object_id 
+						 AND post_type = 'attachment' 
+						 AND term_taxonomy_id = %d",
+					$term )
+		);
 		
 		do_action( 'edit_term_taxonomy', $term );
 		
@@ -249,14 +255,13 @@ function file_gallery_update_media_tag_term_count( $terms )
 }
 
 
+
 /**
  * Adds media tags submenu
  */
 function file_gallery_media_submenu()
 {
-	$title = __("Media tags", "file-gallery");
-	
-    add_submenu_page('upload.php', $title, $title, 8, 'edit-tags.php?taxonomy=' . FILE_GALLERY_MEDIA_TAG_NAME);
+    add_submenu_page('upload.php', __("Media tags", "file-gallery"), __("Media tags", "file-gallery"), 8, 'edit-tags.php?taxonomy=' . FILE_GALLERY_MEDIA_TAG_NAME);
 }
 add_action('admin_menu', 'file_gallery_media_submenu');
 
@@ -413,23 +418,7 @@ function file_gallery_js_admin()
 	}
 	elseif( "media.php" == $pagenow)
 	{
-		// attachment custom fields
-		wp_enqueue_script( 'common' );
-		wp_enqueue_script( 'jquery-color' );
-		wp_enqueue_script( 'post' );
-		wp_enqueue_script( 'editor' );
-		wp_enqueue_script( 'quicktags' );
-		wp_enqueue_script( 'media-upload' );
-		wp_enqueue_script( 'wp-lists' );
-		wp_enqueue_script( 'schedule' );
-		wp_enqueue_script( 'autosave' );
-		wp_enqueue_script( 'jquery-ui-sortable' );
-		wp_enqueue_script( 'word-count' );
-		wp_enqueue_script( 'jquery-ui-draggable' );
-		wp_enqueue_script( 'jquery-ui-resizable' );
-		wp_enqueue_script( 'jquery-ui-dialog' );
-		//wp_enqueue_script( 'custom-fields', get_bloginfo('wpurl') . '/wp-admin/js/custom-fields.js' );
-		
+		//
 	}
 	elseif( "options-media.php" == $pagenow )
 	{
@@ -517,7 +506,7 @@ function file_gallery_content()
 					</div>
 				</form>
 			</div>
-			';
+		';
 }
 
 
@@ -528,14 +517,23 @@ function file_gallery_content()
 function file_gallery()
 {
 	$options = get_option("file_gallery");
-	$types   = get_post_types();
 	
-	foreach( $types as $type )
+	if( function_exists("get_post_types") )
 	{
-		if( ! in_array( $type, array("nav_menu_item", "revision", "attachment") ) && 
-			isset($options["show_on_post_type_" . $type]) && true == $options["show_on_post_type_" . $type]
-		)
-			add_meta_box( 'file_gallery', __( 'File gallery', 'file-gallery' ), 'file_gallery_content', $type, 'normal' );
+		$types = get_post_types();
+		
+		foreach( $types as $type )
+		{
+			if( ! in_array( $type, array("nav_menu_item", "revision", "attachment") ) && 
+				isset($options["show_on_post_type_" . $type]) && true == $options["show_on_post_type_" . $type]
+			)
+				add_meta_box( 'file_gallery', __( 'File gallery', 'file-gallery' ), 'file_gallery_content', $type );
+		}
+	}
+	else // pre 2.9
+	{
+		add_meta_box( 'file_gallery', __( 'File gallery', 'file-gallery' ), 'file_gallery_content', 'post' );
+		add_meta_box( 'file_gallery', __( 'File gallery', 'file-gallery' ), 'file_gallery_content', 'page' );
 	}
 }
 add_action('admin_menu', 'file_gallery');
@@ -665,17 +663,6 @@ add_filter( 'manage_media_columns', 'file_gallery_media_columns' );
 
 
 
-function file_gallery_tiny_mce( $initArray )
-{
-	$initArray["execcommand_callback"] = "file_gallery_tiny_exec_callback";
-	$initArray["onchange_callback"]    = "file_gallery_tiny_exec_callback";
-	
-	return $initArray;
-}
-//add_filter("tiny_mce_before_init", "file_gallery_tiny_mce");
-
-
-
 /**
  * Includes
  */
@@ -684,6 +671,7 @@ include_once("includes/attachment-custom-fields.php");
 include_once("includes/media-settings.php");
 include_once("includes/miscellaneous.php");
 include_once("includes/mime-types.php");
+include_once("includes/lightboxes-support.php");
 include_once("includes/templating.php");
 include_once("includes/main.php");
 include_once("includes/functions.php");

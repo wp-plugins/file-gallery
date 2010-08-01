@@ -26,7 +26,7 @@ function file_gallery_get_attachment_data()
 	$align        = $_POST['align'];
 	$rel          = false;
 	
-	if( "undefined" != $external_url && "" != $external_url )
+	if( "external_url" == $linkto )
 		$linkto = $external_url;
 	
 	if( "undefined" != $linkclass && "" != $linkclass )
@@ -188,6 +188,8 @@ function file_gallery_edit_attachment()
 	
 	$media_tags = implode(", ", $media_tags);
 	
+	do_action('file_gallery_edit_attachment', $attachment_id);
+	
 ?>
 	<div id="file_gallery_attachment_edit_image">
 		<?php if( "image" == $type ) : ?>
@@ -203,9 +205,9 @@ function file_gallery_edit_attachment()
 		</div>
 	</div>
 	
-	<script type="text/javascript"><!-- prevents a weird bug - <form> and </form> tags below get stripped if this script tag is not present here :| --></script>
+<?php do_action('file_gallery_edit_attachment_pre_form', $attachment_id); ?>
 	
-	<form id="attachment_data_edit_form" action="<?php echo FILE_GALLERY_URL . "/file-gallery.php"; ?>" method="post">
+	<div id="attachment_data_edit_form">
 
 		<input type="hidden" name="post_id" id="fgae_post_id" value="<?php echo $_POST['post_id']; ?>" />
 		<input type="hidden" name="attachment_id" id="fgae_attachment_id" value="<?php echo $_POST['attachment_id']; ?>" />
@@ -241,9 +243,10 @@ function file_gallery_edit_attachment()
 		
 		<input type="button" id="file_gallery_edit_attachment_cancel"value="<?php _e("cancel and return", "file-gallery"); ?>" class="button-secondary" />
 	
-	</form>
-	
+	</div>	
 <?php
+
+	do_action('file_gallery_edit_attachment_post_form', $attachment_id);
 
 	exit();
 }
@@ -404,6 +407,8 @@ function file_gallery_copy_all_attachments()
 	// if the post we're copying all the attachments to has no attachments...
 	if( 0 === count($wpdb->get_results( sprintf("SELECT `ID` FROM $wpdb->posts WHERE `post_type`='attachment' AND `post_parent`=%d", $to_id) ) ) )
 		$thumb_id = get_post_meta( $from_id, '_thumbnail_id', true ); // ...automatically set the original post's thumb to the new one
+	
+	do_action('file_gallery_copy_all_attachments', $from_id, $to_id);
 	
 	foreach( $attachments as $aid )
 	{
@@ -566,6 +571,8 @@ function file_gallery_delete_all_attachment_copies( $attachment_id )
 	
 	if( is_array($copies) && !empty($copies) )
 	{
+		do_action('file_gallery_delete_all_attachment_copies', $attachment_id, &$copies);
+		
 		foreach( $copies as $copy )
 		{
 			file_gallery_delete_attachment( $copy );
@@ -614,6 +621,8 @@ function file_gallery_promote_first_attachment_copy( $attachment_id )
 	if( is_array($copies) && !empty($copies) )
 	{
 		$promoted_id = $copies[0];
+		
+		do_action('file_gallery_promote_first_attachment_copy', $attachment_id, &$promoted_id);
 		
 		delete_post_meta($promoted_id, "_is_copy_of");
 		

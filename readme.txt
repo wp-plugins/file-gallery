@@ -25,21 +25,24 @@ more... Here's the full list of features:
 3.  simple, easy to use UI with drag and drop sorting shows attachment 
     thumbnails beneath text editor: everything attachments-related is on 
     the same screen you're editing your post on
-4.  settings page extends the default media settings page
-5.  attach copies of items from media library to current post (copies 
+4.  fully integrated with the visual editor (tinyMCE) - click on the 
+    [gallery] placeholder image and change any option in the File 
+	Gallery metabox - changes will be applied instantly
+5.  settings page extends the default media settings page
+6.  attach copies of items from media library to current post (copies 
     data only, not the file)
-6.  copy all attachments from another post
-7.  unattach (detach) items from current post
-8.  media tags = tag your attachments and then use those tags to choose 
+7.  copy all attachments from another post
+8.  unattach (detach) items from current post
+9.  media tags = tag your attachments and then use those tags to choose 
     which attachments you want to display in your gallery or to filter 
 	your media library items.
-9.  different background colors for items in media library depending 
+10.  different background colors for items in media library depending 
     on their status = completely unattached (white), attached to other 
     posts (red), or attached to current post (yellow)
-10. compatible with "WordPress Mobile Edition", "Media Tags" and 
+11. compatible with "WordPress Mobile Edition", "Media Tags" and 
     "WPML Multilingual CMS" plugins	
-11. basic caching of gallery output and frequent queries (transients)
-12. various smaller modifications described in help files (coming soon!) 
+12. basic caching of gallery output and frequent queries (transients)
+13. various smaller modifications described in help files (coming soon!) 
 
 == Screenshots ==
 
@@ -63,6 +66,42 @@ more... Here's the full list of features:
 3.	You're done - go edit or add a new post to see how it works :)
 
 == Changelog ==
+
+= 1.5.8 =
+* August 1st, 2010
+* implemented 'limit' option in UI
+* all the stuff below related to 1.5.8b1 and 1.5.8b2
+* new WP tinyMCE version probably in 3.1, will investigate...
+
+= 1.5.8b2 =
+* July 25th, 2010
+* added mime type support, more info in help file when 1.5.8 leaves the
+  testing phase. For now:
+  - you can either use the full mime type (like application/pdf) or the 
+    shorthand variants (pdf, word, doc, xls, excel, cvs, zip, rar, 7zip)
+  - you can extend the mime types array using the 
+    'file_gallery_mime_types' filter
+* added 'limit' in code, but I just remembered I didn't implement it in 
+  UI, so forget about that for now (will anybody use this, anyway?) :D
+* minor tweaks and bugfixes, added a few new actions and filters, 
+  enhanced the support for lightbox scripts... New help files are 
+  coming soon :)
+  
+= 1.5.8b1 =
+* July 20th, 2010
+* almost complete tinyMCE integration - click on [gallery] placeholder 
+  image and change any option in File Gallery metabox - changes will be 
+  automatically  applied :)
+  - it's not working in Webkit browsers (safari, chrome...) at the 
+    moment because of Webkit problems with 
+	tinyMCE.activeEditor.selection.setContent() in tinyMCE versions 
+	lower than 3.3.6. If you're an Webkit browser user, you can either 
+	upgrade your tinyMCE editor to a newer version, or wait for 
+	WordPress 3.0.1 (should be out soon)
+  - Internet Explorer loses focus and updating contents doesn't work.
+    I'll do my best to fix it as soon as I can.
+  - Opera and Firefox seem to be working just fine :)
+* couple minor bugfixes
 
 = 1.5.7 =
 * July 3rd, 2010
@@ -234,10 +273,6 @@ sooner (before 1.6):
 - cleanup script for media tag database taxonomy name(s)
 - content type filtering
 - audio and video preview on editing screens
-
-later:
-
-- better tinymce integration
 
 maybe:
 

@@ -6,7 +6,7 @@
 ?>
 <div id="file_gallery_response"><?php echo $output; ?></div>
 
-<form id="file_gallery_form" action="<?php echo FILE_GALLERY_URL . "/file-gallery.php"?>" method="post">
+<div id="file_gallery_form">
 
 	<input type="hidden" name="data_collector"           id="data_collector"           value="" style="width: 90%" />
 	<input type="hidden" name="data_collector_checked"   id="data_collector_checked"   value="<?php echo $checked_attachments; ?>" style="width: 90%" />
@@ -61,6 +61,14 @@
 				</select>
 			</p>
 			
+			<p id="file_gallery_linkrel_label">
+				<label for="file_gallery_linkrel"><?php _e("link 'rel' attribute", "file-gallery"); ?>:</label>
+				<select type="text" name="file_gallery_linkrel" id="file_gallery_linkrel">
+					<option value="true">true</option>
+					<option value="false">false</option>
+				</select>
+			</p>
+			
 			<p id="file_gallery_external_url_label">
 				<label for="file_gallery_external_url"><?php _e("external url", "file-gallery"); ?>:</label>
 				<input type="text" name="file_gallery_external_url" id="file_gallery_external_url" value="<?php echo $file_gallery_options["default_external_url"]; ?>" />
@@ -110,6 +118,16 @@
 			<p>
 				<label for="file_gallery_imageclass"><?php _e("image class", "file-gallery"); ?>:</label>
 				<input type="text" name="file_gallery_imageclass" id="file_gallery_imageclass" value="<?php echo $file_gallery_options["default_imageclass"]; ?>" />
+			</p>
+			
+			<p>
+				<label for="file_gallery_mimetype"><?php _e("mime type", "file-gallery"); ?>:</label>
+				<input type="text" name="file_gallery_mimetype" id="file_gallery_mimetype" value="<?php echo $file_gallery_options["default_mimetype"]; ?>" />
+			</p>
+			
+			<p>
+				<label for="file_gallery_limit"><?php _e("limit", "file-gallery"); ?>:</label>
+				<input type="text" name="file_gallery_limit" id="file_gallery_limit" value="" />
 			</p>
 			
 			<p>
@@ -227,7 +245,7 @@
 		<p id="fg_media_tag_list"><?php file_gallery_list_tags( array("link" => true, "separator" => " ") ); ?></p>
 	</div>
 	
-</form>
+</div>
 
 <?php
 
