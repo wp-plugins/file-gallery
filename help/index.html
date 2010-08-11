@@ -6,7 +6,7 @@
 <style type="text/css">
 body
 {
-	font-family: Arial, Helvetica, sans-serif
+	font-family: Arial, Helvetica, sans-serif;
 }
 
 img
@@ -26,8 +26,13 @@ img
 .tip
 {
 	color: #333;
-	background-color: #FFC;
+	background-color: #FFFFDD;
 	padding: 10px;
+	font-family:"Courier New", Courier, monospace;
+	font-size: 0.9em;
+	border: 1px solid #EAEACA;
+	margin-bottom: 1em;
+	margin-top: 1.25em;
 }
 
 h1, h2, h3, h4, h5, h6
@@ -53,6 +58,36 @@ ul li
 	margin-top: 0.5em;
 }
 
+
+.function
+{
+	color: #00F;
+}
+
+.variable
+{
+	color: #060;
+}
+
+.text
+{
+	color: #C00;
+}
+
+.number
+{
+	color: #F00;
+}
+
+.operator
+{
+	color: #00F;
+}
+
+.css
+{
+	color: #F0F;
+}
 </style>
 </head>
 <body>
@@ -71,7 +106,8 @@ ul li
 						<li><a href="#reordering">(Re)ordering the attachments</a></li>
 					</ul>
 				</li>
-				<li><a href="#attachment_edit">Attachment editing screen</a> </li>
+				<li><a href="#attachment_edit">Attachment editing screen</a></li>
+				<li><a href="#tinymce_integration">TinyMCE integration</a></li>
 			</ul>
 		</li>
 		<li><a href="#originals_and_copies">Attachment <em>originals</em> and
@@ -105,11 +141,11 @@ ul li
 		File Gallery box on post edit screen</h2>
 	<p>When adding a new post (or editing an existing post with no attachments),
 		this is what the File Gallery box on your editing screen should look like.</p>
-	<p><img src="images/01.png" alt="" width="783" height="96" /></p>
+	<p><img src="images/01.png" alt="" width="783" height="95" /></p>
 	<p>Just a notification and some buttons on the right.</p>
 	<p>When you add some attachments to the post, the box will automatically
 		refresh itself and it will look something like this:</p>
-	<p><img src="images/02.png" alt="" width="782" height="542" /></p>
+	<p><img src="images/02.png" alt="" width="782" height="618" /></p>
 	<h3><a name="attachment_colors" id="attachment_colors"></a>Attachment colors</h3>
 	<p>Some attachments might appear with background colors set to other than
 		grey.</p>
@@ -133,6 +169,7 @@ ul li
 			some other post to the current one.</li>
 		<li>Button number six will <strong>delete</strong> all the checked attachments</li>
 		<li>Button number seven will <strong>detach</strong> all the checked attachments</li>
+		<li>Button number eight will <strong>clear the file gallery cache</strong></li>
 	</ul>
 	<h3><a name="inserting" id="inserting"></a>Inserting a gallery and inserting
 		single images</h3>
@@ -187,13 +224,34 @@ ul li
 		screen</h3>
 	<p>When you click the &quot;Edit attachment&quot; button, or double click
 		the attachment thumbnail, you will be presented with the following screen:</p>
-	<p><img src="images/09.png" alt="" width="726" height="464" /></p>
+	<p><img src="images/09.png" alt="" width="781" height="561" /></p>
 	<p><strong>Use this form to edit attachment data</strong> and then click
 		&quot;save and return&quot;. Or just click &quot;cancel and return&quot; to
 		do just that - return to the attachment list.</p>
+	<p>You can also press the enter key to save the data, or the escape key
+		to cancel, and return to main File Gallery screen.</p>
 	<p>Clicking the image thumbnail in the top right corner will <strong>open
 			its enlarged version in an lightbox</strong>, if the attachment is an
 			image.</p>
+	<h3><a name="tinymce_integration" id="tinymce_integration"></a>TinyMCE integration</h3>
+	<p>When you insert a gallery, a placeholder image will appear in the visual
+		editor. When you click on that placeholder, File Gallery box options
+		will automatically change to reflect those in that gallery.</p>
+	<p>While the placeholder is still selected / clicked on, whichever options
+		you change in the File Gallery box, gallery options will be updated
+		automatically (you'll see &quot;Gallery contents updated&quot; text in
+		the upper right corner of the box).</p>
+	<p>At the moment, this works properly only in Firefox and Opera.</p>
+	<p>Internet
+		Explorer has  problems  registering the first click on the gallery
+		placeholder so you have to click twice. It then reflects gallery options,
+		but
+		when you try to change something, it loses focus and gallery options will
+		not be updated. I hope I'll be able to figure out what's the problem soon.</p>
+	<p> Webkit browsers (Safari and Chrome) have problems with <em>tinyMCE.activeEditor.selection.setContent()</em> in
+		tinyMCE versions  prior to 3.3.6 so updating galleries is disabled until
+		WordPress receives
+TinyMCE upgrade (probably in 3.1)</p>
 	<h2><a name="originals_and_copies" id="originals_and_copies"></a>Attachment <em>originals</em> and
 		copies</h2>
 	<p><em>Originals</em> are attachments that have copies, but they themselves
@@ -224,7 +282,7 @@ ul li
 		one that says &quot;Attach all checked items to current post&quot;) to
 		copy selected attachments.</p>
 	<p>After the attachments have been successfully copied to the current post,
-		a notification will show up above the button:<img src="images/14.png" alt="" width="464" height="76" /></p>
+		a notification will show up above the button:<img src="images/14.png" alt="" width="464" height="92" /></p>
 	<p><strong>When an attachment is copied, only its data found in the database
 			is copied into a new attachment, the actual file on the server is not
 			duplicated.</strong></p>
@@ -252,7 +310,7 @@ ul li
 	<p>While you're editing a post, click on the &quot;Switch to tags&quot; button
 		in the File Gallery box (just above attachment list).</p>
 	<p>Attachment list will be replaced with clickable tag list.</p>
-	<p><img src="images/17.png" alt="" width="787" height="265" /></p>
+	<p><img src="images/17.png" alt="" width="787" height="305" /></p>
 	<p>When you click on a tag, it will appear in the media tag field above,
 		inside the first fieldset. Click on it again and it will be removed from
 		the list.</p>
@@ -334,7 +392,7 @@ ul li
 		If your template is named &quot;my-first-template&quot;, you should prefix
 		a selector like this:<br />
 		<br />
-		&nbsp;&nbsp;&nbsp;&nbsp; <strong>.gallery.my-first-template .gallery-item</strong></p>
+		&nbsp;&nbsp;&nbsp;&nbsp; <span class="css">.gallery.my-first-template .gallery-item</span></p>
 	<p><strong>Now just place your custom gallery templates in a subfolder
 			named <br />
 		&quot;file-gallery-templates&quot;, inside your theme's folder, and they
@@ -359,53 +417,60 @@ ul li
 			<p><strong>file_gallery_list_tags( </strong><em>$arguments</em><strong> )</strong></p>
 			will list all media tags.
 			<p>Default $arguments are:</p>
-			<p class="tip">array(<br />
-				"type" => "html",<br />
-				"echo" => true,<br />
-				"link" => true,<br />
-				"slug" => false,<br />
-				"separator" => ", "<br />
-				) </p>
-			<p>type = html, object, array or json</p>
-			<p>echo = whether to echo or return data (type must be html)</p>
-			<p>link = wrap a link around each media tag (type must be html)</p>
-			<p>slug = use media tag slug for link HTML instead of media tag name
+<pre class="tip">
+<span class="function">array</span>(
+	<span class="text">"type"</span> <span class="operator">=></span> <span class="text">"html"</span>,
+	<span class="text">"echo"</span> <span class="operator">=></span> <span class="variable">true</span>,
+	<span class="text">"link"</span> <span class="operator">=></span> <span class="variable">true</span>,
+	<span class="text">"slug"</span> <span class="operator">=></span> <span class="variable">false</span>,
+	<span class="text">"separator"</span> <span class="operator">=></span> <span class="text">", "</span>
+)</pre>
+			<p><strong>type</strong> = html, object, array or json</p>
+			<p><strong>echo</strong> = whether to echo or return data (type must be html)</p>
+			<p><strong>link</strong> = wrap a link around each media tag (type must be html)</p>
+			<p><strong>slug</strong> = use media tag slug for link HTML instead of media tag name
 				(type must be html)</p>
-			<p>separator = if data is echoed, what to use as separator (type must
+			<p><strong>separator</strong> = if data is echoed, what to use as separator (type must
 				be html)</p>
 			<p>If you place <strong>&lt;?php file_gallery_list_tags(); ?&gt;</strong>
 				somewhere in your theme, it will echo a list of html links
 					to media tag archives.</p>
-		<p>I'll probably add a widget for this in v1.5.3.</p>
+		<p>I'll probably add a widget for this at some point.</p>
 		<p class="tip"><strong>Tip</strong>: if the media tag links lead you to a &quot;404 Not found&quot; page, go
 			to settings =&gt; permalinks and just click the &quot;Save changes&quot;
 		button to refresh the rewrite rules.</p></li>
 		<li><strong>file_gallery_shortcode( </strong><em>$arguments</em><strong> )</strong> will
 			fetch attachments from a post.
 			<p> Default <em>$arguments</em> are:</p>
-			<p class="tip">array(<br />
-				'order' =&gt; 'ASC',<br />
-				'orderby' =&gt; ”,<br />
-				'id' =&gt; $post-&gt;ID,<br />
-				'columns' =&gt; 3,<br />
-				'size' =&gt; 'thumbnail',<br />
-				'link' =&gt; 'attachment',<br />
-				<br />
-				'template' =&gt; 'default',<br />
-				'attachment_ids' =&gt; ”,<br />
-				'linkclass' =&gt; ”,<br />
-				'imageclass' =&gt; ”,<br />
-				'tags' =&gt; ”,<br />
-				'tags_from' =&gt; 'current',<br />
-				'<strong>output_type</strong>' =&gt; '<strong>html</strong>',<br />
-				'output_params' =&gt; true<br />
-				) </p>
-			<p>where output_type parameter can also be <strong>html, array, object
-					or json</strong>.</p>
+<pre class="tip"><span class="function">array</span>(
+	<span class="text">'order'</span> <span class="operator">=&gt;</span> <span class="text">'ASC'</span>,
+	<span class="text">'orderby'</span> <span class="operator">=&gt;</span> <span class="text">''</span>,
+	<span class="text">'id'</span> <span class="operator">=&gt;</span> <span class="variable">$post</span><span class="operator">-&gt;</span><span class="variable">ID</span>,
+	<span class="text">'columns'</span> <span class="operator">=&gt;</span> <span class="number">3</span>,
+	<span class="text">'size'</span> <span class="operator">=&gt;</span> <span class="text">'thumbnail'</span>,
+	<span class="text">'link'</span> <span class="operator">=&gt;</span> <span class="text">'attachment'</span>,
+	<span class="text">'include'</span> <span class="operator">=&gt;</span> <span class="text">''</span>,
+	<span class="text">'exclude'</span> <span class="operator">=&gt;</span> <span class="text">''</span>,
+	
+	<span class="text">'template'</span> <span class="operator">=&gt;</span> <span class="text">'default'</span>,
+	<span class="text">'linkclass'</span> <span class="operator">=&gt;</span> <span class="text">''</span>,
+	<span class="text">'imageclass'</span> <span class="operator">=&gt;</span> <span class="text">''</span>,
+	<span class="text">'rel'</span> <span class="operator">=&gt;</span> <span class="number">1</span>,
+	<span class="text">'tags'</span> <span class="operator">=&gt;</span> <span class="text">''</span>,
+	<span class="text">'tags_from'</span> <span class="operator">=&gt;</span> <span class="text">'current'</span>,
+	<span class="text">'<strong>output_type</strong>'</span> <span class="operator">=&gt;</span> <span class="text">'<strong>html</strong>'</span>,
+	<span class="text">'output_params'</span> <span class="operator">=&gt;</span> <span class="number">1</span>,
+	<span class="text">'attachment_ids'</span> <span class="operator">=&gt;</span> <span class="text">''</span>,
+	<span class="text">'mimetype'</span> <span class="operator">=&gt;</span> <span class="text">''</span>,
+	<span class="text">'limit'</span> <span class="operator">=&gt;</span> <span class="operator">-</span><span class="number">1</span>,
+)</pre>
+			<p class="tip">(the <em>output_type</em> parameter can  be <strong>html,
+					array, object </strong>or<strong> json</strong>)</p>
 			<p class="tip">If <em>attachment_ids</em> is left empty, the function
 				will fetch all attachments.</p>
-			<span class="tip"> If <em>tags</em> are specified, <em>attachment_ids</em> will
-			be ignored.</span></li>
+			<p class="tip"> If <em>tags</em> are specified, <em>attachment_ids</em> will
+			be ignored.</p>
+		</li>
 	</ol>
 	<h2><a name="other_plugins" id="other_plugins"></a>Support for other plugins</h2>
 	<p>File Gallery will play nice with the following plugins:</p>
@@ -437,21 +502,48 @@ ul li
 			can choose to add an extension to attachment title when you copy it from
 			one post to another. Pretty useless, now that I think about it, but it's
 			there and you can use it :)</li>
-		<li><strong>file_gallery_lightbox_classes</strong> - filter classes which trigger
-			auto enqueueing of lightbox scripts. One argument: array of classes.</li>
+		<li><strong>file_gallery_lightbox_classes</strong> - filter classes which
+			trigger auto enqueueing of lightbox scripts.<br />
+			Params: 1) array
+			containing existing values</li>
 		<li><strong>file_gallery_lightbox_linkrel</strong> - modify a link's rel
-			attribute when a lightbox script is enqueued. Params: 1) rel attribute,
-			2) gallery ID</li>
+			attribute when a lightbox script is enqueued.<br />
+			Params: 1) rel
+			attribute, 2) gallery ID</li>
 		<li><strong>file_gallery_lightbox_linkclass</strong> - modify a link's
-			class when a lightbox script is enqueued. Params: 1) link class, 2) gallery
-			ID</li>
+			class when a lightbox script is enqueued.<br />
+			Params: 1) link class,
+			2) gallery ID</li>
 		<li><strong>file_gallery_lightbox_imageclass</strong> - modify a image's
-			class when a lightbox script is enqueued. Params: 1) image class, 2)
-			link class, 3) gallery ID</li>
+			class when a lightbox script is enqueued.<br />
+			Params: 1) image class,
+			2) link class, 3) gallery ID</li>
+		<li><strong>file_gallery_lightboxes_options</strong> - add or modify options
+			for lightbox scripts.<br />
+			<em>See example use below</em>.<br />
+			Params: 1) array containing
+			existing values</li>
+		<li><strong>file_gallery_non_image_thumb_link</strong> - change the url
+			of the icon used for non-image attachments.<br />
+			Params: 1) thumb link, 2)
+			attachment
+		type, 3) attachment ID</li>
+		<li><strong>file_gallery_mime_types</strong> - add or modify mime type
+			to SQL translations.<br />
+			<em>See example use below</em>.<br />
+			Params: 1) array
+			containing existing values</li>
+		<li><strong>plugin_translations_path</strong> - filter the location/path where
+			the plugin should look for its translation (.mo) files <strong>first</strong>.
+			Second location is &quot;wp-content/plugins&quot;, and the third is in
+			&quot;languages&quot; subdirectory within plugin directory.<br />
+			Params:
+			1)
+			current path, 2) domain</li>
 	</ul>
-	<p>&nbsp;</p>
-	<p><strong>== Example image class filtering for <a href="http://wordpress.org/extend/plugins/jquery-colorbox/">jQuery
-				Colorbox WordPress plugin</a>: ==</strong></p>
+	<h3>Examples</h3>
+<h4>Image class filtering for <a href="http://wordpress.org/extend/plugins/jquery-colorbox/">jQuery
+				Colorbox WordPress plugin</a></h4>
 	<p>On the media settings page, add <em><strong>colorbox</strong></em> under <em>File
 			Gallery =&gt; Auto enqueue lightbox scripts for which link classes</em>.</p>
 	<p>Now, either add <strong><em>colorbox</em></strong> onder <em>File Gallery
@@ -460,21 +552,132 @@ ul li
 			inserting a new gallery into a post.</p>
 	<p>Then add this filter to your theme's functions.php file, or create a
 		plugin for it:</p>
-	<p class="tip">function filter_file_gallery_imageclass( $imageclass, $linkclass,
-		$gallery_id )<br />
-		{<br />
-		&nbsp;&nbsp;&nbsp;&nbsp;if( false !== strpos($linkclass, &quot;colorbox&quot;)
-		)<br />
-		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$imageclass .= &quot; colorbox-&quot; .
-		$gallery_id;<br />
-		<br />
-		&nbsp;&nbsp;&nbsp;&nbsp;return $imageclass;<br />
-		}<br />
-		add_filter(&quot;file_gallery_lightbox_imageclass&quot;, &quot;filter_file_gallery_imageclass&quot;,
-		10, 3);</p>
-	<p>That number 3 at the end of last line is important - it tells the add_filter function
-		that your function expects three arguments - so be sure it's there :)</p>
-	<p class="tip"><strong>If you want me to add a new filter somewhere - just
+<pre class="tip">
+<span class="function">function</span> filter_imgclass( <span class="variable">$imageclass</span>, <span class="variable">$linkclass,</span> <span class="variable">$gallery_id</span> )
+{
+	<span class="variable">if</span>( <span class="variable">false</span> <span class="operator">!==</span> <span class="function">strpos</span>(<span class="variable">$linkclass</span>, <span class="text">&quot;colorbox&quot;</span>) )
+		<span class="variable">$imageclass</span> <span class="operator">.=</span> <span class="text">&quot; colorbox-&quot;</span> <span class="operator">.</span> <span class="variable">$gallery_id</span>;
+
+	<span class="variable">return</span> <span class="variable">$imageclass</span>;
+}
+
+add_filter(<span class="text">&quot;file_gallery_lightbox_imageclass&quot;</span>,<span class="text"> &quot;filter_imgclass&quot;</span>,<span class="text"> <span class="number">10</span></span>, <span class="text"><span class="number">3</span></span>);
+</pre>
+	<p>That number <span class="number">3</span> at the end of last line is
+		important &#8212; it tells the add_filter function that your function
+		expects three arguments &#8212; so be sure it's there :)</p>
+		
+	<h4>Filtering of lightbox scripts options</h4>
+	<p>This code below that takes care of Colorbox is the only default preset for now, but I'll add more in the future.</p>
+	
+<pre class="tip"><span class="variable">$lightboxes_options</span> <span class="operator">=</span> <span class="function">array</span>
+(
+	<span class="text">'colorbox'</span> <span class="operator">=&gt;</span> <span class="function">array</span>(
+		<span class="text">'linkrel'</span> <span class="operator">=&gt;</span> <span class="variable">false</span>, 
+		<span class="text">'linkclass'</span> <span class="operator">=&gt;</span> <span class="variable">false</span>, 
+		<span class="text">'imageclass'</span> <span class="operator">=&gt;</span> <span class="text">'{script_name}-{gallery_id}'</span>, 
+		<span class="text">'disable_imageclass_if_rel_false'</span> <span class="operator">=&gt;</span> <span class="variable">true</span>
+	)
+);</pre>
+<p>You can add suport for your own lightbox scripts by using the <em>file_gallery_lightboxes_options</em> filter.
+	Something like this</p>
+<pre class="tip"><span class="function">function</span> filter_lightboxes( <span class="variable">$options</span> )
+{
+	<span class="variable">$options</span>[<span class="text">'my-lightbox-script'</span>] <span class="operator">=</span> <span class="function">array</span>(
+		<span class="text">'linkrel'</span> <span class="operator">=&gt;</span> <span class="variable"></span><span class="text">'{script_name}[{gallery_id}]'</span>, 
+		<span class="text">'linkclass'</span> <span class="operator">=&gt;</span><span class="text">'{script_name}'</span>, 
+		<span class="text">'imageclass'</span> <span class="operator">=&gt;</span> <span class="text">false</span>, 
+		<span class="text">'disable_imageclass_if_rel_false'</span> <span class="operator">=&gt;</span> <span class="variable">false</span>
+	);
+
+	<span class="variable">return</span> <span class="variable">$options</span>;
+}
+add_filter(<span class="text">'file_gallery_lightboxes_options'</span>, <span class="text">'filter_lightboxes'</span>);</pre>
+<p>Parameters explained:</p>
+<p class="tip">linkrel =&gt; <span class="variable">false</span> <span class="operator">or</span> text
+	value;<br />
+	whether the script requires the rel attribute of the link for grouping
+	images</p>
+<p class="tip">linkclass =&gt; <span class="variable">false</span> <span class="operator">or</span> <span class="text">text
+		value</span>;<br />
+	value of link class</p>
+<p class="tip">imageclass =&gt; <span class="variable">false</span> <span class="operator">or</span> <span class="text">text
+	value</span>;<br />
+	value of image class</p>
+<p class="tip">disable_imageclass_if_rel_false =&gt; <span class="variable">true</span> <span class="operator">or</span> <span class="variable">false</span>;<br />
+	whether
+	to disable image class if linkrel is set to <span class="variable">false</span></p>
+<p>You can use two variable placeholders in linkrel, linkclass and image
+	class -
+	<strong>{script_name}</strong> and <strong>{gallery_id}</strong>. They
+	will be replaced with the name of the lightbox script, and ID of the gallery,
+	respectively.</p>
+
+	<h4>Filtering of mime type to SQL translations</h4>
+	<p>Here's the built-in array:</p>
+	
+	<pre class="tip"><span class="variable">$mime_types</span> <span class="operator">=</span> <span class="function">array</span>(
+	<span class="text">'word'</span> <span class="operator">=&gt;</span> <span class="text">'*msword'</span>,
+	<span class="text">'doc'</span> <span class="operator">=&gt;</span> <span class="text">'*msword'</span>,
+	<span class="text">'excel'</span> <span class="operator">=&gt;</span> <span class="text">'*excel'</span>,
+	<span class="text">'xls'</span> <span class="operator">=&gt;</span> <span class="text">'*excel'</span>,
+	<span class="text">'csv'</span> <span class="operator">=&gt;</span> <span class="text">'text/csv, text/comma-separated-values'</span>,
+	<span class="text">'powerpoint'</span> <span class="operator">=&gt;</span> <span class="text">'*powerpoint'</span>,
+	<span class="text">'ppt'</span> <span class="operator">=&gt;</span> <span class="text">'*powerpoint'</span>,
+	<span class="text">'pdf'</span> <span class="operator">=&gt;</span> <span class="text">'*pdf'</span>,
+	<span class="text">'rar'</span> <span class="operator">=&gt;</span> <span class="text">'*-rar*'</span>,
+	<span class="text">'zip'</span> <span class="operator">=&gt;</span> <span class="text">'*compress*, *zip'</span>,
+	<span class="text">'7zip'</span> <span class="operator">=&gt;</span> <span class="text">'application/x-7z-compressed'</span>
+);<span class="variable"></span>
+</pre>
+	<p>Keys (on the left) are shorthands you can use when inserting a gallery
+		(mime type box), but you can also use all the values (on the right).</p>
+	<p>For example, all three gallery shortcodes below will give you the same
+	results:</p>
+	<pre class="tip">[gallery mimetype=&quot;pdf&quot;]
+
+[gallery mimetype=&quot;*pdf&quot;]
+
+[gallery mimetype=&quot;application/pdf&quot;]
+</pre>
+	<p>Differences:</p>
+	<ul>
+		<li>first example's value (<strong>pdf</strong>) will
+			be found within the <em>$mime_types</em> array and will be translated
+			into <strong>*pdf</strong>,
+		which will end up as &quot;<strong>mime_type LIKE '%pdf'</strong>&quot; in
+		SQL (translated
+		by WordPress' own <strong>wp_post_mime_type_where</strong> function)</li>
+		<li>second example's value (<strong>*pdf</strong>) is not in the array
+		and will end up same as above</li>
+		<li>third example will end up as &quot;<strong>mime_type = 'application/pdf'</strong>&quot; in
+		SQL</li>
+	</ul>
+<p></p>
+<p>A bit of explanation: </p>
+<p>if a shorthand name for a mime type is not found as a key in the above array,
+	it will go straight into the <strong>wp_post_mime_type_where</strong> function
+	which translates values like this:</p>
+<p class="tip">pdf <span class="operator">OR</span> pdf/ <span class="operator">=&gt;</span> <strong>&quot;mime_type
+	LIKE 'pdf/%'&quot;</strong></p>
+<p class="tip">/pdf  <span class="operator">=&gt;</span> &quot;<strong>mime_type
+	LIKE '%/pdf'</strong>&quot;</p>
+<p class="tip">*pdf <span class="operator">=&gt;</span> &quot;<strong>mime_type LIKE '%pdf'</strong>&quot;</p>
+<p class="tip">*pdf* <span class="operator">=&gt;</span> &quot;<strong>mime_type LIKE '%pdf%'</strong>&quot;</p>
+<p class="tip">application/pdf  <span class="operator">=&gt;</span> &quot;<strong>mime_type
+	= 'application/pdf'</strong>&quot;</p>
+<p>If you want to work with multiple mime types, just separate
+	them with a comma (<strong>,</strong>).</p>
+<p>You can add your own shorthands by using the <em>file_gallery_mime_types</em> filter</p>
+<pre class="tip"><span class="function">function</span> filter_file_gallery_mime_types( <span class="variable">$mime_types</span> )
+{
+	<span class="variable">$mime_types</span>[<span class="text">'mymimetype'</span>] <span class="operator">=</span> <span class="text">'*mymimetype'</span>;
+
+	<span class="variable">return</span> <span class="variable">$mime_types</span>;
+}
+add_filter(<span class="text">'file_gallery_mime_types'</span>, <span class="text">'filter_file_gallery_mime_types'</span>);</span></pre>
+<p>&nbsp;</p>
+<p class="tip"><strong>If you want me to add a new filter somewhere - just
 			leave a comment or e-mail me and I promise I'll add it as soon as humanly
 			possible :)</strong></p>
 	<h2>That's it!</h2>

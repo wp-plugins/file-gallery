@@ -67,6 +67,13 @@ more... Here's the full list of features:
 
 == Changelog ==
 
+= 1.5.9 =
+* August 11th, 2010
+* fixed a small javascript bug
+* made some changes regarding textdomain loading
+* updated the help file
+* updated screenshots
+
 = 1.5.8 =
 * August 1st, 2010
 * implemented 'limit' option in UI
@@ -268,11 +275,14 @@ Help file is included, you'll find it in the "help" subfolder :)
 
 == Plans for the next version? ==
 
-sooner (before 1.6):
+sooner (pre 1.6):
 
 - cleanup script for media tag database taxonomy name(s)
-- content type filtering
 - audio and video preview on editing screens
+
+later (post 1.6):
+
+- phpdoc all the functions
 
 maybe:
 

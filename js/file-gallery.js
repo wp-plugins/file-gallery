@@ -23,9 +23,7 @@ jQuery(document).ready(function()
 		 * takes care of communication with tinyMCE
 		 */
 		tinymce : function()
-		{
-			// alert( tinymce.majorVersion + "." + tinymce.minorVersion );
-			
+		{			
 			// get editor instance
 			var ed = tinymce.EditorManager.get('content');
 			
@@ -35,8 +33,7 @@ jQuery(document).ready(function()
 				return false;
 			}
 			
-			// trigger file_gallery.tinymce_gallery() if clicked-on image
-			// has a wpGallery class
+			// trigger file_gallery.tinymce_gallery() if clicked-on image has a wpGallery class
 			ed.onClick.add( function(tinymce_object, mouseEvent)
 			{
 				if( mouseEvent.target.className.match(/wpGallery/) )
@@ -75,12 +72,12 @@ jQuery(document).ready(function()
 			if( (! jQuery.browser.webkit && ! jQuery.browser.safari) || (3 <= parseFloat(tinymce.majorVersion) && 3.6 <= parseFloat(tinymce.minorVersion)) )
 			{
 				var ed = tinymce.EditorManager.get('content'),
-					new_serial = serial.replace(/\[gallery([^\]]*)\]/g, function(a,b)
+					new_content = serial.replace(/\[gallery([^\]]*)\]/g, function(a,b)
 					{
 						return "<img src='" + tinymce.baseURL + "/plugins/wpgallery/img/t.gif' class='wpGallery mceItem' title='gallery" + tinymce.DOM.encode(b) + "' id='file_gallery_tmp_" + file_gallery_tmp + "' />";
 					});
 				
-				ed.selection.setContent(new_serial);
+				ed.selection.setContent(new_content);
 				
 				ed.selection.select(ed.getDoc().getElementById('file_gallery_tmp_' + file_gallery_tmp));
 				tinyMCE.execCommand('mceFocus', false, 'content');
@@ -182,6 +179,26 @@ jQuery(document).ready(function()
 		
 		
 		
+		/*
+		 * collapses selection if gallery placeholder is clicked
+		 */
+		tinymce_deselect : function()
+		{
+			if( false === file_gallery_gallery_img_clicked )
+				return;
+
+			var ed = tinymce.EditorManager.get('content');
+
+			ed.selection.collapse(false);
+			tinyMCE.execCommand('mceRepaint', false, 'content');
+			tinyMCE.execCommand('mceFocus', false, 'content');
+		},
+		
+		
+		
+		/*
+		 * checks if all the attachments are, eh, checked...
+		 */
 		is_all_checked : function()
 		{
 			var all_checked = true;
@@ -208,7 +225,15 @@ jQuery(document).ready(function()
 		{
 			var tags_from = jQuery("#fg_gallery_tags_from").attr("checked"), 
 				container = jQuery("#fg_container"), 
-				fieldsets = jQuery("#file_gallery_fieldsets").val();
+				fieldsets = jQuery("#file_gallery_fieldsets").val(),
+				data = null;
+			
+			if( 'return_from_single_attachment' == response_message )
+			{
+				file_gallery.tinymce_deselect();
+				
+				response_message = null;
+			}
 			
 			if( "undefined" == typeof(fieldsets) )
 				fieldsets = "";
@@ -244,7 +269,7 @@ jQuery(document).ready(function()
 				{
 					container.html(response);
 					
-					if( "undefined" != typeof( response_message ) )
+					if( "undefined" != typeof( response_message ) && null !== response_message )
 						jQuery('#file_gallery_response').html(response_message).show().fadeOut(7500);
 					
 					file_gallery.setup();
@@ -355,10 +380,8 @@ jQuery(document).ready(function()
 				copies = "",
 				originals = "",
 				file_gallery_order = "",
-				file_gallery_orderby = "",
-				fg_gallery_tags = jQuery("#fg_gallery_tags");
-			
-			
+				file_gallery_orderby = "";
+
 			if( 'undefined' == typeof(internal_event) )
 				internal_event = 'normal';
 			
@@ -367,39 +390,42 @@ jQuery(document).ready(function()
 			
 			if( "external_url" == linkto_val )
 				linkto_val = encodeURIComponent(external_url);
+				
+			if( 0 < jQuery("#fg_gallery_tags").length )
+			{
+				if( "undefined" == typeof( jQuery("#fg_gallery_tags").val() ) || "undefined" == jQuery("#fg_gallery_tags").val() )
+					jQuery("#fg_gallery_tags").val("");
+				
+				tags      = jQuery("#fg_gallery_tags").val();
+				tags_from = jQuery("#fg_gallery_tags_from").attr("checked");
+				
+				tags = tags.replace(/\s+/g, " ").replace(/\s+,/g, ",").replace(/,+\s*/g, ",");
 			
-			if( "undefined" == typeof( fg_gallery_tags.val() ) || "undefined" == fg_gallery_tags.val() )
-				fg_gallery_tags.val("");
-		
-			tags      = fg_gallery_tags.val();
-			tags_from = jQuery("#fg_gallery_tags_from").attr("checked");
+				ctlen = tags.length;
+				
+				if( "," == tags[0] )
+					tags = tags.substring(1);
+				
+				if( "," == tags[ctlen-2] )
+					tags = tags.substring(0, ctlen-1);
 			
-			tags = tags.replace(/\s+/g, " ").replace(/\s+,/g, ",").replace(/,+\s*/g, ",");
-		
-			ctlen = tags.length;
-			
-			if( "," == tags[0] )
-				tags = tags.substring(1);
-			
-			if( "," == tags[ctlen-2] )
-				tags = tags.substring(0, ctlen-1);
-		
-			fg_gallery_tags.val(tags);
+				jQuery("#fg_gallery_tags").val(tags);
+				
+				jQuery(".fg_insert_tag").each( function()
+				{
+					ct = "," + jQuery("#fg_gallery_tags").val() + ",";
+					ns = "," + jQuery(this).attr("name") + ",";
+					nn = "," + jQuery(this).html() + ",";
+					
+					if ( "-1" != ct.search(ns) || "-1" != ct.search(nn) )
+						jQuery(this).css({"color" : "#BBBBBB"});
+					else
+						jQuery(this).css({"color" : "#21759B"});
+				});
+			}
 			
 			if( 0 < jQuery("#file_gallery_list li").length )
 				serial = jQuery("#file_gallery_list").sortable("serialize");
-		
-			jQuery(".fg_insert_tag").each( function()
-			{
-				ct = "," + fg_gallery_tags.val() + ",";
-				ns = "," + jQuery(this).attr("name") + ",";
-				nn = "," + jQuery(this).html() + ",";
-				
-				if ( "-1" != ct.search(ns) || "-1" != ct.search(nn) )
-					jQuery(this).css({"color" : "#BBBBBB"});
-				else
-					jQuery(this).css({"color" : "#21759B"});
-			});
 			
 			serial = serial.toString().replace(/image\[\]=/g, '').replace(/&/g, ',').replace(/,+/g, ',');
 			jQuery("#data_collector_full").val(serial);
@@ -689,8 +715,7 @@ jQuery(document).ready(function()
 		 */
 		add_remove_tags : function( tag )
 		{
-			var fg_gallery_tags = jQuery("#fg_gallery_tags"),
-				current_tags 	= fg_gallery_tags.val(),
+			var current_tags 	= jQuery("#fg_gallery_tags").val(),
 				newtag_slug  	= jQuery(tag).attr("name"),
 				newtag_name  	= jQuery(tag).html(),
 				ct 			 	= "," + current_tags + ",",
@@ -728,7 +753,7 @@ jQuery(document).ready(function()
 			if( "," == current_tags[ctlen-2] )
 				current_tags = current_tags.substr(0, ctlen-2);
 			
-			fg_gallery_tags.val(current_tags);
+			jQuery("#fg_gallery_tags").val(current_tags);
 			
 			file_gallery.serialize();
 		},
@@ -1104,6 +1129,8 @@ jQuery(document).ready(function()
 				function(response)
 				{
 					jQuery('#fg_container').html(response);
+					
+					file_gallery.tinymce_deselect();
 				},
 				"html"
 			);
@@ -1345,23 +1372,26 @@ jQuery(document).ready(function()
 	
 	jQuery("#file_gallery_linkclass, #file_gallery_imageclass, #file_gallery_mimetype, #file_gallery_limit, #file_gallery_external_url, #file_gallery_single_linkclass, #file_gallery_single_imageclass, #file_gallery_single_external_url, #fg_gallery_tags").live('keypress keyup', function(e)
 	{
+		// on enter
 		if ( 13 === e.which || 13 === e.keyCode )
 		{
 			file_gallery.serialize();
 			return false;
 		}
-		
-		return;
 	});
 	
 	jQuery("#fgae_post_alt, #fgae_post_title, #fgae_post_excerpt, #fgae_tax_input, #fgae_menu_order").live('keypress keyup', function(e)
 	{
-		if ( 13 === e.which || 13 === e.keyCode )
+		if ( 13 === e.which || 13 === e.keyCode ) // on enter
+		{
 			jQuery("#file_gallery_edit_attachment_save").trigger("click");
-		else if( 27 === e.which || 27 === e.keyCode )
+			e.preventDefault();
+			return false;
+		}
+		else if( 27 === e.which || 27 === e.keyCode ) // on esc
+		{
 			jQuery("#file_gallery_edit_attachment_cancel").trigger("click");
-
-		return false;
+		}
 	});
 
 	jQuery("a.post_thumb_status").live("click", function()
@@ -1442,7 +1472,7 @@ jQuery(document).ready(function()
 	// cancel changes
 	jQuery("#file_gallery_edit_attachment_cancel").live("click", function()
 	{
-		file_gallery.start();
+		file_gallery.start('return_from_single_attachment');
 		
 		return false;
 	});

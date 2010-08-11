@@ -29,7 +29,7 @@ jQuery(document).ready(function()
 	
 	// appends a div in which we display the ajax response
 	jQuery('#library-form')
-		.append('<p id="file_gallery_attach_response" class="updated fade" style="visibility:hidden;">&nbsp;</p>')
+		.append('<p id="file_gallery_attach_response" class="updated fade" style="visibility: hidden; margin: 0 18px 15px 0; padding:3px 10px;">&nbsp;</p>')
 		.append('<input type="button" class="button" id="file_gallery_attach_button" value="' + fgL10n["attach_all_checked_copy"] + '" />');
 	
 	// attaches checked attachments to current post
@@ -65,7 +65,8 @@ jQuery(document).ready(function()
 				
 				jQuery('#file_gallery_attach_response')
 					.html(response)
-					.css({"visibility" : "visible"});
+					.css({'opacity' : 0, 'visibility' : 'visible'})
+					.fadeTo(200, 1);
 			},
 			'html'
 		);

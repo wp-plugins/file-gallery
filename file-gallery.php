@@ -2,7 +2,7 @@
 /*
 Plugin Name: File Gallery
 Plugin URI: http://skyphe.org/code/wordpress/file-gallery/
-Version: 1.5.8
+Version: 1.5.9
 Description: "File Gallery" extends WordPress' media (attachments) capabilities by adding a new gallery shortcode handler with templating support, a new interface for attachment handling when editing posts, and much more.
 Author: Bruno "Aesqe" Babic
 Author URI: http://skyphe.org
@@ -25,12 +25,6 @@ Author URI: http://skyphe.org
 ////////////////////////////////////////////////////////////////////////////
 
 */
-
-
-/**
- * Translation
- */
-load_plugin_textdomain('file-gallery', false, dirname(plugin_basename(__FILE__)) . "/languages"); 
 
 
 
@@ -58,6 +52,44 @@ $file_gallery_abspath = preg_replace("#/+#", "/", $file_gallery_abspath);
 define("FILE_GALLERY_URL", WP_PLUGIN_URL . "/" . basename(dirname(__FILE__)));
 define("FILE_GALLERY_ABSPATH", $file_gallery_abspath);
 define("FILE_GALLERY_DEFAULT_TEMPLATES", serialize( array("default", "file-gallery", "list") ) );
+
+
+
+/**
+ * Loads the translation file
+ * Slightly modified load_plugin_textdomain WP function
+ * Tries with the filtered path first, then plugins dir path, and then the plugin supplied path
+ */
+function file_gallery_load_plugin_textdomain( $domain, $plugin_rel_path = false )
+{
+	$locale = apply_filters( 'plugin_locale', get_locale(), $domain );
+
+	$filtered_path = apply_filters('plugin_translations_path', WP_PLUGIN_DIR, $domain);
+
+	$paths = array(
+		$filtered_path
+	);
+	
+	if( WP_PLUGIN_DIR != $filtered_path )
+		$paths[] = WP_PLUGIN_DIR;
+	
+	if( false !== $plugin_rel_path )
+		$paths[] = WP_PLUGIN_DIR . '/' . trim( $plugin_rel_path, '/' );
+
+	foreach( $paths as $path )
+	{
+		$mofile = $path . '/'. $domain . '-' . $locale . '.mo';
+		
+		if ( load_textdomain($domain, $mofile) )
+			return true;
+	}
+
+	return false;
+}
+
+
+
+file_gallery_load_plugin_textdomain('file-gallery', dirname(plugin_basename(__FILE__)) . "/languages"); 
 
 
 
