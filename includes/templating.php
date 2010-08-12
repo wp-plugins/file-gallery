@@ -543,7 +543,7 @@ function file_gallery_shortcode( $attr )
 				}
 			}
 			
-			if( false === $param['rel'] || true === $param['rel'] )
+			if( is_bool($param['rel']) )
 				$param['rel'] = "";
 			
 			switch( $linkto )
