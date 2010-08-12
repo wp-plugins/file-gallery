@@ -233,7 +233,7 @@ function file_gallery_print_scripts( $styles = false )
 	{
 		$linkclasses = maybe_unserialize(FILE_GALLERY_LIGHTBOX_CLASSES);
 
-		if( !empty($linkclasses) )
+		if( ! empty($linkclasses) )
 		{
 			foreach( $linkclasses as $lc )
 			{
@@ -499,11 +499,11 @@ function file_gallery_shortcode( $attr )
 	foreach($attachments as $attachment)
 	{
 		$param = array(
-			'image_class' => " " . $imageclass,
-			'link_class'  => " " . $linkclass,
+			'image_class' => $imageclass,
+			'link_class'  => $linkclass,
 			'rel'         => $rel,
 			'title'       => "",
-			'cation'      => "",
+			'caption'      => "",
 			'description' => "",
 			'thumb_alt'   => ""
 		);
@@ -542,6 +542,9 @@ function file_gallery_shortcode( $attr )
 					$param['link_class'] = str_replace( trim(implode(" ", $plcai)), "", trim($linkclass));
 				}
 			}
+			
+			if( false === $param['rel'] || true === $param['rel'] )
+				$param['rel'] = "";
 			
 			switch( $linkto )
 			{

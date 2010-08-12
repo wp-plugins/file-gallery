@@ -1407,11 +1407,18 @@ jQuery(document).ready(function()
 	});
 		
 	jQuery("#remove-post-thumbnail").attr("onclick", "").live("click.file_gallery", function()
-	{
-		var id = jQuery(".sortableitem.post_thumb").attr("id");
+	{		
+		if( 0 < jQuery(".sortableitem.post_thumb").length )
+		{
+			var id = jQuery(".sortableitem.post_thumb").attr("id");
 			
-		file_gallery.set_post_thumb(id.split("-").pop(), true);
-
+			file_gallery.set_post_thumb(id.split("-").pop(), true);
+		}
+		else
+		{
+			WPRemoveThumbnail(post_thumb_nonce);
+		}
+		
 		return false;
 	});
 	

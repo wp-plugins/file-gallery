@@ -4,7 +4,7 @@ function file_gallery_lightboxes_support( $value = '', $type = '', $args = array
 {
 	$lightboxes_options = array
 	(
-		'colorbox' => array( 'linkrel' => false, 'linkclass' => false, 'imageclass' => '{script_name}-{gallery_id}', 'disable_imageclass_if_rel_false' => true )
+		'colorbox' => array( 'linkrel' => false, 'linkclass' => false, 'imageclass' => '{script_name}-{gallery_id}', 'disable_imageclass_if_rel_false' => true ),
 	);
 
 	$lightboxes_options = apply_filters('file_gallery_lightboxes_options', $lightboxes_options);
@@ -39,8 +39,8 @@ function file_gallery_lightboxes_support( $value = '', $type = '', $args = array
 	
 	return $value;
 }
-add_filter('file_gallery_lightbox_linkrel',    'file_gallery_lightboxes_support', 10, 3);
-add_filter('file_gallery_lightbox_linkclass',  'file_gallery_lightboxes_support', 10, 3);
-add_filter('file_gallery_lightbox_imageclass', 'file_gallery_lightboxes_support', 10, 3);
+//add_filter('file_gallery_lightbox_linkrel',    'file_gallery_lightboxes_support', 10, 3);
+//add_filter('file_gallery_lightbox_linkclass',  'file_gallery_lightboxes_support', 10, 3);
+//add_filter('file_gallery_lightbox_imageclass', 'file_gallery_lightboxes_support', 10, 3);
 
 ?>
