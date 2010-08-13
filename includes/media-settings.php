@@ -157,6 +157,8 @@ function file_gallery_options_init()
 	// delete options on deactivation
 	add_settings_field("file_gallery_del_options_on_deactivate", __("Delete all options on deactivation?", 'file-gallery'), create_function("", 'return file_gallery_options_fields( array("name" => "file_gallery_del_options_on_deactivate") );'), 'media', 'file_gallery_options');
 
+
+
 	/**/
 	
 	
@@ -270,13 +272,74 @@ function file_gallery_options_fields( $args )
 		
 		$order_dropdown .= '>' . __($description, 'file-gallery') . '</option>';
 	}
+	
+	// default sizes dropdown list
+	$sizes_dropdown .= '<option value="thumbnail"';
+	
+	if( $file_gallery_options["default_image_size"] == "thumbnail" )
+		$sizes_dropdown .= ' selected="selected"';
+	
+	$sizes_dropdown .= '>' . __('thumbnail', 'file-gallery') . '</option>';
+	
+	$sizes_dropdown .= '<option value="medium"';
+	
+	if( $file_gallery_options["default_image_size"] == "medium" )
+		$sizes_dropdown .= ' selected="selected"';
+	
+	$sizes_dropdown .= '>' . __('medium', 'file-gallery') . '</option>';
+	
+	$sizes_dropdown .= '<option value="large"';
+	
+	if( $file_gallery_options["default_image_size"] == "large" )
+		$sizes_dropdown .= ' selected="selected"';
+	
+	$sizes_dropdown .= '>' . __('large', 'file-gallery') . '</option>';
+	
+	$sizes_dropdown .= '<option value="full"';
+	
+	if( $file_gallery_options["default_image_size"] == "full" )
+		$sizes_dropdown .= ' selected="selected"';
+	
+	$sizes_dropdown .= '>' . __('full', 'file-gallery') . '</option>';
+
+	// default sizes dropdown list for single option	
+	$sizes_single_dropdown .= '<option value="thumbnail"';
+	
+	if( $file_gallery_options["single_default_image_size"] == "thumbnail" )
+		$sizes_single_dropdown .= ' selected="selected"';
+	
+	$sizes_single_dropdown .= '>' . __('thumbnail', 'file-gallery') . '</option>';
+	
+	$sizes_single_dropdown .= '<option value="medium"';
+	
+	if( $file_gallery_options["single_default_image_size"] == "medium" )
+		$sizes_single_dropdown .= ' selected="selected"';
+	
+	$sizes_single_dropdown .= '>' . __('medium', 'file-gallery') . '</option>';
+	
+	$sizes_single_dropdown .= '<option value="large"';
+	
+	if( $file_gallery_options["single_default_image_size"] == "large" )
+		$sizes_single_dropdown .= ' selected="selected"';
+	
+	$sizes_single_dropdown .= '>' . __('large', 'file-gallery') . '</option>';
+	
+	$sizes_single_dropdown .= '<option value="full"';
+	
+	if( $file_gallery_options["single_default_image_size"] == "full" )
+		$sizes_single_dropdown .= ' selected="selected"';
+	
+	$sizes_single_dropdown .= '>' . __('full', 'file-gallery') . '</option>';
 
 	// size dropdown lists
 	foreach( $file_gallery_sizes as $size )
 	{
+		if( in_array($size, array('thumbnail', 'medium', 'large', 'full')) )
+			continue;
+
 		$sizes_dropdown .= '<option value="' . $size . '"';
 		
-		if( $file_gallery_options["default_image_size"] == $size)
+		if( $file_gallery_options["default_image_size"] == $size )
 			$sizes_dropdown .= ' selected="selected"';
 		
 		$sizes_dropdown .= '>' . $size . '</option>';
@@ -284,7 +347,7 @@ function file_gallery_options_fields( $args )
 		// for single option	
 		$sizes_single_dropdown .= '<option value="' . $size . '"';
 		
-		if( $file_gallery_options["single_default_image_size"] == $size)
+		if( $file_gallery_options["single_default_image_size"] == $size )
 			$sizes_single_dropdown .= ' selected="selected"';
 		
 		$sizes_single_dropdown .= '>' . $size . '</option>';
@@ -340,11 +403,17 @@ function file_gallery_options_fields( $args )
 		if( "1" == get_option($size . "_crop") )
 			$checked = ' checked="checked" ';
 		
-		if( "medium" == $size || "large" == $size )
+		if( "medium" == $size )
 		{	
 			$output = 
-			'<input name="' . $size . '_crop" id="' . $size . '_crop" value="1" ' . $checked . ' type="checkbox" />
-			 <label for="'  . $size . '_crop">' . sprintf(__('Crop %s size to exact dimensions', 'file-gallery'), __($size, "file-gallery")) . '</label>';
+			'<input name="medium_crop" id="medium_crop" value="1" ' . $checked . ' type="checkbox" />
+			 <label for="medium_crop">' . sprintf(__('Crop %s size to exact dimensions', 'file-gallery'), __("medium", "file-gallery")) . '</label>';
+		}
+		elseif( "large" == $size )
+		{	
+			$output = 
+			'<input name="large_crop" id="large_crop" value="1" ' . $checked . ' type="checkbox" />
+			 <label for="large_crop">' . sprintf(__('Crop %s size to exact dimensions', 'file-gallery'), __("large", "file-gallery")) . '</label>';
 		}
 		else
 		{
