@@ -19,23 +19,24 @@ function file_gallery_options_init()
 	{
 		if( "thumbnail" != $size && "full" != $size )
 		{
-			$size_translated = __('size', 'file-gallery');
+			$size_translated = " " . __('size', 'file-gallery');
 			
 			if( "medium" == $size )
 			{
-				$translated_size = ucfirst(__("medium", "file-gallery"));
+				$translated_size = ucfirst(__("Medium size", "file-gallery"));
+				$size_translated = "";
 			}
 			elseif( "large" == $size )
 			{
-				$translated_size = ucfirst(__("large", "file-gallery"));
+				$translated_size = ucfirst(__("Large size", "file-gallery"));
 				$size_translated = "";
 			}
 			else
 			{
-				$translated_size = '"' . ucfirst($size) . '"';
+				$translated_size = ucfirst($size);
 			}
 				
-			add_settings_field("size_" . $size, $translated_size . ' ' . $size_translated, create_function("", 'return file_gallery_options_fields( array("size" => "' . $size . '") );'), 'media', 'intermediate_image_sizes');
+			add_settings_field("size_" . $size, $translated_size . $size_translated, create_function("", 'return file_gallery_options_fields( array("size" => "' . $size . '") );'), 'media', 'intermediate_image_sizes');
 			
 			register_setting('media', $size . "_size_w");
 			register_setting('media', $size . "_size_h");
@@ -198,6 +199,8 @@ function file_gallery_options_sections( $args )
  */
 function file_gallery_options_fields( $args )
 {
+	global $_wp_additional_image_sizes;
+	
 	$file_gallery_sizes = file_gallery_get_intermediate_image_sizes();
 	
 	$file_gallery_options = get_option("file_gallery");
@@ -400,28 +403,37 @@ function file_gallery_options_fields( $args )
 	{
 		$size = $args["size"];
 		
-		if( "1" == get_option($size . "_crop") )
+		if( "1" == get_option($size . "_crop") || 1 == $_wp_additional_image_sizes[$size]['crop'] )
 			$checked = ' checked="checked" ';
 		
 		if( "medium" == $size )
 		{	
 			$output = 
 			'<input name="medium_crop" id="medium_crop" value="1" ' . $checked . ' type="checkbox" />
-			 <label for="medium_crop">' . sprintf(__('Crop %s size to exact dimensions', 'file-gallery'), __("medium", "file-gallery")) . '</label>';
+			 <label for="medium_crop">' . __('Crop medium size to exact dimensions', 'file-gallery') . '</label>';
 		}
 		elseif( "large" == $size )
 		{	
 			$output = 
 			'<input name="large_crop" id="large_crop" value="1" ' . $checked . ' type="checkbox" />
-			 <label for="large_crop">' . sprintf(__('Crop %s size to exact dimensions', 'file-gallery'), __("large", "file-gallery")) . '</label>';
+			 <label for="large_crop">' . __('Crop large size to exact dimensions', 'file-gallery') . '</label>';
 		}
 		else
 		{
+			$size_w = get_option($size . "_size_w");
+			$size_h = get_option($size . "_size_w");
+			
+			if( ! is_numeric($size_w) )
+				$size_w = $_wp_additional_image_sizes[$size]['width'];
+			
+			if( ! is_numeric($size_h) )
+				$size_h = $_wp_additional_image_sizes[$size]['height'];
+			
 			$output = 
 			'<label for="'  . $size . '_size_w">' . __("Width", 'file-gallery') . '</label>
-			 <input name="' . $size . '_size_w" id="' . $size . '_size_w" value="' . get_option($size . "_size_w") . '" class="small-text" type="text" />
+			 <input name="' . $size . '_size_w" id="' . $size . '_size_w" value="' . $size_w . '" class="small-text" type="text" />
 			 <label for="'  . $size . '_size_h">' . __("Height", 'file-gallery') . '</label>
-			 <input name="' . $size . '_size_h" id="' . $size . '_size_h" value="' . get_option($size . "_size_h") . '" class="small-text" type="text" /><br />
+			 <input name="' . $size . '_size_h" id="' . $size . '_size_h" value="' . $size_h . '" class="small-text" type="text" /><br />
 			 <input name="' . $size . '_crop" id="' . $size . '_crop" value="1" ' . $checked . ' type="checkbox" />
 			 <label for="'  . $size . '_crop">' . sprintf(__('Crop %s size to exact dimensions', 'file-gallery'), $size) . '</label>';
 		}

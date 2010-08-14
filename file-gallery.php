@@ -304,7 +304,12 @@ add_action('admin_menu', 'file_gallery_media_submenu');
  */
 function file_gallery_get_intermediate_image_sizes()
 {
-	$additional_intermediate_sizes = apply_filters("intermediate_image_sizes", array());
+	$sizes = array();
+
+	if( function_exists("get_intermediate_image_sizes") )
+		$sizes = get_intermediate_image_sizes();
+
+	$additional_intermediate_sizes = apply_filters("intermediate_image_sizes", $sizes);
 	
 	array_unshift($additional_intermediate_sizes, "thumbnail", "medium", "large", "full");
 	
