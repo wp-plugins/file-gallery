@@ -375,7 +375,7 @@ function file_gallery_js_admin()
 	{
 		echo   '<script type="text/javascript">
 					//internationalization
-					fgL10n								= new Array();
+					var fgL10n							= new Array();
 					fgL10n["switch_to_tags"] 			= "' . __("Switch to tags", "file-gallery") . '";
 					fgL10n["switch_to_files"] 			= "' . __("Switch to list of attachments", "file-gallery") . '";
 					fgL10n["fg_info"] 					= "' . __("Insert checked attachments into post as", "file-gallery") . ':";
@@ -395,20 +395,21 @@ function file_gallery_js_admin()
 					fgL10n["post_thumb_unset"]			= "' . __("Featured image removed", "file-gallery") . '";
 					fgL10n["copy_all_from_original"]	= "' . __("Copy all attachments from the original post?", "file-gallery") . '";
 					
-					fgL10n["Remove featured image"]		= "' . __("Remove featured image") . '";
+					fgL10n["set_as_featured"]			= "' . __("Set as featured image", "file-gallery") . '";
+					fgL10n["unset_as_featured"]			= "' . __("Unset as featured image", "file-gallery") . '";
 				
-					var file_gallery_url 	 = "' . FILE_GALLERY_URL . '";
-					var file_gallery_nonce   = "' . $nonce . '";
-					var file_gallery_clear_cache_nonce   = "' . $clear_cache_nonce . '";
-					var file_gallery_mode    = "list";
-					var current_item_dragged = "";
-					var thumb_w 			 = '  . get_option("thumbnail_size_w") . ';
-					var thumb_h 			 = '  . get_option("thumbnail_size_h") . ';
-					var num_attachments 	 = 1;
-					var wp_version 			 = '  . (float)$wp_version . ';
-					var tags_from 			 = true;
-					var list_attachments 	 = "";
-					var post_thumb_nonce     = "' . wp_create_nonce( "set_post_thumbnail-" . $post_ID ) . '";
+					var file_gallery_url 	 = "' . FILE_GALLERY_URL . '",
+						file_gallery_nonce   = "' . $nonce . '",
+						file_gallery_clear_cache_nonce = "' . $clear_cache_nonce . '",
+						file_gallery_mode    = "list",
+						current_item_dragged = "",
+						thumb_w 			 = '  . get_option("thumbnail_size_w") . ',
+						thumb_h 			 = '  . get_option("thumbnail_size_h") . ',
+						num_attachments 	 = 1,
+						wp_version 			 = '  . (float)$wp_version . ',
+						tags_from 			 = true,
+						list_attachments 	 = "",
+						post_thumb_nonce     = "' . wp_create_nonce( "set_post_thumbnail-" . $post_ID ) . '";
 				</script>';
 
 		wp_enqueue_script( "file-gallery-main",  FILE_GALLERY_URL . "/js/file-gallery.js", array("jquery", "jquery-ui-core", "jquery-ui-draggable", "jquery-ui-sortable", "jquery-ui-dialog"), false, true );

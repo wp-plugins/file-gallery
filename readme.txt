@@ -4,11 +4,13 @@ Donate link: http://www.amazon.com/gp/registry/wishlist/1IU6F22QPQX2Y/
 Tags: attachment, attachments, gallery, galleries, template, templates, shortcode, file, files, attach, detach, unattach, copy, media, tags, library
 Requires at least: 2.9.2
 Tested up to: 3.1-alpha
-Stable tag: 1.5.9
+Stable tag: 1.6.0
 
 File Gallery extends WordPress media (attachments) capabilities 
 by adding a new gallery shortcode handler with templating support 
 (and much more).
+
+
 
 == Description ==
 
@@ -44,6 +46,8 @@ more... Here's the full list of features:
 12. basic caching of gallery output and frequent queries (transients)
 13. various smaller modifications described in help files (coming soon!) 
 
+
+
 == Screenshots ==
 
 1. File Gallery main box on editing screen
@@ -57,6 +61,8 @@ more... Here's the full list of features:
 9. With "WPML Multilingual CMS" plugin istalled, you'll be able to copy 
    all attachments from the original post to translated one in two clicks
 
+
+
 == Installation == 
 
 1.	Place the whole 'file-gallery' folder into your WordPress 
@@ -65,7 +71,18 @@ more... Here's the full list of features:
 	"File Gallery" plugin.
 3.	You're done - go edit or add a new post to see how it works :)
 
+
+
 == Changelog ==
+
+= 1.6 =
+* August 17th, 2010
+* added French translation (thanks, Jean-Michel!)
+* reverted to default 'load_plugin_textdomain'
+* fixed a link 'rel' attribute bug
+* modified the default templates a bit (if/else statements for image 
+  class)
+* minor js changes regarding (un)setting featured image translation
 
 = 1.5.9 =
 * August 11th, 2010
@@ -262,6 +279,8 @@ more... Here's the full list of features:
 * December 12th, 2009
 * Rewritten a lot of stuff for better WordPress compliance :)
 
+
+
 == More info ==
 
 This plugin uses icons from the awesome famfamfam Silk icon set by 
@@ -273,14 +292,25 @@ Plugin settings are integrated into media settings page.
 
 Help file is included, you'll find it in the "help" subfolder :)
 
+
+
+== Thanks goes out to... ==
+
+* **Jean-Michel Meyer** (http://www.li-an.fr/wpplugins/) for the 
+  French translation
+* All the people leaving comments, bug reports and suggestions on 
+  the official plugin page
+
+  
+  
 == Plans for the next version? ==
 
-sooner (pre 1.6):
+sooner:
 
 - cleanup script for media tag database taxonomy name(s)
 - audio and video preview on editing screens
 
-later (post 1.6):
+later:
 
 - phpdoc all the functions
 
@@ -288,7 +318,7 @@ maybe:
 
 - ability to load attachments from other posts
 
-probably not but who knows:
+probably not, but who knows:
 
 - when detaching / deleting attachments, just remove them from DOM
   without refreshing the entire file gallery box - need to think of 

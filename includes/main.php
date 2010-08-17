@@ -100,8 +100,13 @@ function file_gallery_list_attachments(&$count_attachments, $post_id, $attachmen
 				
 				if( "" == $non_image && function_exists('current_theme_supports') && current_theme_supports('post-thumbnails') ) :
 				
-					$attached_files .= '<a href="#" class="post_thumb_status" rel="' . $attachment->ID . '">
-							<img src="' . FILE_GALLERY_URL . '/images/famfamfam_silk/bell_' . $post_thumb_link . '.png" alt="' . __(ucfirst($post_thumb_link) . " as post thumb", "file-gallery") . '" title="' . __(ucfirst($post_thumb_link) . " as featured image", "file-gallery") . '" />
+					if( "set" == $post_thumb_link )
+						$as_featured = __("Set as featured image", "file-gallery");
+					else
+						$as_featured = __("Unset as featured image", "file-gallery");
+				
+					$attached_files .= '<a href="#" class="post_thumb_status" rel="' . $attachment->ID . '" title="' . $as_featured . '">
+							<img src="' . FILE_GALLERY_URL . '/images/famfamfam_silk/bell_' . $post_thumb_link . '.png" alt="' . $as_featured . '" />
 						</a>';
 					
 					$attached_files .= '<div id="post_thumb_setter_' . $attachment->ID . '" class="post_thumb_setter">

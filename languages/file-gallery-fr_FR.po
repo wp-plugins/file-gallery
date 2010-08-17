@@ -884,32 +884,32 @@ msgstr "utiliser le style par défaut "
 #: includes/media-settings.php:312
 #@ file-gallery
 msgid "thumbnail"
-msgstr ""
+msgstr "miniature"
 
 #: includes/main-form.php:51
 #: includes/media-settings.php:304
 #: includes/media-settings.php:333
 #@ file-gallery
 msgid "full"
-msgstr ""
+msgstr "entière "
 
 #: includes/media-settings.php:26
 #@ file-gallery
 msgid "Medium size"
-msgstr ""
+msgstr "Taille moyenne "
 
 #: includes/media-settings.php:31
 #@ file-gallery
 msgid "Large size"
-msgstr ""
+msgstr "Grande taille "
 
 #: includes/media-settings.php:413
 #@ file-gallery
 msgid "Crop medium size to exact dimensions"
-msgstr ""
+msgstr "Retailler la taille médium aux dimensions exactes "
 
 #: includes/media-settings.php:419
 #@ file-gallery
 msgid "Crop large size to exact dimensions"
-msgstr ""
+msgstr "Retailler la grande taille aux dimensions exactes "
 

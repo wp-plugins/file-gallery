@@ -1280,34 +1280,45 @@ jQuery(document).ready(function()
 				function( new_thumb )
 				{
 					var src = jQuery("#image-" + attachment_ids + " .post_thumb_status img").attr("src"),
-						response = fgL10n["post_thumb_set"];
+						response = fgL10n["post_thumb_set"],
+						bell = null;
 					
 					jQuery("#fg_loading_on_thumb").fadeOut(250).remove();
 					
 					if( "file_gallery_set_post_thumb" == action )
 					{
 						jQuery(".sortableitem.post_thumb .post_thumb_status img")
+							.attr("alt", fgL10n["set_as_featured"])
 							.attr("src", src.replace(/bell_unset.png/, "bell_set.png"))
-							.parents("li")
-								.removeClass("post_thumb");
+							.parent()
+								.attr("title", fgL10n["set_as_featured"])
+								.parent()
+									.removeClass("post_thumb");
 						
-						jQuery("#image-" + attachment_ids + " .post_thumb_status img").attr("src", src.replace(/bell_set.png/, "bell_unset.png"));
+						jQuery("#image-" + attachment_ids + " .post_thumb_status img")
+							.attr("src", src.replace(/bell_set.png/, "bell_unset.png"))
+							.attr("alt", fgL10n["unset_as_featured"])
+							.parent()
+								.attr("title", fgL10n["unset_as_featured"]);
+						
 						jQuery("#image-" + attachment_ids).addClass("post_thumb");
 						
 						jQuery("#postimagediv .inside")
 							.html(new_thumb);
-						
 					}
 					else
-					{
+					{						
 						WPRemoveThumbnail(post_thumb_nonce);
 						
 						response = fgL10n["post_thumb_unset"];
 						
 						jQuery("#image-" + attachment_ids + " .post_thumb_status img")
+							.attr("alt", fgL10n["set_as_featured"])
 							.attr("src", src.replace(/bell_unset.png/, "bell_set.png"))
-							.parents("li")
-								.removeClass("post_thumb");
+							.parent()
+								.attr("title", fgL10n["set_as_featured"])
+								.parent()
+									.removeClass("post_thumb");
 					}
 					
 					jQuery('#file_gallery_response').html(response).fadeOut(7500);
