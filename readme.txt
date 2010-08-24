@@ -4,7 +4,7 @@ Donate link: http://www.amazon.com/gp/registry/wishlist/1IU6F22QPQX2Y/
 Tags: attachment, attachments, gallery, galleries, template, templates, shortcode, file, files, attach, detach, unattach, copy, media, tags, library
 Requires at least: 2.9.2
 Tested up to: 3.1-alpha
-Stable tag: 1.6.0
+Stable tag: 1.6.0.1
 
 File Gallery extends WordPress media (attachments) capabilities 
 by adding a new gallery shortcode handler with templating support 
@@ -74,6 +74,11 @@ more... Here's the full list of features:
 
 
 == Changelog ==
+
+= 1.6.0.1 =
+* August 24th, 2010
+* fixed a bug in media settings where custom image size height would 
+  get the value of width because of a typo - sorry :/
 
 = 1.6 =
 * August 17th, 2010

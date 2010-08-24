@@ -421,7 +421,7 @@ function file_gallery_options_fields( $args )
 		else
 		{
 			$size_w = get_option($size . "_size_w");
-			$size_h = get_option($size . "_size_w");
+			$size_h = get_option($size . "_size_h");
 			
 			if( ! is_numeric($size_w) )
 				$size_w = $_wp_additional_image_sizes[$size]['width'];
