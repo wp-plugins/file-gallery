@@ -1,0 +1,48 @@
+.gallery.default,
+#content .gallery.default
+{
+	margin: auto;
+	overflow: hidden;
+}
+
+.gallery.default .gallery-item,
+#content .gallery.default .gallery-item
+{
+	float: left;
+	text-align: center;
+	margin: 10px 0 0 0;
+	padding: 0;
+}
+
+.gallery.default .gallery-item .gallery-icon,
+#content .gallery.default .gallery-item .gallery-icon
+{
+	margin: 0;
+	padding: 0;
+}
+
+.gallery.default img,
+#content .gallery.default img
+{
+	border: 2px solid #cfcfcf;
+}
+
+.gallery.default .gallery-caption,
+#content .gallery.default .gallery-caption
+{
+	margin-left: 0;
+}
+
+.gallery.default .gallery-description,
+#content .gallery.default .gallery-description
+{
+	margin-left: 0;
+}
+
+.gallery.default br.clear,
+#content .gallery.default br.clear
+{
+	clear: both;
+	height: 0.001px;
+	visibility: hidden;
+}
