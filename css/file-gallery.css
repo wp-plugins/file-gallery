@@ -625,19 +625,6 @@ textarea, input, select
 	background-image: url(../images/famfamfam_silk/bullet_arrow_down.png);
 }
 
-.column-post_thumb,
-.column-attachment_count
-{
-	text-align: center;
-}
-
-.column-post_thumb img
-{
-	margin: 3px 0;
-	max-height: 60px;
-	max-width: 80px;
-}
-
 .thumb_switch_load
 {
 	position: absolute;
@@ -667,6 +654,29 @@ textarea, input, select
 {
 	color: #b37458;
 	background: #fdf9da;
+}
+
+
+
+/* edit.php - posts/pages listing */
+
+th.column-post_thumb,
+th.column-attachment_count
+{
+	width: 100px;
+}
+
+td.column-post_thumb,
+td.column-attachment_count
+{
+	text-align: center;
+}
+
+td.column-post_thumb img
+{
+	margin: 3px 0;
+	max-height: 60px;
+	max-width: 80px;
 }
 
 
