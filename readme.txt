@@ -1,10 +1,10 @@
 === File Gallery ===
 Contributors: aesqe
-Donate link: http://www.amazon.com/gp/registry/wishlist/1IU6F22QPQX2Y/
+Donate link: http://skyphe.org/donate/
 Tags: attachment, attachments, gallery, galleries, template, templates, shortcode, file, files, attach, detach, unattach, copy, media, tags, library
 Requires at least: 2.9.2
 Tested up to: 3.1-alpha
-Stable tag: 1.6.0.1
+Stable tag: 1.6.2
 
 File Gallery extends WordPress media (attachments) capabilities 
 by adding a new gallery shortcode handler with templating support 
@@ -74,6 +74,15 @@ more... Here's the full list of features:
 
 
 == Changelog ==
+
+= 1.6.2 =
+* September 12th, 2010
+* added Hebrew translation and support for RTL languages
+  - Maor Barazany, thank you so much for your assistance :)
+* some new filters (check the help file)
+* small cosmetic changes in code
+* added a proper donation link to this readme ;)
+* skipped v1.6.1 so it wouldn't confuse people (because of 1.6.0.1)
 
 = 1.6.0.1 =
 * August 24th, 2010
@@ -299,12 +308,17 @@ Help file is included, you'll find it in the "help" subfolder :)
 
 
 
+== Translation Credits ==
+
+* **Maor Barazany**     - Hebrew - http://www.maorb.info
+* **Jean-Michel Meyer** - French - http://www.li-an.fr/wpplugins/
+
+
+
 == Thanks goes out to... ==
 
-* **Jean-Michel Meyer** (http://www.li-an.fr/wpplugins/) for the 
-  French translation
-* All the people leaving comments, bug reports and suggestions on 
-  the official plugin page
+* All the translators, and people leaving comments, bug reports and 
+  suggestions on the official page and in the WordPress.org forums
 
   
   
@@ -325,6 +339,7 @@ maybe:
 
 probably not, but who knows:
 
+- watermarking - probably in another plugin...
 - when detaching / deleting attachments, just remove them from DOM
   without refreshing the entire file gallery box - need to think of 
   a nice, elegant solution? any ideas? :)

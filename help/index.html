@@ -533,13 +533,27 @@ TinyMCE upgrade (probably in 3.1)</p>
 			<em>See example use below</em>.<br />
 			Params: 1) array
 			containing existing values</li>
-		<li><strong>plugin_translations_path</strong> - filter the location/path where
-			the plugin should look for its translation (.mo) files <strong>first</strong>.
-			Second location is &quot;wp-content/plugins&quot;, and the third is in
-			&quot;languages&quot; subdirectory within plugin directory.<br />
-			Params:
-			1)
-			current path, 2) domain</li>
+		<li><strong>file_gallery_admin_css_location</strong> - filter the location of File Gallery
+		admin CSS (probably of no use to anyone, but hey :))</li>
+		<li><strong>file_gallery_admin_rtl_css_location</strong> - same as above
+			for RTL CSS</li>
+		<li><strong>file_gallery_post_attachment_count</strong> - if attachment count for a post
+			is being shown on edit posts (list) screens.<br />
+			Params: 1) attachment count, 2) post ID
+		</li>
+		<li><strong>file_gallery_post_thumb_content</strong> - if post thumbs
+			(featured images) are being shown on edit posts (list) screens
+		and featured image is set for a post. Thumb image by default.<br />
+		Params: 1) thumb image HTML, 2) post ID, 3) thumbnail image (attachment)
+		ID
+		</li>
+		<li><strong>file_gallery_no_post_thumb_content</strong> - if post thumbs
+			(featured images) are being shown on edit posts (list) screens
+			and no featured image is set for a post.<br />
+			Params: 1) a dash symbol (-), 2) post ID</li>
+		<li><strong>file_gallery_crystal_url</strong> - URL to the Crystal image set supplied with
+			WordPress.<br />
+			Params: 1) default location (wp-includes/images/crystal)</li>
 	</ul>
 	<h3>Examples</h3>
 <h4>Image class filtering for <a href="http://wordpress.org/extend/plugins/jquery-colorbox/">jQuery

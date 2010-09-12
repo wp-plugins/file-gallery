@@ -2,7 +2,7 @@
 /*
 Plugin Name: File Gallery
 Plugin URI: http://skyphe.org/code/wordpress/file-gallery/
-Version: 1.6.0.1
+Version: 1.6.2
 Description: "File Gallery" extends WordPress' media (attachments) capabilities by adding a new gallery shortcode handler with templating support, a new interface for attachment handling when editing posts, and much more.
 Author: Bruno "Aesqe" Babic
 Author URI: http://skyphe.org
@@ -51,13 +51,15 @@ if ( !defined( 'WP_PLUGIN_DIR' ) )
 /**
  * Setup default File Gallery options
  */
-$file_gallery_abspath = WP_PLUGIN_DIR . "/" . basename(dirname(__FILE__));
-$file_gallery_abspath = str_replace("\\", "/", $file_gallery_abspath);
-$file_gallery_abspath = preg_replace("#/+#", "/", $file_gallery_abspath);
+$file_gallery_abspath     = WP_PLUGIN_DIR . "/" . basename(dirname(__FILE__));
+$file_gallery_abspath     = str_replace("\\", "/", $file_gallery_abspath);
+$file_gallery_abspath     = preg_replace("#/+#", "/", $file_gallery_abspath);
+$file_gallery_crystal_url = get_bloginfo('wpurl') . "/" . WPINC . "/images/crystal";
 
 define("FILE_GALLERY_URL", WP_PLUGIN_URL . "/" . basename(dirname(__FILE__)));
 define("FILE_GALLERY_ABSPATH", $file_gallery_abspath);
 define("FILE_GALLERY_DEFAULT_TEMPLATES", serialize( array("default", "file-gallery", "list") ) );
+define("FILE_GALLERY_CRYSTAL_URL", apply_filters("file_gallery_crystal_url", $file_gallery_crystal_url));
 
 
 
@@ -75,12 +77,15 @@ function file_gallery_plugins_support()
 	$mobile = false;
 	$fg_ss_dir = get_stylesheet_directory();
 	$file_gallery_media_tag_name = "media_tag";
+	$options = get_option("file_gallery");
 	
 	// WordPress Mobile Edition
 	if( function_exists("cfmobi_check_mobile") && cfmobi_check_mobile() )
 	{
 		$mobile = true;
-		add_filter('stylesheet_uri', 'file_gallery_mobile_css');
+	
+		if( "" != $options && isset($options['disable_shortcode_handler']) && true != $options['disable_shortcode_handler'] )
+			add_filter('stylesheet_uri', 'file_gallery_mobile_css');
 	}
 	
 	// Media Tags
@@ -108,6 +113,8 @@ add_action("plugins_loaded", "file_gallery_plugins_support", 100);
  */
 function file_gallery_activate()
 {
+	file_gallery_plugins_support();
+	
 	$defaults = array(
 		'folder' 					  => FILE_GALLERY_URL, 
 		'abspath' 					  => FILE_GALLERY_ABSPATH, 
@@ -451,10 +458,13 @@ function file_gallery_css_admin()
 	   "media.php" 			== $pagenow || 
 	   "media-upload.php" 	== $pagenow || 
 	   "edit.php"			== $pagenow || 
-	   ("post" == $current_screen->base && isset($current_screen->post_type))
+	   ( isset($current_screen->post_type) && "post" == $current_screen->base )
 	  )
 	{
-		wp_enqueue_style( "file_gallery_admin", FILE_GALLERY_URL . "/css/file-gallery.css" );
+		wp_enqueue_style( "file_gallery_admin", apply_filters("file_gallery_admin_css_location", FILE_GALLERY_URL . "/css/file-gallery.css") );
+		
+		if( "rtl" == get_bloginfo("text_direction") )
+			wp_enqueue_style( "file_gallery_admin_rtl", apply_filters("file_gallery_admin_rtl_css_location", FILE_GALLERY_URL . "/css/file-gallery-rtl.css") );
 	}
 }
 add_action('admin_print_styles', 'file_gallery_css_admin');
@@ -557,18 +567,22 @@ function file_gallery_posts_custom_column($column_name, $post_id)
 
 	if( "attachment_count" == $column_name && isset($options["e_display_attachment_count"]) && true == $options["e_display_attachment_count"] )
 	{
-		echo $wpdb->get_var( $wpdb->prepare("SELECT COUNT(ID) FROM $wpdb->posts WHERE post_type='attachment' AND post_parent=%d", $post_id) );
+		$count = $wpdb->get_var( $wpdb->prepare("SELECT COUNT() FROM $wpdb->posts WHERE post_type='attachment' AND post_parent=%d", $post_id) );
+		
+		echo apply_filters('file_gallery_post_attachment_count', $count, $post_id);
 	}
 	elseif( "post_thumb" == $column_name && isset($options["e_display_post_thumb"]) && true == $options["e_display_post_thumb"] )
 	{
 		if( $thumb_id = get_post_meta( $post_id, '_thumbnail_id', true ) )
 		{
 			$thumb_src = wp_get_attachment_image_src( $thumb_id, "thumbnail", false, $attr );
-			echo '<img src="' . $thumb_src[0] .'" alt="Post thumb" />';
+			$content   = '<img src="' . $thumb_src[0] .'" alt="Post thumb" />';
+			
+			echo apply_filters('file_gallery_post_thumb_content', $content, $post_id, $thumb_id);
 		}
 		else
 		{
-			echo "-";
+			echo apply_filters('file_gallery_no_post_thumb_content', '-', $post_id);
 		}
 	}
 }

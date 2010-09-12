@@ -1742,10 +1742,15 @@ jQuery(document).ready(function()
 	
 	
 	
+	/* ie6 min/max-width/height */
+	if( 0 < jQuery("td.column-post_thumb img").length && jQuery.browser.msie && 7 > jQuery.browser.version )
+	{
+		jQuery("td.column-post_thumb img").width(80).height(60).css({"border" : "0px solid #000"});
+	}
 });
 
 
-	
+
 // --------------------------------------------------------- //
 
 

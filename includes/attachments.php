@@ -103,7 +103,7 @@ function file_gallery_parse_attachment_data( $attachment_id, $size, $linkto, $li
 	}
 	else
 	{
-		$size_src    = get_bloginfo('wpurl') . "/" . WPINC . "/images/crystal/" . file_gallery_get_file_type($attachment->post_mime_type) . ".png";
+		$size_src    = FILE_GALLERY_CRYSTAL_URL . "/" . file_gallery_get_file_type($attachment->post_mime_type) . ".png";
 		$width       = "46";
 		$height      = "60";
 		$imageclass .= " non-image";
@@ -171,7 +171,7 @@ function file_gallery_edit_attachment()
 	else
 	{
 		$fullsize_src = wp_get_attachment_url( $attachment_id );
-		$size_src     = get_bloginfo('wpurl') . "/" . WPINC . "/images/crystal/" . file_gallery_get_file_type($attachment->post_mime_type) . ".png";
+		$size_src     = FILE_GALLERY_CRYSTAL_URL . "/" . file_gallery_get_file_type($attachment->post_mime_type) . ".png";
 		
 		$type = "document";
 	}

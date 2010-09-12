@@ -663,20 +663,20 @@ textarea, input, select
 th.column-post_thumb,
 th.column-attachment_count
 {
-	width: 100px;
+	width: 100px !important;
 }
 
 td.column-post_thumb,
 td.column-attachment_count
 {
-	text-align: center;
+	text-align: center !important;
 }
 
 td.column-post_thumb img
 {
-	margin: 3px 0;
-	max-height: 60px;
-	max-width: 80px;
+	margin: 3px 0 !important;
+	max-height: 60px !important;
+	max-width: 80px !important;
 }
 
 

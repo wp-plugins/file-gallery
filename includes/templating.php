@@ -43,7 +43,7 @@ function file_gallery_get_templates()
 			unset($file_gallery_templates[$key]);
 	}
 	
-	$default_templates = maybe_unserialize(FILE_GALLERY_DEFAULT_TEMPLATES);
+	$default_templates = unserialize(FILE_GALLERY_DEFAULT_TEMPLATES);
 	
 	foreach( $default_templates as $df )
 	{
@@ -66,7 +66,7 @@ function file_gallery_mobile_css( $stylesheet_url )
 	$options = get_option("file_gallery");
 	
 	if( true == $options['disable_shortcode_handler'] )
-		return;
+		return $stylesheet_url;
 
 	file_gallery_css_front( true );
 	
@@ -116,8 +116,8 @@ function file_gallery_css_front( $mobile = false )
 			// if there's a match...
 			if( false !== $m && 0 < $m )
 			{
-				$gallery_matches += $m; // ...add the number of matches to global count...
-				$galleries = $g[0];   // ...and add the match to galleries array
+				$gallery_matches += $m;    // ...add the number of matches to global count...
+				$galleries        = $g[0]; // ...and add the match to galleries array
 			}
 		}
 	}
@@ -329,8 +329,8 @@ function file_gallery_shortcode( $attr )
 				'tags'				=> '',
 				'tags_from'			=> 'current',
 				'output_type'		=> 'html',
-				'output_params'		=> 1,	// needed when outputting html
-				'attachment_ids'	=> '',
+				'output_params'		=> 1,				// needed when outputting html
+				'attachment_ids'	=> '',				// alias of 'include'
 				'mimetype'			=> '',
 				'limit' 			=> -1
 			)
@@ -578,7 +578,7 @@ function file_gallery_shortcode( $attr )
 			}
 			else
 			{
-				$param['thumb_link']   = get_bloginfo('wpurl') . "/" . WPINC . "/images/crystal/" . file_gallery_get_file_type($attachment->post_mime_type) . ".png";
+				$param['thumb_link']   = FILE_GALLERY_CRYSTAL_URL . "/" . file_gallery_get_file_type($attachment->post_mime_type) . ".png";
 				$param['thumb_link']   = apply_filters('file_gallery_non_image_thumb_link', $param['thumb_link'], $attachment->post_mime_type, $attachment->ID);
 				$param['thumb_width']  = "46";
 				$param['thumb_height'] = "60";

@@ -27,7 +27,6 @@ function file_gallery_list_attachments(&$count_attachments, $post_id, $attachmen
 								  'order' => 'ASC', 
 								  'orderby' => 'menu_order',
 								  'post_status' => 'inherit'
-							 // , 'post_mime_type' => 'image' // gotta add "images only" option, until then this is out
 		));
 	}
 
@@ -48,9 +47,9 @@ function file_gallery_list_attachments(&$count_attachments, $post_id, $attachmen
 			$original_id = get_post_meta($attachment->ID, "_is_copy_of", true);
 			$copies 	 = get_post_meta($attachment->ID, "_has_copies", true);
 			
-			if( "" != $original_id )
+			if( "" != strval($original_id) )
 				$classes[] = "copy copy-of-" . $original_id;
-			elseif( "" != $copies )
+			elseif( "" != strval($copies) )
 				$classes[] = "has_copies copies-" . implode("-", $copies);
 			
 			if( intval($thumb_id) === intval($attachment->ID) )
@@ -74,10 +73,10 @@ function file_gallery_list_attachments(&$count_attachments, $post_id, $attachmen
 			// if it's not an image...
 			if( "" == $attachment_thumb )
 			{
-				$attachment_thumb = get_bloginfo('wpurl') . "/" . WPINC . "/images/crystal/" . file_gallery_get_file_type($attachment->post_mime_type) . ".png";
-				$attachment_width = "";
+				$attachment_thumb  = FILE_GALLERY_CRYSTAL_URL . "/" . file_gallery_get_file_type($attachment->post_mime_type) . ".png";
+				$attachment_width  = "";
 				$attachment_height = "";
-				$non_image = " non_image";
+				$non_image         = " non_image";
 			}
 			
 			$attached_files .= '
@@ -96,7 +95,7 @@ function file_gallery_list_attachments(&$count_attachments, $post_id, $attachmen
 				</a>
 				<input type="checkbox" id="att-chk-' . $attachment->ID . '" class="checker"' . $checked . ' />';
 		
-			if (current_user_can('edit_post', $attachment->ID)) :
+			if( current_user_can('edit_post', $attachment->ID) ) :
 				
 				if( "" == $non_image && function_exists('current_theme_supports') && current_theme_supports('post-thumbnails') ) :
 				
@@ -131,7 +130,7 @@ function file_gallery_list_attachments(&$count_attachments, $post_id, $attachmen
 				<div id="detach_or_delete_'  . $attachment->ID . '" class="detach_or_delete">
 					<br />';
 
-				if (current_user_can('delete_post', $attachment->ID)) :
+				if( current_user_can('delete_post', $attachment->ID) ) :
 	
 					$attached_files .= '<a href="#" class="do_single_delete" rel="' . $attachment->ID . '">' . __("Delete", "file-gallery") . '</a>
 						<br />
@@ -149,7 +148,7 @@ function file_gallery_list_attachments(&$count_attachments, $post_id, $attachmen
 					<a href="#" class="detach_cancel" rel="' . $attachment->ID . '">' . __("Cancel", "file-gallery") . '</a>
 				</div>';
 				
-				if (current_user_can('delete_post', $attachment->ID)) :
+				if( current_user_can('delete_post', $attachment->ID) ) :
 				
 					$attached_files .= '<div id="del_attachment_' . $attachment->ID . '" class="del_attachment">
 						' . __("Really delete?", "file-gallery") . ' 
