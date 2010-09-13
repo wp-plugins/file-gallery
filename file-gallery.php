@@ -2,7 +2,7 @@
 /*
 Plugin Name: File Gallery
 Plugin URI: http://skyphe.org/code/wordpress/file-gallery/
-Version: 1.6.2
+Version: 1.6.3-beta
 Description: "File Gallery" extends WordPress' media (attachments) capabilities by adding a new gallery shortcode handler with templating support, a new interface for attachment handling when editing posts, and much more.
 Author: Bruno "Aesqe" Babic
 Author URI: http://skyphe.org
@@ -59,7 +59,6 @@ $file_gallery_crystal_url = get_bloginfo('wpurl') . "/" . WPINC . "/images/cryst
 define("FILE_GALLERY_URL", WP_PLUGIN_URL . "/" . basename(dirname(__FILE__)));
 define("FILE_GALLERY_ABSPATH", $file_gallery_abspath);
 define("FILE_GALLERY_DEFAULT_TEMPLATES", serialize( array("default", "file-gallery", "list") ) );
-define("FILE_GALLERY_CRYSTAL_URL", apply_filters("file_gallery_crystal_url", $file_gallery_crystal_url));
 
 
 
@@ -91,20 +90,37 @@ function file_gallery_plugins_support()
 	// Media Tags
 	if( defined('MEDIA_TAGS_TAXONOMY') )
 		$file_gallery_media_tag_name = MEDIA_TAGS_TAXONOMY;
+		
+	define("FILE_GALLERY_MOBILE", $mobile);
+	define("FILE_GALLERY_MEDIA_TAG_NAME", $file_gallery_media_tag_name);
+}
+add_action("plugins_loaded", "file_gallery_plugins_support", 100);
 
-	// theme dirs
+
+
+/*
+ * Some constants you can filter even with your theme's functions.php file
+ *
+ * @since 1.6.3
+ */
+function file_gallery_filtered_constants()
+{
 	$file_gallery_theme_abspath = str_replace("\\", "/", $fg_ss_dir);
 	$file_gallery_theme_abspath = preg_replace("#/+#", "/", $file_gallery_theme_abspath);
 	$file_gallery_theme_templates_abspath = apply_filters("file_gallery_templates_folder_abspath", $file_gallery_theme_abspath . "/file-gallery-templates");
 	$file_gallery_theme_templates_url	  = apply_filters("file_gallery_templates_folder_url", get_bloginfo("stylesheet_directory") . "/file-gallery-templates");
 	
-	define("FILE_GALLERY_MOBILE", $mobile);
-	define("FILE_GALLERY_MEDIA_TAG_NAME", $file_gallery_media_tag_name);
 	define("FILE_GALLERY_THEME_ABSPATH", $file_gallery_theme_abspath);
 	define("FILE_GALLERY_THEME_TEMPLATES_ABSPATH", $file_gallery_theme_templates_abspath);
 	define("FILE_GALLERY_THEME_TEMPLATES_URL", $file_gallery_theme_templates_url);
+	
+	define("FILE_GALLERY_CRYSTAL_URL", apply_filters("file_gallery_crystal_url", $file_gallery_crystal_url));
+	
+	define("FILE_GALLERY_DEFAULT_TEMPLATE_NAME", apply_filters("file_gallery_default_template_name", "default"));
+	define("FILE_GALLERY_DEFAULT_TEMPLATE_URL", apply_filters("file_gallery_default_template_url", FILE_GALLERY_URL . "/templates/default"));
+	define("FILE_GALLERY_DEFAULT_TEMPLATE_ABSPATH", apply_filters("file_gallery_default_template_abspath", FILE_GALLERY_ABSPATH . "/templates/default"));
 }
-add_action("plugins_loaded", "file_gallery_plugins_support", 100);
+add_action("after_setup_theme", "file_gallery_filtered_constants");
 
 
 
