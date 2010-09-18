@@ -88,6 +88,11 @@ ul li
 {
 	color: #F0F;
 }
+
+.comment
+{
+	color: #F90;
+}
 </style>
 </head>
 <body>
@@ -320,8 +325,35 @@ TinyMCE upgrade (probably in 3.1)</p>
 	<p>All &quot;File Gallery&quot; related settings are integrated into WordPress'
 		Media settings admin page, found on the main WordPress admin menu under <strong>Settings
 		-&gt; Media</strong>.</p>
-	<p>Most of the options are self-explanatory, I believe, but caching should
-		probably be mentioned here.</p>
+	<p class="tip">Options in the first two sections (&quot;<strong>Some default
+			values for when inserting a gallery into a post...&quot;</strong> and <strong>&quot;...and
+			for when inserting (a) single image(s) into a post&quot;</strong>)
+			only set the default values for the File Gallery options found
+			in the File Gallery box on post editing screens - <strong>they do not
+			override previously set options in gallery shortcode!</strong><br />
+		<br />
+		If you need to override default gallery shortcode options,
+		you can do that via many filters supplied within this plugin.<br />
+		<br />
+		If you need a filter added somewhere just ask me and I'll
+		add it :)<br />
+		My e-mail address is <span class="text"><strong>aesqe@skyphe.org</strong></span><br />
+		<br />
+		In other words, if under the section &quot;<strong>Some default values
+		for when inserting a gallery into a post...</strong>&quot; you set the
+		value of the option &quot;<strong>template</strong>&quot; to &quot;<strong>file-gallery</strong>&quot;,
+		that <strong>will not</strong> make all your galleries use that template.
+		It will only set &quot;file-gallery&quot; as the preselected value
+		in the template dropdown within the File Gallery box on post editing
+		screens.<br />
+		<br />
+		It's a mouthful, I know, so here's a screenshot: <br />
+		<br />
+		<img src="images/19.png" alt="" width="720" height="752" /><br />
+		That's all
+		those options in the first two sections do, nothing more, I'm afraid...</p>
+<p>With that said, most of the options are self-explanatory, I believe,
+		but caching should probably be mentioned here.</p>
 	<h3><a name="cache" id="cache"></a>Cache</h3>
 	<p><strong>Q</strong>: What is cache?</p>
 	<p><strong>A</strong>: I think the <a href="http://www.tutorial9.net/web-tutorials/wordpress-caching-whats-the-best-caching-plugin/#1">first
@@ -360,7 +392,7 @@ TinyMCE upgrade (probably in 3.1)</p>
 	<h4><a name="gallery_php" id="gallery_php"></a>A) gallery.php</h4>
 	<p>This file contains the code for a <strong>single item</strong> in the
 		gallery.</p>
-	<p>At the beginning of the file, two variables need to be declared:</p>
+	<p>At the beginning of the file, two variables <em>should</em> to be declared:</p>
 	<ul>
 		<li><strong>$starttag</strong> - this is the tag used for gallery wrapper
 			element (default is 'div')</li>
@@ -368,6 +400,14 @@ TinyMCE upgrade (probably in 3.1)</p>
 			so you could specify the number of columns in a gallery (default is &quot;\n&lt;br
 			class='clear' /&gt;\n&quot; - &quot;\n&quot; is not obligatory there,
 			it represents a new line characteer and is just for the looks)</li>
+	</ul>
+	<p>There are two additional variables you can declare:</p>
+	<ul>
+		<li><strong>$starttag_class</strong> - additional class(es) for the gallery wrapper.
+			Separate multiple classes with a blank space.</li>
+		<li><strong>$columns</strong> - this will override the 'columns' value
+			set in the shortcode (or
+			in the defaults).</li>
 	</ul>
 	<p>The rest of the variables you can use in a template, in form of <strong>variable_name</strong> - <strong>value</strong></p>
 	<ul>
@@ -554,9 +594,55 @@ TinyMCE upgrade (probably in 3.1)</p>
 		<li><strong>file_gallery_crystal_url</strong> - URL to the Crystal image set supplied with
 			WordPress.<br />
 			Params: 1) default location (wp-includes/images/crystal)</li>
+		<li><strong>file_gallery_output</strong> - final shortcode output<br />
+			Params: 1) output, 2) post ID, 3) gallery ID</li>
+		<li><strong>file_gallery_default_template_name</strong> - filters the name of the default
+			template, see use example below<br />
+			Params: 1) default template name
+		- &quot;default&quot;</li>
+		<li><strong>file_gallery_default_template_url</strong> - URL to the default template directory,
+			see use example below<br />
+Params: 1) default template URL</li>
+		<li><strong>file_gallery_default_template_abspath</strong> - path to the default template
+			directory, see use example below<br />
+Params: 1) default template path</li>
 	</ul>
 	<h3>Examples</h3>
-<h4>Image class filtering for <a href="http://wordpress.org/extend/plugins/jquery-colorbox/">jQuery
+	<h4>Set name, path and URL of default template</h4>
+	<p>If you don't want to go through all of your gallery shortcodes in all
+		the posts just to change template from &quot;default&quot; to something
+		else, there are three filters you can use within your plugin, or
+		within your theme's functions.php file. The following example will
+		set the included 'list' template as default one:</p>
+<pre class="tip"><span class="function">function</span> filter_fg_default_url( <span class="variable">$url</span> )
+{
+	<span class="comment">// placed in a subfolder of your active theme
+	// $url = get_bloginfo(&quot;stylesheet_directory&quot;) . &quot;/file-gallery-templates/default&quot;;
+	// or just use the 'list' template which is included with the plugin</span>
+	<span class="variable">$url</span> = FILE_GALLERY_URL <span class="operator">.</span> <span class="text">&quot;/templates/list&quot;</span>;<br />
+	<span class="variable">return</span> <span class="variable">$url</span>;
+}
+add_filter(<span class="text">'file_gallery_default_template_url'</span>, <span class="text">'filter_fg_default_url'</span>);
+
+<span class="function">function</span> filter_fg_default_path( <span class="variable">$path</span> )
+{
+	<span class="comment">// placed in a subfolder of your active theme
+	// $path = STYLESHEETPATH . &quot;/file-gallery-templates/default&quot;;
+	// or just use the 'list' template which is included with the plugin</span>
+	<span class="variable">$path</span> = FILE_GALLERY_ABSPATH <span class="operator">.</span> <span class="text">&quot;/templates/list&quot;</span>;<br />
+	<span class="variable">return</span> <span class="variable">$path</span>;
+}
+add_filter(<span class="text">'file_gallery_default_template_abspath'</span>, <span class="text">'filter_fg_default_path'</span>);</p>
+<span class="function">function</span> filter_fg_default_name( <span class="variable">$name</span> )<br />{
+<span class="comment">	// if your css file is using a different class than '.gallery.default',
+	// for example .gallery.list</span>
+	<span class="variable">$name</span> <span class="operator">=</span> <span class="text">&quot;list&quot;</span>;<br />
+	<span class="variable">return</span> <span class="variable">$name</span>;
+}
+add_filter(<span class="text">'file_gallery_default_template_name'</span>, <span class="text">'filter_fg_default_name'</span>);
+</pre>
+
+	<h4>Image class filtering for <a href="http://wordpress.org/extend/plugins/jquery-colorbox/">jQuery
 				Colorbox WordPress plugin</a></h4>
 	<p>On the media settings page, add <em><strong>colorbox</strong></em> under <em>File
 			Gallery =&gt; Auto enqueue lightbox scripts for which link classes</em>.</p>

@@ -142,7 +142,7 @@
 				<?php
 					$col_def = $file_gallery_options["default_columns"];
 					
-					for( $i=1; $i < 10; $i++ )
+					for( $i=0; $i < 10; $i++ )
 					{
 						$selected = "";
 
@@ -154,6 +154,11 @@
 					
 				?>
 				</select>
+			</p>
+			
+			<p>
+				<label for="file_gallery_postid"><?php _e("post ID", "file-gallery"); ?>:</label>
+				<input type="text" name="file_gallery_postid" id="file_gallery_postid" value="" />
 			</p>
 			
 			<br />

@@ -96,8 +96,6 @@ function file_gallery_css_front( $mobile = false )
 
 	global $wp_query;
 
-	$options = get_option("file_gallery");
-
 	// if option to show galleries in excerpts is set to false
 	if( !is_single() && "1" != $options["in_excerpt"] && false == $mobile )
 		return;
@@ -105,6 +103,7 @@ function file_gallery_css_front( $mobile = false )
 	$gallery_matches = 0;
 	$missing = array();
 	$mobiles = array();
+	$columns_required = false;
 	
 	// check for gallery shortcode in all posts
 	if( !empty($wp_query->posts) )
@@ -125,11 +124,6 @@ function file_gallery_css_front( $mobile = false )
 	// no matches...
 	if( 0 === $gallery_matches )
 		return;
-
-	if( ! $mobile )
-		wp_enqueue_style( "file_gallery_columns", FILE_GALLERY_URL . "/templates/columns.css" );
-	else
-		$mobiles[] = FILE_GALLERY_URL . "/templates/columns.css";
 	
 	// automaticaly enqueue predefined scripts and styles
 	$aqs = explode(",", $options["auto_enqueued_scripts"]);
@@ -137,13 +131,23 @@ function file_gallery_css_front( $mobile = false )
 	$aq_linkclasses = array();
 
 	// collect template names
-	foreach($galleries as $gallery)
+	foreach( $galleries as $gallery )
 	{
+		if( false === $columns_required )
+		{
+			$zc = preg_match("#\columns=(['\"])0\\1#is", $gallery);
+				
+			if( false !== $zc && 0 < $zc ) // no error and match found
+				$columns_required = false;
+			else
+				$columns_required = true;
+		}
+		
 		$tm = preg_match("#\stemplate=(['\"])([^'\"]+)\\1#is", $gallery, $gm);
 
 		if( isset($gm[2]) )
 			$templates[] = $gm[2];
-
+		
 		$gcm = preg_match("#\slinkclass=(['\"])([^'\"]+)\\1#is", $gallery, $gcg);
 		$glm = preg_match("#\slink=(['\"])([^'\"]+)\\1#is", $gallery, $glg);
 		
@@ -187,6 +191,10 @@ function file_gallery_css_front( $mobile = false )
 		// eliminate duplicate entries
 		$templates = array_unique($templates);
 		
+		// if none of default templates are needed, don't include the 'columns.css' file
+		if( ! in_array('default', $templates) && ! in_array('file-gallery', $templates) && ! in_array('list', $templates) )
+			$columns_required = false;
+		
 		foreach($templates as $template)
 		{
 			// check if file exists and enqueue it if it does
@@ -210,6 +218,14 @@ function file_gallery_css_front( $mobile = false )
 				echo "<!-- " . __("file does not exist:", "file-gallery") . " " . $template . "/gallery.css - " . __("using default style", "file-gallery")  . "-->\n";
 			}
 		}
+	}
+	
+	if( $columns_required )
+	{
+		if( ! $mobile )
+			wp_enqueue_style( "file_gallery_columns", FILE_GALLERY_URL . "/templates/columns.css" );
+		else
+			$mobiles[] = FILE_GALLERY_URL . "/templates/columns.css";
 	}
 	
 	if( $mobile )
@@ -650,13 +666,17 @@ function file_gallery_shortcode( $attr )
 	else
 	{
 		$cols = "";
+		$stc  = "";
 		
-		if( 0 < $columns && "" != $columns )
+		if( 0 < intval($columns) )
 			$cols = " columns_" . $columns;
+		
+		if( isset($starttag_class) && "" != $starttag_class )
+			$stc = " " . $starttag_class;
 		
 		$trans_append = "\n<!-- file gallery output cached on " . date("Y.m.d @ H:i:s", time()) . "-->\n";
 		
-		$output = "<" . $starttag . " class=\"gallery " . str_replace(" ", "-", $template) . $cols . "\">\n" . $gallery_items . "\n</" . $starttag . ">";
+		$output = "<" . $starttag . " class=\"gallery " . str_replace(" ", "-", $template) . $cols . $stc . "\">\n" . $gallery_items . "\n</" . $starttag . ">";
 	}
 	
 	if( isset($options["cache"]) && true == $options["cache"] )
@@ -667,7 +687,7 @@ function file_gallery_shortcode( $attr )
 			set_transient($transient, $output, $options["cache_time"]);
 	}
 	
-	return $output;
+	return apply_filters("file_gallery_output", $output, $post->ID, $wp->file_gallery_gallery_id);
 }
 
 function file_gallery_register_shortcode_handler()

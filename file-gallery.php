@@ -2,7 +2,7 @@
 /*
 Plugin Name: File Gallery
 Plugin URI: http://skyphe.org/code/wordpress/file-gallery/
-Version: 1.6.3-beta
+Version: 1.6.3-beta2
 Description: "File Gallery" extends WordPress' media (attachments) capabilities by adding a new gallery shortcode handler with templating support, a new interface for attachment handling when editing posts, and much more.
 Author: Bruno "Aesqe" Babic
 Author URI: http://skyphe.org
@@ -74,7 +74,6 @@ function file_gallery_plugins_support()
 	global $sitepress, $wp_taxonomies;
 	
 	$mobile = false;
-	$fg_ss_dir = get_stylesheet_directory();
 	$file_gallery_media_tag_name = "media_tag";
 	$options = get_option("file_gallery");
 	
@@ -105,6 +104,7 @@ add_action("plugins_loaded", "file_gallery_plugins_support", 100);
  */
 function file_gallery_filtered_constants()
 {
+	$fg_ss_dir = get_stylesheet_directory();
 	$file_gallery_theme_abspath = str_replace("\\", "/", $fg_ss_dir);
 	$file_gallery_theme_abspath = preg_replace("#/+#", "/", $file_gallery_theme_abspath);
 	$file_gallery_theme_templates_abspath = apply_filters("file_gallery_templates_folder_abspath", $file_gallery_theme_abspath . "/file-gallery-templates");
@@ -392,7 +392,7 @@ function file_gallery_js_admin()
 	
 	if(
 	   "post.php" == $pagenow || "post-new.php" == $pagenow || 
-	   "page.php" == $pagenow || "page-new.php" == $pagenow || 
+	   "page.php" == $pagenow || "page-new.php" == $pagenow || "edit.php" == $pagenow || 
 	   "post" == $current_screen->base && isset($current_screen->post_type)
 	  )
 	{

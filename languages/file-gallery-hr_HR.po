@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: File Gallery 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-08-14 15:59+0100\n"
+"POT-Creation-Date: 2010-09-15 22:31+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: aesqe <aesqe@skyphe.org>\n"
 "Language-Team: \n"
@@ -16,157 +16,163 @@ msgstr ""
 "X-Poedit-KeywordsList: __;_e;__ngettext\n"
 "X-Poedit-SearchPath-0: ..\n"
 
-#: ../file-gallery.php:149
+#: ../file-gallery.php:140
 msgid "galleries are shown on full posts only"
 msgstr "galerije se ne prikazuju u sažecima"
 
-#: ../file-gallery.php:225
+#: ../file-gallery.php:216
 msgid "Settings"
 msgstr "Postavke"
 
-#: ../file-gallery.php:242
-#: ../file-gallery.php:296
-#: ../file-gallery.php:379
-#: ../file-gallery.php:695
+#: ../file-gallery.php:233
+#: ../file-gallery.php:287
+#: ../file-gallery.php:370
+#: ../file-gallery.php:694
 #: ../includes/main-form.php:166
 msgid "Media tags"
 msgstr "Medijski tagovi"
 
-#: ../file-gallery.php:243
-#: ../file-gallery.php:248
+#: ../file-gallery.php:234
+#: ../file-gallery.php:239
 msgid "Media tag"
 msgstr "Medijsk tagov"
 
-#: ../file-gallery.php:361
+#: ../file-gallery.php:352
 msgid "Attach all checked items to current post"
 msgstr "Pridruži sve označene priloge trenutnom postu"
 
-#: ../file-gallery.php:362
+#: ../file-gallery.php:353
 msgid "Exclude current post\\'s attachments"
 msgstr "Izuzmi priloge vezane uz trenutni post"
 
-#: ../file-gallery.php:363
+#: ../file-gallery.php:354
 msgid "Include current post\\'s attachments"
 msgstr "Uvrsti priloge vezane uz trenutni post"
 
-#: ../file-gallery.php:411
+#: ../file-gallery.php:402
 #: ../includes/main-form.php:239
 msgid "Switch to tags"
 msgstr "Prebaci na odabir tagova"
 
-#: ../file-gallery.php:412
+#: ../file-gallery.php:403
 msgid "Switch to list of attachments"
 msgstr "Prebaci na listu priloga"
 
-#: ../file-gallery.php:413
+#: ../file-gallery.php:404
 #: ../includes/main-form.php:31
 msgid "Insert checked attachments into post as"
 msgstr "Umetni označene priloge u post kao"
 
-#: ../file-gallery.php:414
+#: ../file-gallery.php:405
 msgid "No files are currently attached to this post."
 msgstr "Trenutno nema priloga vezanih uz ovaj post."
 
-#: ../file-gallery.php:415
+#: ../file-gallery.php:406
 msgid "Are you sure that you want to delete these attachments? Press [OK] to delete or [Cancel] to abort."
 msgstr "Sigurno želite izbrisati ove priloge? Pritisnite [OK] za potvrdu ili [Cancel] za odustajanje."
 
-#: ../file-gallery.php:416
+#: ../file-gallery.php:407
 msgid "saving attachment data..."
 msgstr "spremam podatke o prilogu..."
 
-#: ../file-gallery.php:417
+#: ../file-gallery.php:408
 msgid "loading attachment data..."
 msgstr "učitavam podatke o prilogu..."
 
-#: ../file-gallery.php:418
+#: ../file-gallery.php:409
 msgid "deleting attachment..."
 msgstr "brišem prilog..."
 
-#: ../file-gallery.php:419
+#: ../file-gallery.php:410
 msgid "deleting attachments..."
 msgstr "brišem priloge..."
 
-#: ../file-gallery.php:420
+#: ../file-gallery.php:411
 msgid "loading..."
 msgstr "učitavam..."
 
-#: ../file-gallery.php:421
+#: ../file-gallery.php:412
 msgid "detaching attachment"
 msgstr "odvajam prilog..."
 
-#: ../file-gallery.php:422
+#: ../file-gallery.php:413
 msgid "detaching attachments"
 msgstr "odvajam priloge..."
 
-#: ../file-gallery.php:423
+#: ../file-gallery.php:414
 msgid "Are you sure that you want to detach these attachments? Press [OK] to detach or [Cancel] to abort."
 msgstr "Sigurno želite odvojiti ove priloge od trenutnog posta? Pritisnite [OK] za potvrdu ili [Cancel] za odustajanje."
 
-#: ../file-gallery.php:424
+#: ../file-gallery.php:415
 msgid "close"
 msgstr "zatvori"
 
-#: ../file-gallery.php:425
+#: ../file-gallery.php:416
 msgid "loading attachments"
 msgstr "učitavam priloge"
 
-#: ../file-gallery.php:426
+#: ../file-gallery.php:417
 msgid "Featured image set successfully"
 msgstr "Istaknutu slika je uspješno postavljena"
 
-#: ../file-gallery.php:427
+#: ../file-gallery.php:418
 msgid "Featured image removed"
 msgstr "Istaknuta slika je uklonjena"
 
-#: ../file-gallery.php:428
+#: ../file-gallery.php:419
 msgid "Copy all attachments from the original post?"
 msgstr "Kopiraj sve priloge iz originalnog članka?"
 
-#: ../file-gallery.php:430
-msgid "Remove featured image"
-msgstr "Ukloni istaknutu sliku"
+#: ../file-gallery.php:421
+#: ../includes/main.php:103
+msgid "Set as featured image"
+msgstr "Postavi kao istaknutu sliku"
 
-#: ../file-gallery.php:528
+#: ../file-gallery.php:422
+#: ../includes/main.php:105
+msgid "Unset as featured image"
+msgstr "Odznači kao istaknutu sliku"
+
+#: ../file-gallery.php:523
 msgid "File Gallery requires Javascript to function. Please enable it in your browser."
 msgstr "File Gallery zahtijeva Javascript za propisno funkcioniranje. Molim omogućite ga u svojem pregledniku."
 
-#: ../file-gallery.php:532
+#: ../file-gallery.php:527
 msgid "Delete attachment dialog"
 msgstr "Dijalog za brisanje priloga"
 
-#: ../file-gallery.php:533
+#: ../file-gallery.php:528
 msgid "Warning: one of the attachments you've chosen to delete has copies."
 msgstr "Upozorenje: jedan od priloga koje ste odlučili izbrisati ima kopije."
 
-#: ../file-gallery.php:534
+#: ../file-gallery.php:529
 msgid "How do you wish to proceed?"
 msgstr "Što želite napraviti?"
 
-#: ../file-gallery.php:535
+#: ../file-gallery.php:530
 msgid "Click here if you have no idea what this dialog means"
 msgstr "Kliknite ovdje ako ne razumijete ovaj dijalog :)"
 
-#: ../file-gallery.php:538
+#: ../file-gallery.php:533
 #: ../includes/main-form.php:23
 msgid "Copy all attachments from another post"
 msgstr "Kopiraj sve priloge iz nekog drugog posta"
 
-#: ../file-gallery.php:541
+#: ../file-gallery.php:536
 msgid "Post ID:"
 msgstr "ID posta:"
 
+#: ../file-gallery.php:562
 #: ../file-gallery.php:567
-#: ../file-gallery.php:572
-#: ../file-gallery.php:573
+#: ../file-gallery.php:568
 msgid "File gallery"
 msgstr "File gallery"
 
-#: ../file-gallery.php:619
+#: ../file-gallery.php:618
 msgid "No. of attachments"
 msgstr "Broj vezanih priloga"
 
-#: ../file-gallery.php:622
+#: ../file-gallery.php:621
 msgid "Post thumb"
 msgstr "Sličica vezana uz post"
 
@@ -498,97 +504,89 @@ msgstr "File Gallery &mdash; %d prilog."
 msgid "File Gallery &mdash; %d attachments."
 msgstr "File Gallery &mdash; %d priloga."
 
-#: ../includes/main.php:90
+#: ../includes/main.php:89
 msgid "Zoom"
 msgstr "Uvećanje"
 
-#: ../includes/main.php:95
+#: ../includes/main.php:94
 msgid "Edit"
 msgstr "Uredi"
 
-#: ../includes/main.php:104
-msgid " as post thumb"
-msgstr "kao istaknuta slika za članak"
-
-#: ../includes/main.php:104
-msgid " as featured image"
-msgstr "kao istaknutu sliku"
-
-#: ../includes/main.php:108
+#: ../includes/main.php:112
 msgid "Really set as featured image?"
 msgstr "Stvarno označiti kao istaknutu sliku?"
 
-#: ../includes/main.php:109
-#: ../includes/main.php:116
-#: ../includes/main.php:142
-#: ../includes/main.php:151
+#: ../includes/main.php:113
+#: ../includes/main.php:120
+#: ../includes/main.php:146
+#: ../includes/main.php:155
 msgid "Continue"
 msgstr "Nastavak"
 
-#: ../includes/main.php:110
-#: ../includes/main.php:117
-#: ../includes/main.php:133
-#: ../includes/main.php:143
-#: ../includes/main.php:152
+#: ../includes/main.php:114
+#: ../includes/main.php:121
+#: ../includes/main.php:137
+#: ../includes/main.php:147
+#: ../includes/main.php:156
 msgid "or"
 msgstr "ili"
 
-#: ../includes/main.php:111
-#: ../includes/main.php:118
-#: ../includes/main.php:144
-#: ../includes/main.php:153
+#: ../includes/main.php:115
+#: ../includes/main.php:122
+#: ../includes/main.php:148
+#: ../includes/main.php:157
 msgid "Cancel"
 msgstr "Odustani"
 
-#: ../includes/main.php:115
+#: ../includes/main.php:119
 msgid "Really unset as featured image?"
 msgstr "Stvarno odznačiti kao istaknutu sliku?"
 
-#: ../includes/main.php:124
+#: ../includes/main.php:128
 msgid "Detach / Delete"
 msgstr "Odvoji / Izbriši"
 
-#: ../includes/main.php:131
+#: ../includes/main.php:135
 msgid "Delete"
 msgstr "Izbriši"
 
-#: ../includes/main.php:138
+#: ../includes/main.php:142
 msgid "Detach"
 msgstr "Odvoji"
 
-#: ../includes/main.php:141
+#: ../includes/main.php:145
 msgid "Really detach?"
 msgstr "Stvarno odvojiti?"
 
-#: ../includes/main.php:150
+#: ../includes/main.php:154
 msgid "Really delete?"
 msgstr "Stvarno izbrisati?"
 
-#: ../includes/main.php:412
+#: ../includes/main.php:416
 msgid "No attachments were deleted (capabilities?)"
 msgstr "Nijedan prilog nije izbrisan (mogućnosti korisnika?)"
 
-#: ../includes/main.php:414
+#: ../includes/main.php:418
 msgid "Attachment(s) deleted"
 msgstr "Prilozi izbrisani"
 
-#: ../includes/main.php:425
+#: ../includes/main.php:429
 msgid "Attachment(s) detached"
 msgstr "Prilozi odvojeni"
 
-#: ../includes/main.php:427
+#: ../includes/main.php:431
 msgid "Error detaching attachment(s)"
 msgstr "Greška pri odvajanju priloga!"
 
-#: ../includes/main.php:484
+#: ../includes/main.php:488
 msgid "Attachment data updated"
 msgstr "Podaci o prilogu su ažurirani"
 
-#: ../includes/main.php:488
+#: ../includes/main.php:492
 msgid "Error updating attachment data!"
 msgstr "Greška pri ažuriranju podataka o prilogu!"
 
-#: ../includes/main.php:493
+#: ../includes/main.php:497
 msgid "No change."
 msgstr "Nema izmjena."
 
@@ -755,6 +753,10 @@ msgstr "datoteka ne postoji:"
 msgid "using default style"
 msgstr "koristim osnovni stil"
 
+#~ msgid "Remove featured image"
+#~ msgstr "Ukloni istaknutu sliku"
+#~ msgid " as post thumb"
+#~ msgstr "kao istaknuta slika za članak"
 #~ msgid ""
 #~ "No templates found in theme folder (or in user supplied folder via "
 #~ "filter). Provided location: "

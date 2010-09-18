@@ -97,6 +97,7 @@ jQuery(document).ready(function()
 			var opt = title.replace("gallery ", "").replace(/"/g, "'"),
 				attachment_ids = opt.match(/attachment_ids='([^']+)'/),
 				attachment_includes = opt.match(/include='([^']+)'/),
+				post_id = opt.match(/id='([^']+)'/),
 				size = opt.match(/size='([^']+)'/),
 				linkto = opt.match(/link='([^']+)'/),
 				thelink = linkto ? linkto[1] : 'attachment',
@@ -119,6 +120,7 @@ jQuery(document).ready(function()
 				thelink = 'external_url';
 			}
 			
+			jQuery("#file_gallery_postid").val( post_id ? post_id[1] : ''  );
 			jQuery("#file_gallery_size").val(size ? size[1] : 'thumbnail' );
 			jQuery("#file_gallery_linkto").val( thelink );
 			jQuery("#file_gallery_linkrel").val(linkrel ? linkrel[1] : 'true' );
@@ -358,6 +360,7 @@ jQuery(document).ready(function()
 		serialize : function( internal_event )
 		{
 			var serial = "",
+				id = ""
 				size = "",
 				linkto = "",
 				linkrel = "",
@@ -529,10 +532,13 @@ jQuery(document).ready(function()
 			if( "" != jQuery("#file_gallery_limit").val() )
 				limit = ' limit="' + jQuery("#file_gallery_limit").val() + '"';
 			
+			if( "" != jQuery("#file_gallery_postid").val() )
+				limit = ' id="' + jQuery("#file_gallery_postid").val() + '"';
+			
 			if( "" != jQuery("#file_gallery_columns").val() && "3" != jQuery("#file_gallery_columns").val() )
 				columns = ' columns="' + jQuery("#file_gallery_columns").val() + '"';
 			
-			serial += size + linkto + linkclass + imageclass + mimetype + limit + order + orderby + template + columns + linkrel + "]\n";
+			serial += id + size + linkto + linkclass + imageclass + mimetype + limit + order + orderby + template + columns + linkrel + "]\n";
 			
 			jQuery("#data_collector").val(serial);
 			
@@ -1381,7 +1387,7 @@ jQuery(document).ready(function()
 
 	/* === BINDINGS === */
 	
-	jQuery("#file_gallery_linkclass, #file_gallery_imageclass, #file_gallery_mimetype, #file_gallery_limit, #file_gallery_external_url, #file_gallery_single_linkclass, #file_gallery_single_imageclass, #file_gallery_single_external_url, #fg_gallery_tags").live('keypress keyup', function(e)
+	jQuery("#file_gallery_linkclass, #file_gallery_imageclass, #file_gallery_mimetype, #file_gallery_limit, #file_gallery_external_url, #file_gallery_single_linkclass, #file_gallery_single_imageclass, #file_gallery_single_external_url, #fg_gallery_tags, #file_gallery_postid").live('keypress keyup', function(e)
 	{
 		// on enter
 		if ( 13 === e.which || 13 === e.keyCode )
@@ -1673,7 +1679,7 @@ jQuery(document).ready(function()
 	});
 	
 	// blur binding for text inputs and dropdown selects
-	jQuery("#fg_gallery_tags, #file_gallery_linkclass, #file_gallery_imageclass, #file_gallery_single_linkclass, #file_gallery_single_imageclass, #file_gallery_single_external_url, #file_gallery_external_url").live("blur", function()
+	jQuery("#fg_gallery_tags, #file_gallery_linkclass, #file_gallery_imageclass, #file_gallery_single_linkclass, #file_gallery_single_imageclass, #file_gallery_single_external_url, #file_gallery_external_url, #file_gallery_postid").live("blur", function()
 	{
 		file_gallery.serialize();
 	});
@@ -1742,10 +1748,37 @@ jQuery(document).ready(function()
 	
 	
 	
-	/* ie6 min/max-width/height */
+	/*
+	 * ie6 min/max-width/height for post thumbnails on edit.php screens
+	 */
 	if( 0 < jQuery("td.column-post_thumb img").length && jQuery.browser.msie && 7 > jQuery.browser.version )
 	{
-		jQuery("td.column-post_thumb img").width(80).height(60).css({"border" : "0px solid #000"});
+		var w = jQuery("td.column-post_thumb img").width(),
+			h = jQuery("td.column-post_thumb img").height(),
+			r = w / h,
+			c = false;
+		
+		if( 80 < w )
+		{
+			c = true;
+			w = 80;
+			h = w / r;
+			
+			if( 60 < h )
+			{
+				h = 60;
+				w = h * r;
+			}
+		}
+		else if( 60 < h )
+		{
+			c = true;
+			h = 60;
+			w = h * r;
+		}
+		
+		if( c )
+			jQuery("td.column-post_thumb img").width(w).height(h);
 	}
 });
 

@@ -135,11 +135,6 @@
 	margin-left: 3px;
 	margin-right: 5px;
 	margin-bottom: 13px;
-
-	/*border-right: 1px solid #AAA;
-	border-bottom: 1px solid #DDD;
-	-moz-border-radius: 5px;
-	-webkit-border-radius: 5px;*/
 	
 	cursor: pointer;
 }
@@ -330,16 +325,12 @@ a.img_edit
 {
 	float: right;
 	position:relative;
-	/*width: 276px;*/
 	margin-right: 2px;
 	text-align: right;
 }
 
 #fg_buttons.alt
 {
-	/*position: absolute;
-	right: -15px;
-	width: 56px;*/
 	margin-bottom: 15px;
 	background: none;
 }
@@ -473,7 +464,6 @@ a.img_edit
 	width: 100%;
 }
 
-/*#file_gallery_attachment_list,*/
 #file_gallery_tag_list
 {
 	display: none;
@@ -663,13 +653,14 @@ textarea, input, select
 th.column-post_thumb,
 th.column-attachment_count
 {
-	width: 100px !important;
+	max-width: 100px !important;
 }
 
 td.column-post_thumb,
 td.column-attachment_count
 {
 	text-align: center !important;
+	background: none;
 }
 
 td.column-post_thumb img
