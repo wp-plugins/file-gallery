@@ -583,7 +583,7 @@ function file_gallery_posts_custom_column($column_name, $post_id)
 
 	if( "attachment_count" == $column_name && isset($options["e_display_attachment_count"]) && true == $options["e_display_attachment_count"] )
 	{
-		$count = $wpdb->get_var( $wpdb->prepare("SELECT COUNT() FROM $wpdb->posts WHERE post_type='attachment' AND post_parent=%d", $post_id) );
+		$count = $wpdb->get_var( $wpdb->prepare("SELECT COUNT(ID) FROM $wpdb->posts WHERE post_type='attachment' AND post_parent=%d", $post_id) );
 		
 		echo apply_filters('file_gallery_post_attachment_count', $count, $post_id);
 	}

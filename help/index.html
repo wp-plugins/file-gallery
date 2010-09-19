@@ -632,7 +632,8 @@ add_filter(<span class="text">'file_gallery_default_template_url'</span>, <span 
 	<span class="variable">$path</span> = FILE_GALLERY_ABSPATH <span class="operator">.</span> <span class="text">&quot;/templates/list&quot;</span>;<br />
 	<span class="variable">return</span> <span class="variable">$path</span>;
 }
-add_filter(<span class="text">'file_gallery_default_template_abspath'</span>, <span class="text">'filter_fg_default_path'</span>);</p>
+add_filter(<span class="text">'file_gallery_default_template_abspath'</span>, <span class="text">'filter_fg_default_path'</span>);
+
 <span class="function">function</span> filter_fg_default_name( <span class="variable">$name</span> )<br />{
 <span class="comment">	// if your css file is using a different class than '.gallery.default',
 	// for example .gallery.list</span>
@@ -684,7 +685,7 @@ add_filter(<span class="text">&quot;file_gallery_lightbox_imageclass&quot;</span
 <pre class="tip"><span class="function">function</span> filter_lightboxes( <span class="variable">$options</span> )
 {
 	<span class="variable">$options</span>[<span class="text">'my-lightbox-script'</span>] <span class="operator">=</span> <span class="function">array</span>(
-		<span class="text">'linkrel'</span> <span class="operator">=&gt;</span> <span class="variable"></span><span class="text">'{script_name}[{gallery_id}]'</span>, 
+		<span class="text">'linkrel'</span> <span class="operator">=&gt;</span> <span class="text">'{script_name}[{gallery_id}]'</span>, 
 		<span class="text">'linkclass'</span> <span class="operator">=&gt;</span><span class="text">'{script_name}'</span>, 
 		<span class="text">'imageclass'</span> <span class="operator">=&gt;</span> <span class="text">false</span>, 
 		<span class="text">'disable_imageclass_if_rel_false'</span> <span class="operator">=&gt;</span> <span class="variable">false</span>
@@ -728,7 +729,7 @@ add_filter(<span class="text">'file_gallery_lightboxes_options'</span>, <span cl
 	<span class="text">'rar'</span> <span class="operator">=&gt;</span> <span class="text">'*-rar*'</span>,
 	<span class="text">'zip'</span> <span class="operator">=&gt;</span> <span class="text">'*compress*, *zip'</span>,
 	<span class="text">'7zip'</span> <span class="operator">=&gt;</span> <span class="text">'application/x-7z-compressed'</span>
-);<span class="variable"></span>
+);
 </pre>
 	<p>Keys (on the left) are shorthands you can use when inserting a gallery
 		(mime type box), but you can also use all the values (on the right).</p>
@@ -753,7 +754,6 @@ add_filter(<span class="text">'file_gallery_lightboxes_options'</span>, <span cl
 		<li>third example will end up as &quot;<strong>mime_type = 'application/pdf'</strong>&quot; in
 		SQL</li>
 	</ul>
-<p></p>
 <p>A bit of explanation: </p>
 <p>if a shorthand name for a mime type is not found as a key in the above array,
 	it will go straight into the <strong>wp_post_mime_type_where</strong> function
@@ -775,7 +775,7 @@ add_filter(<span class="text">'file_gallery_lightboxes_options'</span>, <span cl
 
 	<span class="variable">return</span> <span class="variable">$mime_types</span>;
 }
-add_filter(<span class="text">'file_gallery_mime_types'</span>, <span class="text">'filter_file_gallery_mime_types'</span>);</span></pre>
+add_filter(<span class="text">'file_gallery_mime_types'</span>, <span class="text">'filter_file_gallery_mime_types'</span>);</pre>
 <p>&nbsp;</p>
 <p class="tip"><strong>If you want me to add a new filter somewhere - just
 			leave a comment or e-mail me and I promise I'll add it as soon as humanly
