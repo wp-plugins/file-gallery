@@ -157,7 +157,7 @@
 			</p>
 			
 			<p>
-				<label for="file_gallery_postid"><?php _e("post ID", "file-gallery"); ?>:</label>
+				<label for="file_gallery_postid"><?php _e("Post ID:", "file-gallery"); ?>:</label>
 				<input type="text" name="file_gallery_postid" id="file_gallery_postid" value="" />
 			</p>
 			
