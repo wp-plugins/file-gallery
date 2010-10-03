@@ -1747,38 +1747,79 @@ jQuery(document).ready(function()
 	jQuery("#TB_window").live("unload", function(){ file_gallery.start(); });
 	
 	
-	
+
 	/*
-	 * ie6 min/max-width/height for post thumbnails on edit.php screens
+	 * min/max-width/height adjustments for post thumbnails on edit.php screens
 	 */
-	if( 0 < jQuery("td.column-post_thumb img").length && jQuery.browser.msie && 7 > jQuery.browser.version )
-	{
-		var w = jQuery("td.column-post_thumb img").width(),
-			h = jQuery("td.column-post_thumb img").height(),
-			r = w / h,
-			c = false;
-		
-		if( 80 < w )
+	if( 0 < jQuery(".column-post_thumb").length )
+	{		
+		if( 1024 > jQuery(window).width() )
 		{
-			c = true;
-			w = 80;
-			h = w / r;
-			
-			if( 60 < h )
+			jQuery(".column-post_thumb, .column-attachment_count")
+					.css({"width" : "60px", "height" : "auto", "padding" : "3px"})
+					.children("img")
+						.css({"width" : "60px", "height" : "auto", "padding" : "0"});
+		}
+		
+		jQuery(window).resize(function()
+		{
+			if( 1024 > jQuery(window).width() )
 			{
+				jQuery(".column-post_thumb, .column-attachment_count")
+					.css({"width" : "60px", "height" : "auto", "padding" : "3px"})
+					.children("img")
+						.css({"width" : "60px", "height" : "auto", "padding" : "0"});
+			}
+			else
+			{
+				jQuery(".column-post_thumb, .column-attachment_count")
+					.css({"width" : "auto", "height" : "auto", "padding" : "7px"})
+					.children("img")
+						.css({"width" : "auto", "height" : "auto", "padding" : "0"});
+			}
+			
+			if( 90 < jQuery("th.column-post_thumb").width() )
+				jQuery("th.column-post_thumb").width(90);
+		
+			if( 85 < jQuery("th.column-attachment_count").width() )
+				jQuery("th.column-attachment_count").width(85);
+		});
+		
+		if( jQuery.browser.msie && 7 > jQuery.browser.version )
+		{
+			var w = jQuery("td.column-post_thumb img").width(),
+				h = jQuery("td.column-post_thumb img").height(),
+				r = w / h,
+				c = false;
+			
+			if( 80 < w )
+			{
+				c = true;
+				w = 80;
+				h = w / r;
+				
+				if( 60 < h )
+				{
+					h = 60;
+					w = h * r;
+				}
+			}
+			else if( 60 < h )
+			{
+				c = true;
 				h = 60;
 				w = h * r;
 			}
+			
+			if( c )
+				jQuery("td.column-post_thumb img").width(w).height(h);
 		}
-		else if( 60 < h )
-		{
-			c = true;
-			h = 60;
-			w = h * r;
-		}
-		
-		if( c )
-			jQuery("td.column-post_thumb img").width(w).height(h);
+			
+		if( 90 < jQuery("th.column-post_thumb").width() )
+			jQuery("th.column-post_thumb").width(90);
+	
+		if( 85 < jQuery("th.column-attachment_count").width() )
+			jQuery("th.column-attachment_count").width(85);
 	}
 });
 

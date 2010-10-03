@@ -4,7 +4,7 @@ Donate link: http://skyphe.org/donate/
 Tags: attachment, attachments, gallery, galleries, template, templates, shortcode, file, files, attach, detach, unattach, copy, media, tags, library
 Requires at least: 2.9.2
 Tested up to: 3.1-alpha
-Stable tag: 1.6.2
+Stable tag: 1.6.3
 
 File Gallery extends WordPress media (attachments) capabilities 
 by adding a new gallery shortcode handler with templating support 
@@ -74,6 +74,23 @@ more... Here's the full list of features:
 
 
 == Changelog ==
+
+= 1.6.3 = 
+* October 3rd, 2010
+* moved constants definitions into another function to allow 
+  functions.php filtering of most of the constants
+* fixed disappeared attachment count
+* zero columns option, columns.css is loaded only when needed
+* new constants, see help file:
+  FILE_GALLERY_CRYSTAL_URL,
+  FILE_GALLERY_DEFAULT_TEMPLATE_ABSPATH,
+  FILE_GALLERY_DEFAULT_TEMPLATE_URL,
+  FILE_GALLERY_DEFAULT_TEMPLATE_NAME
+* added gallery id to gallery wrapper element
+* "file_gallery_output" filter
+* post ID option for shortcode
+* post thumbs width on post editing screen is now controlled via
+  JavaScript to give more space to other columns on smaller screens
 
 = 1.6.2 =
 * September 12th, 2010

@@ -676,7 +676,7 @@ function file_gallery_shortcode( $attr )
 		
 		$trans_append = "\n<!-- file gallery output cached on " . date("Y.m.d @ H:i:s", time()) . "-->\n";
 		
-		$output = "<" . $starttag . " class=\"gallery " . str_replace(" ", "-", $template) . $cols . $stc . "\">\n" . $gallery_items . "\n</" . $starttag . ">";
+		$output = "<" . $starttag . " id=\"gallery-" . $wp->file_gallery_gallery_id . "\" class=\"gallery " . str_replace(" ", "-", $template) . $cols . $stc . "\">\n" . $gallery_items . "\n</" . $starttag . ">";
 	}
 	
 	if( isset($options["cache"]) && true == $options["cache"] )
