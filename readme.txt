@@ -85,6 +85,7 @@ more... Here's the full list of features:
 * new template - 'simple'. added to demonstrate inclusion of the 
   JavaScript file (thanks to spiranovich!)
 * added captions support for single file insertion
+* fixed crystal icons url bug - sorry about that :/
 
 = 1.6.3 = 
 * October 3rd, 2010
