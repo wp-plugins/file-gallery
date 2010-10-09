@@ -52,7 +52,7 @@ function file_gallery_get_templates()
 	
 	if( isset($options["cache"]) && true == $options["cache"] )
 		set_transient($transient, $file_gallery_templates, $options["cache_time"]);
-	
+
 	return $file_gallery_templates;
 }
 
@@ -104,6 +104,7 @@ function file_gallery_css_front( $mobile = false )
 	$missing = array();
 	$mobiles = array();
 	$columns_required = false;
+	$default_templates = unserialize(FILE_GALLERY_DEFAULT_TEMPLATES);
 	
 	// check for gallery shortcode in all posts
 	if( !empty($wp_query->posts) )
@@ -192,11 +193,13 @@ function file_gallery_css_front( $mobile = false )
 		$templates = array_unique($templates);
 		
 		// if none of default templates are needed, don't include the 'columns.css' file
-		if( ! in_array('default', $templates) && ! in_array('file-gallery', $templates) && ! in_array('list', $templates) )
+		if( array() == array_intersect($templates, $default_templates) )
 			$columns_required = false;
-		
+
 		foreach($templates as $template)
 		{
+			$js_dependencies = array();
+			
 			// check if file exists and enqueue it if it does
 			if( is_readable(FILE_GALLERY_THEME_TEMPLATES_ABSPATH . "/" . $template . "/gallery.css") )
 			{
@@ -204,6 +207,15 @@ function file_gallery_css_front( $mobile = false )
 					wp_enqueue_style( "file_gallery_" . str_replace(" ", "-", $template), FILE_GALLERY_THEME_TEMPLATES_URL . "/" . str_replace(" ", "%20", $template) . "/gallery.css" );
 				else
 					$mobiles[] = FILE_GALLERY_THEME_TEMPLATES_URL . "/" . str_replace(" ", "%20", $template) . "/gallery.css";
+				
+				if( is_readable(FILE_GALLERY_THEME_TEMPLATES_ABSPATH . "/" . $template . "/gallery.js") )
+				{
+					ob_start();
+						include(FILE_GALLERY_THEME_TEMPLATES_ABSPATH . "/" . $template . "/gallery.php");					
+					ob_end_clean();
+					
+					wp_enqueue_script( "file_gallery_" . str_replace(" ", "-", $template), FILE_GALLERY_THEME_TEMPLATES_URL . "/" . str_replace(" ", "%20", $template) . "/gallery.js", $js_dependencies, '', true );	
+				}
 			}
 			elseif( is_readable(FILE_GALLERY_ABSPATH . "/templates/" . $template . "/gallery.css") )
 			{
@@ -211,6 +223,15 @@ function file_gallery_css_front( $mobile = false )
 					wp_enqueue_style( "file_gallery_" . $template, FILE_GALLERY_URL . "/templates/" . $template . "/gallery.css" );
 				else
 					$mobiles[] = FILE_GALLERY_URL . "/templates/" . $template . "/gallery.css";
+				
+				if( is_readable(FILE_GALLERY_ABSPATH . "/templates/" . "/" . $template . "/gallery.js") )
+				{
+					ob_start();
+						include(FILE_GALLERY_ABSPATH . "/templates/" . $template . "/gallery.php");
+					ob_end_clean();
+
+					wp_enqueue_script( "file_gallery_" . str_replace(" ", "-", $template), FILE_GALLERY_URL . "/templates/" . str_replace(" ", "%20", $template) . "/gallery.js", $js_dependencies, '', true );
+				}
 			}
 			else
 			{
@@ -227,11 +248,12 @@ function file_gallery_css_front( $mobile = false )
 		else
 			$mobiles[] = FILE_GALLERY_URL . "/templates/columns.css";
 	}
-	
-	if( $mobile )
+
+	if( $mobile && ! defined("FILE_GALLERY_MOBILE_STYLESHEETS") )
 		define("FILE_GALLERY_MOBILE_STYLESHEETS", serialize($mobiles));
 }
-add_action('wp_print_styles', 'file_gallery_css_front');
+add_action('wp_print_styles',  'file_gallery_css_front');
+add_action('wp_print_scripts', 'file_gallery_css_front');
 
 
 
@@ -286,7 +308,7 @@ function file_gallery_shortcode( $attr )
 {
 	global $wp, $wpdb, $post;
 		
-	if( !isset($wp->file_gallery_gallery_id) )
+	if( ! isset($wp->file_gallery_gallery_id) )
 		$wp->file_gallery_gallery_id = 1;
 	else
 		$wp->file_gallery_gallery_id++;
@@ -309,6 +331,8 @@ function file_gallery_shortcode( $attr )
 	// ...replace [gallery] with user selected text
 	if( !is_single() && "1" != $options["in_excerpt"] )
 		return $options["in_excerpt_replace_content"];
+	
+	$default_templates = unserialize(FILE_GALLERY_DEFAULT_TEMPLATES);
 	
 	// We're trusting author input, so let's at least make sure it looks like a valid orderby statement
 	if( isset($attr['orderby']) )
@@ -487,7 +511,7 @@ function file_gallery_shortcode( $attr )
 		return $output;
 	}
 	
-	if( ! in_array($template, array("file-gallery", "default", "list")) )
+	if( ! in_array($template, $default_templates) )
 	{
 		$template_file = FILE_GALLERY_THEME_TEMPLATES_ABSPATH . '/' . $template . '/gallery.php';
 	}
@@ -503,13 +527,17 @@ function file_gallery_shortcode( $attr )
 			$template_file = FILE_GALLERY_ABSPATH . '/templates/' . $template . '/gallery.php';
 		}
 	}
-	
+
 	// check if template exists and replace with default if it does not
 	if( ! is_readable($template_file) )
 	{
 		$template_file = FILE_GALLERY_ABSPATH . '/templates/default/gallery.php';
 		$template      = "default";
 	}
+	
+	ob_start();
+	include($template_file);
+	ob_end_clean();
 	
 	$i = 0;
 	$unique_ids = array();
@@ -522,6 +550,8 @@ function file_gallery_shortcode( $attr )
 	
 	if( defined("FILE_GALLERY_LIGHTBOX_CLASSES") )
 		$autoqueueclasses = maybe_unserialize(FILE_GALLERY_LIGHTBOX_CLASSES);
+	
+	$file_gallery_this_template_counter = 1;
 	
 	// create output
 	foreach($attachments as $attachment)
@@ -646,6 +676,8 @@ function file_gallery_shortcode( $attr )
 				$x = ob_get_contents();
 				
 			ob_end_clean();
+			
+			$file_gallery_this_template_counter++;
 			
 			if ( $columns > 0 && $i % $columns == 0 )
 				$x .= $cleartag;

@@ -75,6 +75,17 @@ more... Here's the full list of features:
 
 == Changelog ==
 
+= 1.6.4 =
+* October XX 2010
+* if there's a "gallery.js" file inside your template folder, it 
+  will be automatically enqueued. you can set its JavaScript 
+  dependencies by setting a $js_dependencies variable inside your
+  template's PHP file - it must be an array, something like this:
+  $js_dependencies = array("jquery")
+* new template - 'simple'. added to demonstrate inclusion of the 
+  JavaScript file (thanks to spiranovich!)
+* added captions support for single file insertion
+
 = 1.6.3 = 
 * October 3rd, 2010
 * moved constants definitions into another function to allow 

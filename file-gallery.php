@@ -2,7 +2,7 @@
 /*
 Plugin Name: File Gallery
 Plugin URI: http://skyphe.org/code/wordpress/file-gallery/
-Version: 1.6.3
+Version: 1.6.4-beta
 Description: "File Gallery" extends WordPress' media (attachments) capabilities by adding a new gallery shortcode handler with templating support, a new interface for attachment handling when editing posts, and much more.
 Author: Bruno "Aesqe" Babic
 Author URI: http://skyphe.org
@@ -58,7 +58,7 @@ $file_gallery_crystal_url = get_bloginfo('wpurl') . "/" . WPINC . "/images/cryst
 
 define("FILE_GALLERY_URL", WP_PLUGIN_URL . "/" . basename(dirname(__FILE__)));
 define("FILE_GALLERY_ABSPATH", $file_gallery_abspath);
-define("FILE_GALLERY_DEFAULT_TEMPLATES", serialize( array("default", "file-gallery", "list") ) );
+define("FILE_GALLERY_DEFAULT_TEMPLATES", serialize( array("default", "file-gallery", "list", "simple") ) );
 
 
 

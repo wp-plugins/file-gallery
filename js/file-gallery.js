@@ -1088,6 +1088,7 @@ jQuery(document).ready(function()
 				imageclass 	  : jQuery('#file_gallery_single_imageclass').val(),
 				align 	      : jQuery('#file_gallery_single_align').val(),
 				post_id 	  : jQuery("#post_ID").val(),
+				caption       : jQuery('#file_gallery_single_caption:checked').length ? true : false,
 				_ajax_nonce	  : file_gallery_nonce
 			};
 			

@@ -63,7 +63,8 @@
 	vertical-align: baseline;
 }
 
-#file_gallery fieldset p input#fg_gallery_tags_from
+#file_gallery fieldset p input#fg_gallery_tags_from,
+#file_gallery fieldset p input#file_gallery_single_caption
 {
 	vertical-align: middle;
 	margin: -1px 0 0 3px;

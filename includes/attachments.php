@@ -25,6 +25,7 @@ function file_gallery_get_attachment_data()
 	$imageclass   = $_POST['imageclass'];
 	$align        = $_POST['align'];
 	$rel          = false;
+	$caption      = "true" == $_POST['caption'] ? true : false;
 	
 	if( "external_url" == $linkto )
 		$linkto = $external_url;
@@ -39,12 +40,12 @@ function file_gallery_get_attachment_data()
 	else
 		$imageclass = "";
 	
-	if( "undefined" == $align )
+	if( "undefined" == $align || "" == $align )
 		$align = "none";
-	
+
 	$attachments = explode(",", $attachment);
 	
-	if( 1 < count($attachments) )
+	if( 1 < count($attachments) && "" != $linkclass )
 	{
 		if( !isset($wp->file_gallery_gallery_id) )
 			$wp->file_gallery_gallery_id = 1;
@@ -54,11 +55,14 @@ function file_gallery_get_attachment_data()
 		$rel = ' rel="' . $linkclass . '[' . $wp->file_gallery_gallery_id . ']"';
 	}
 	
-	$imageclass .= " align" . $align ." size-" . $size;
+	if( "none" == $linkto )
+		$imageclass .= " align" . $align;
+		
+	$imageclass .= " size-" . $size;
 	
 	foreach( $attachments as $attachment )
 	{
-		echo file_gallery_parse_attachment_data( $attachment, $size, $linkto, $linkclass, $imageclass, $rel );
+		echo file_gallery_parse_attachment_data( $attachment, $size, $linkto, $linkclass, $imageclass, $rel, $caption, $align );
 	}
 	
 	exit();
@@ -73,11 +77,11 @@ add_action('wp_ajax_file_gallery_send_single', 'file_gallery_get_attachment_data
  * @param int $attachment_id ID of the attachment
  * @return mixed Returns a HTML string, or FALSE if $attachment_id is not a number
  */
-function file_gallery_parse_attachment_data( $attachment_id, $size, $linkto, $linkclass, $imageclass )
+function file_gallery_parse_attachment_data( $attachment_id, $size, $linkto, $linkclass, $imageclass, $rel, $caption, $align )
 {
 	global $wpdb;
 	
-	if( !is_numeric($attachment_id) )
+	if( ! is_numeric($attachment_id) )
 		return false; // not a number, exiting
 	
 	$link = "";
@@ -86,12 +90,7 @@ function file_gallery_parse_attachment_data( $attachment_id, $size, $linkto, $li
 	if( ! $thumb_alt = get_post_meta($attachment_id, "_wp_attachment_image_alt", true) )
 		$thumb_alt = $attachment->post_title;
 
-	if( "" == $attachment->post_excerpt && "" == $attachment->post_content )
-		$title = $attachment->post_title;
-	elseif( "" == $attachment->post_excerpt )
-		$title = $attachment->post_content;
-	else
-		$title = $attachment->post_excerpt;
+	$title = $attachment->post_title;
 	
 	if( file_gallery_file_is_displayable_image( get_attached_file( $attachment_id ) ) )
 	{
@@ -109,7 +108,7 @@ function file_gallery_parse_attachment_data( $attachment_id, $size, $linkto, $li
 		$imageclass .= " non-image";
 	}
 	
-	$output = '<img src="' . $size_src . '" alt="' . $thumb_alt . '" title="' . $title . '"  class="' . trim($imageclass) . '" width="' . $width . '" height="' . $height . '" />';
+	$output = '<img src="' . $size_src . '" alt="' . $thumb_alt . '" title="' . $title . '" width="' . $width . '" height="' . $height . '" class="' . trim($imageclass) . '" />';
 	
 	switch( $linkto )
 	{
@@ -132,6 +131,12 @@ function file_gallery_parse_attachment_data( $attachment_id, $size, $linkto, $li
 	
 	if( "" != $link )
 		$output = '<a href="' . $link . '"' . trim($linkclass) . $rel . '>' . $output . '</a>';
+	
+	if( false !== $caption )
+	{
+		$caption_text = $attachment->post_excerpt; 
+		$output = '[caption id="attachment_' . $attachment_id . '" align="align' . $align . '" width="' . $width . '" caption="' . $caption_text .'"]' . $output . '[/caption] ';
+	}
 
 	return apply_filters("file_gallery_parse_attachment_data", $output, $attachment_id);
 }

@@ -157,7 +157,7 @@
 			</p>
 			
 			<p>
-				<label for="file_gallery_postid"><?php _e("Post ID:", "file-gallery"); ?>:</label>
+				<label for="file_gallery_postid"><?php _e("Post ID:", "file-gallery"); ?></label>
 				<input type="text" name="file_gallery_postid" id="file_gallery_postid" value="" />
 			</p>
 			
@@ -230,6 +230,11 @@
 					<option value="right"<?php if( "right" == $file_gallery_options["single_default_align"]){ ?> selected="selected"<?php } ?>><?php _e("right", "file-gallery"); ?></option>
 					<option value="center"<?php if( "center" == $file_gallery_options["single_default_align"]){ ?> selected="selected"<?php } ?>><?php _e("center", "file-gallery"); ?></option>
 				</select>
+			</p>
+			
+			<p>
+				<label for="file_gallery_single_caption"><?php _e("display caption?", "file-gallery"); ?></label>
+				<input type="checkbox" id="file_gallery_single_caption" name="file_gallery_single_caption" />
 			</p>
 			
 			<br />
