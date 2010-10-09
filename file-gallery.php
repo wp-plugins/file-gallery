@@ -54,7 +54,6 @@ if ( !defined( 'WP_PLUGIN_DIR' ) )
 $file_gallery_abspath     = WP_PLUGIN_DIR . "/" . basename(dirname(__FILE__));
 $file_gallery_abspath     = str_replace("\\", "/", $file_gallery_abspath);
 $file_gallery_abspath     = preg_replace("#/+#", "/", $file_gallery_abspath);
-$file_gallery_crystal_url = get_bloginfo('wpurl') . "/" . WPINC . "/images/crystal";
 
 define("FILE_GALLERY_URL", WP_PLUGIN_URL . "/" . basename(dirname(__FILE__)));
 define("FILE_GALLERY_ABSPATH", $file_gallery_abspath);
@@ -105,6 +104,7 @@ add_action("plugins_loaded", "file_gallery_plugins_support", 100);
 function file_gallery_filtered_constants()
 {
 	$fg_ss_dir = get_stylesheet_directory();
+	$file_gallery_crystal_url = get_bloginfo('wpurl') . "/" . WPINC . "/images/crystal";
 	$file_gallery_theme_abspath = str_replace("\\", "/", $fg_ss_dir);
 	$file_gallery_theme_abspath = preg_replace("#/+#", "/", $file_gallery_theme_abspath);
 	$file_gallery_theme_templates_abspath = apply_filters("file_gallery_templates_folder_abspath", $file_gallery_theme_abspath . "/file-gallery-templates");
