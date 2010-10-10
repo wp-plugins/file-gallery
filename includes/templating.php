@@ -236,6 +236,7 @@ function file_gallery_css_front( $mobile = false )
 			else
 			{
 				$missing[] = $template;
+				wp_enqueue_style( "file_gallery_default", FILE_GALLERY_URL . "/templates/default/gallery.css" );
 				echo "<!-- " . __("file does not exist:", "file-gallery") . " " . $template . "/gallery.css - " . __("using default style", "file-gallery")  . "-->\n";
 			}
 		}
