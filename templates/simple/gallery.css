@@ -1,7 +1,7 @@
 .gallery.simple,
 #content .gallery.simple
 {
-	margin: auto;
+	margin: auto auto 1.5em auto;
 	overflow: hidden;
 }
 

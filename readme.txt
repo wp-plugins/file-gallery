@@ -22,8 +22,9 @@ more... Here's the full list of features:
 **Features:**
 
 1.  multiple galleries per post with custom attachment order
-2.  a basic templating system = choose a different template for each 
-    gallery, even within the same post
+2.  a flexible templating system (PHP, CSS, JS) – choose a different 
+    template for each gallery, even within the same post (4 templates 
+	included with plugin)
 3.  simple, easy to use UI with drag and drop sorting shows attachment 
     thumbnails beneath text editor: everything attachments-related is on 
     the same screen you're editing your post on
@@ -44,7 +45,7 @@ more... Here's the full list of features:
 11. compatible with "WordPress Mobile Edition", "Media Tags" and 
     "WPML Multilingual CMS" plugins	
 12. basic caching of gallery output and frequent queries (transients)
-13. various smaller modifications described in help files (coming soon!) 
+13. please see the help file for complete list of features
 
 
 
@@ -76,13 +77,13 @@ more... Here's the full list of features:
 == Changelog ==
 
 = 1.6.4 =
-* October XX 2010
+* October 10th 2010
 * if there's a "gallery.js" file inside your template folder, it 
-  will be automatically enqueued. you can set its JavaScript 
-  dependencies by setting a $js_dependencies variable inside your
+  will be automatically enqueued. You can set its JavaScript 
+  dependencies by defining a $js_dependencies variable inside your
   template's PHP file - it must be an array, something like this:
   $js_dependencies = array("jquery")
-* new template - 'simple'. added to demonstrate inclusion of the 
+* new template - 'simple' - added to demonstrate inclusion of the 
   JavaScript file (thanks to spiranovich!)
 * added captions support for single file insertion
 * fixed crystal icons url bug - sorry about that :/

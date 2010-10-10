@@ -150,9 +150,9 @@ function file_gallery_css_front( $mobile = false )
 			$templates[] = $gm[2];
 		
 		$gcm = preg_match("#\slinkclass=(['\"])([^'\"]+)\\1#is", $gallery, $gcg);
-		$glm = preg_match("#\slink=(['\"])([^'\"]+)\\1#is", $gallery, $glg);
-		
-		if( isset($gcg[2]) && "" != $gcg[2] && isset($glg[2]) && "file" == $glg[2] )
+		// $glm = preg_match("#\slink=(['\"])([^'\"]+)\\1#is", $gallery, $glg);
+
+		if( isset($gcg[2]) && "" != $gcg[2] /*&& isset($glg[2]) && "file" == $glg[2]*/ )
 		{
 			$glc = explode(" ", $gcg[2]);
 
@@ -375,6 +375,34 @@ function file_gallery_shortcode( $attr )
 				'limit' 			=> -1
 			)
 	, $attr));
+	
+	if( ! in_array($template, $default_templates) )
+	{
+		$template_file = FILE_GALLERY_THEME_TEMPLATES_ABSPATH . '/' . $template . '/gallery.php';
+	}
+	else
+	{
+		if( "default" == $template )
+		{
+			$template_file = FILE_GALLERY_DEFAULT_TEMPLATE_ABSPATH . '/gallery.php';
+			$template      = FILE_GALLERY_DEFAULT_TEMPLATE_NAME;
+		}
+		else
+		{
+			$template_file = FILE_GALLERY_ABSPATH . '/templates/' . $template . '/gallery.php';
+		}
+	}
+
+	// check if template exists and replace with default if it does not
+	if( ! is_readable($template_file) )
+	{
+		$template_file = FILE_GALLERY_ABSPATH . '/templates/default/gallery.php';
+		$template      = "default";
+	}
+	
+	ob_start();
+	include($template_file);
+	ob_end_clean();
 
 	if( 'false' == $rel || '0' == $rel )
 		$rel = false;
@@ -389,7 +417,8 @@ function file_gallery_shortcode( $attr )
 	if( "" != $include && "" == $attachment_ids )
 		$attachment_ids = $include;
 	
-	$linkto = $link;
+	if( ! isset( $linkto ) )
+		$linkto = $link;
 	
 	$limit = intval($limit);
 	
@@ -400,6 +429,9 @@ function file_gallery_shortcode( $attr )
 		$mimetype     = file_gallery_get_mime_type($mimetype);
 		$sql_mimetype = wp_post_mime_type_where($mimetype);
 	}
+
+	$approved_attachment_post_statuses = apply_filters("file_gallery_approved_attachment_post_statuses", array('inherit'));
+	$ignored_attachment_post_statuses  = apply_filters("file_gallery_ignored_attachment_post_statuses", array('trash', 'private', 'pending'));
 
 	// start with tags because they negate everything else
 	if( "" != $tags )
@@ -412,7 +444,8 @@ function file_gallery_shortcode( $attr )
 						LEFT JOIN $wpdb->terms ON($wpdb->term_taxonomy.term_id = $wpdb->terms.term_id)
 						WHERE $wpdb->posts.post_type = 'attachment' 
 						" . $sql_mimetype . "
-						AND $wpdb->posts.post_status != 'trash' 
+						AND $wpdb->posts.post_status IN ('" . implode("', '", $approved_attachment_post_statuses) . "') 
+						AND $wpdb->posts.post_status NOT IN ('" . implode("', '", $ignored_attachment_post_statuses) . "') 
 						AND $wpdb->term_taxonomy.taxonomy = '" . FILE_GALLERY_MEDIA_TAG_NAME . "'";
 		
 		$query .= sprintf("
@@ -462,7 +495,8 @@ function file_gallery_shortcode( $attr )
 		$query = sprintf("SELECT * FROM $wpdb->posts 
 						  WHERE $wpdb->posts.ID IN (%s) 
 						  	AND $wpdb->posts.post_type = 'attachment' 
-							AND $wpdb->posts.post_status != 'trash' ", 
+							AND $wpdb->posts.post_status IN ('" . implode("', '", $approved_attachment_post_statuses) . "') 
+							AND $wpdb->posts.post_status NOT IN ('" . implode("', '", $ignored_attachment_post_statuses) . "') ", 
 		$attachment_ids);
 		
 		$query .= $sql_mimetype;
@@ -481,7 +515,7 @@ function file_gallery_shortcode( $attr )
 		
 		$attachment_args = array(
 			'post_parent'		=> $id,
-			'post_status'		=> 'inherit', 
+			'post_status'		=> "'" . implode("', '", $approved_attachment_post_statuses) . "'" , 
 			'post_type'			=> 'attachment', 
 			'order'				=> $order, 
 			'orderby'			=> $orderby,
@@ -510,34 +544,6 @@ function file_gallery_shortcode( $attr )
 		
 		return $output;
 	}
-	
-	if( ! in_array($template, $default_templates) )
-	{
-		$template_file = FILE_GALLERY_THEME_TEMPLATES_ABSPATH . '/' . $template . '/gallery.php';
-	}
-	else
-	{
-		if( "default" == $template )
-		{
-			$template_file = FILE_GALLERY_DEFAULT_TEMPLATE_ABSPATH . '/gallery.php';
-			$template      = FILE_GALLERY_DEFAULT_TEMPLATE_NAME;
-		}
-		else
-		{
-			$template_file = FILE_GALLERY_ABSPATH . '/templates/' . $template . '/gallery.php';
-		}
-	}
-
-	// check if template exists and replace with default if it does not
-	if( ! is_readable($template_file) )
-	{
-		$template_file = FILE_GALLERY_ABSPATH . '/templates/default/gallery.php';
-		$template      = "default";
-	}
-	
-	ob_start();
-	include($template_file);
-	ob_end_clean();
 	
 	$i = 0;
 	$unique_ids = array();
@@ -574,7 +580,7 @@ function file_gallery_shortcode( $attr )
 		if( $output_params )
 		{
 			$plcai = array_intersect($autoqueueclasses, explode(" ", trim($linkclass)));
-			
+
 			if( ! empty($plcai) && "file" == $linkto )
 			{
 				if( $attachment_is_image )
@@ -603,7 +609,7 @@ function file_gallery_shortcode( $attr )
 			
 			if( is_bool($param['rel']) )
 				$param['rel'] = "";
-			
+
 			switch( $linkto )
 			{
 				case "parent_post" :

@@ -6,7 +6,7 @@
  * thanks to merlinyoda at dorproject dot net
  * http://php.net/manual/en/function.array-diff.php
  */
-if( !function_exists("array_xor") )
+if( ! function_exists("array_xor") )
 {
 	function array_xor( $array_a, $array_b )
 	{
@@ -23,7 +23,7 @@ if( !function_exists("array_xor") )
  *
  * http://bytes.com/topic/php/answers/456092-slick-way-check-if-array-contains-empty-elements
  */
-if( !function_exists("empty_array") )
+if( ! function_exists("empty_array") )
 {
 	function empty_array( $array = array() )
 	{

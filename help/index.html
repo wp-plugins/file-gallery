@@ -154,7 +154,7 @@ ul li
 	<p>Just a notification and some buttons on the right.</p>
 	<p>When you add some attachments to the post, the box will automatically
 		refresh itself and it will look something like this:</p>
-	<p><img src="images/02.png" alt="" width="782" height="618" /></p>
+	<p><img src="images/02.png" alt="" width="782" height="617" /></p>
 	<h3><a name="attachment_colors" id="attachment_colors"></a>Attachment colors</h3>
 	<p>Some attachments might appear with background colors set to other than
 		grey.</p>
@@ -258,13 +258,13 @@ ul li
 		when you try to change something, it loses focus and gallery options will
 		not be updated. I hope I'll be able to figure out what's the problem soon.</p>
 	<p> Webkit browsers (Safari and Chrome) have problems with <em>tinyMCE.activeEditor.selection.setContent()</em> in
-		tinyMCE versions  prior to 3.3.6 so updating galleries is disabled until
-		WordPress receives
-TinyMCE upgrade (probably in 3.1)</p>
+		tinyMCE versions  prior to 3.3.6 so updating galleries is disabled
+		until WordPress receives
+TinyMCE upgrade  in v3.1.</p>
 	<h2><a name="originals_and_copies" id="originals_and_copies"></a>Attachment <em>originals</em> and
 		copies</h2>
-	<p><em>Originals</em> are attachments that have copies, but they themselves
-		are not a copy.</p>
+	<p><em>Originals</em> are attachments that have copies, but  
+		are not a copy themselves.</p>
 	<p>Copies are, well, copies of <em>originals</em> :)</p>
 	<h3><a name="copy_from_other_posts" id="copy_from_other_posts"></a>Copying
 		attachments from other posts</h3>
@@ -386,34 +386,55 @@ TinyMCE upgrade (probably in 3.1)</p>
 	<p>These serve only as examples so you could create your own templates.</p>
 	<h3><a name="your_own_templates" id="your_own_templates"></a>How can I
 		create my own templates?</h3>
-	<p>It's easy, but you'll need some basic knowledge of <a href="http://www.php.net">PHP</a>.</p>
+	<p>It's easy, but you'll (probably) need some basic knowledge of <a href="http://www.php.net">PHP</a>.</p>
 	<p>Go to &quot;File Gallery&quot;'s folder and open the subfolder named &quot;<strong>templates</strong>&quot; -
 		that's where the three included templates reside - and take a look at
 		the files inside.</p>
 	<p><strong>Template name is the name of the folder in which the template
 			resides.</strong></p>
-	<p>Each template consists of a <strong>gallery.php</strong> file, and a <strong>gallery.css</strong> file.</p>
+	<p>Each template consists of a <strong>gallery.php</strong> file, and a <strong>gallery.css</strong> file
+		- bothe are obligatory. Optionally, you can also include an <strong>gallery.js</strong> file,
+		which will be automatically enqueued.</p>
 	<h4><a name="gallery_php" id="gallery_php"></a>A) gallery.php</h4>
 	<p>This file contains the code for a <strong>single item</strong> in the
 		gallery.</p>
 	<p>At the beginning of the file, two variables <em>should</em> to be declared:</p>
 	<ul>
-		<li><strong>$starttag</strong> - this is the tag used for gallery wrapper
+		<li><em>(string)</em> <strong>$starttag</strong> - this is the tag used for gallery wrapper
 			element (default is 'div')</li>
-		<li> <strong>$cleartag</strong> - this is the tag used for clearing floats
+		<li> <em>(string)</em> <strong>$cleartag</strong> - this is the tag used for clearing floats
 			so you could specify the number of columns in a gallery (default is &quot;\n&lt;br
 			class='clear' /&gt;\n&quot; - &quot;\n&quot; is not obligatory there,
 			it represents a new line characteer and is just for the looks)</li>
 	</ul>
-	<p>There are two additional variables you can declare:</p>
+	<p>There's a few additional variables you can declare:</p>
 	<ul>
-		<li><strong>$starttag_class</strong> - additional class(es) for the gallery wrapper.
-			Separate multiple classes with a blank space.</li>
-		<li><strong>$columns</strong> - this will override the 'columns' value
-			set in the shortcode (or
+		<li><em>(string)</em> <strong>$starttag_class</strong> - additional class(es)
+			for the gallery wrapper HTML element. Separate multiple classes
+			with a blank space.</li>
+		<li><em>(int)</em> <strong>$columns</strong> - this will override the 'columns'
+			value set in the shortcode (or
 			in the defaults).</li>
+		<li><em>(array) </em><strong>$js_dependencies</strong> - if there's a
+			JavaScript file included with your template and it has some
+			dependencies (like, for example, jQuery), please declare them like this:
+			<span class="variable">$js_dependencies</span> <span class="operator">=</span> <span class="variable">array</span>(<span class="text">&quot;jquery&quot;</span>);</li>
+		<li><em>(string)</em> <strong>$linkto</strong> - 
+			same as with $columns, you can use this to override the 'link'
+			shortcode parameter (can be <strong>'file'</strong>, <strong>'attachment'</strong>, <strong>'parent_post'</strong>,  <strong>'none'</strong>,
+			or an
+			<strong>URL</strong>)</li>
+		<li><em>(string)</em> <strong>$mimetype</strong> - same as with $columns,
+			you can use this to override the 'mimetype' shortcode parameter</li>
+		<li>basically speaking, within the gallery.php
+			file, you can override any shortcode parameter by defining
+			a PHP variable with the same name as the parameter. The only exception
+			is 'link', for which the variable name is $linkto.</li>
 	</ul>
-	<p>The rest of the variables you can use in a template, in form of <strong>variable_name</strong> - <strong>value</strong></p>
+	<p>There's also a <em class="number">counter</em> variable - <strong>$file_gallery_this_template_counter</strong> -
+		which stores current attachment number within the current gallery. You
+		can see its example use in the &quot;simple&quot; template.</p>
+<p>The rest of the variables you can use in a template, in form of <strong>variable_name</strong> - <strong>value</strong></p>
 	<ul>
 		<li><strong>$endcol</strong> - outputs &quot;gallery-endcol&quot; (if
 			it's the last attachment in that column)</li>
@@ -453,6 +474,10 @@ TinyMCE upgrade (probably in 3.1)</p>
 		(&quot;file-gallery-templates&quot;) via these two filters:<br />
 		<br />
 		<strong>file_gallery_templates_folder_abspath</strong> and <strong>file_gallery_templates_folder_url</strong></p>
+	<p><strong>C) gallery.js</strong></p>
+	<p>Any kind of JavaScript can go in this file. You can set its JavaScript
+		dependencies via the <strong>$js_dependencies</strong> variable (see above,
+		under gallery.php).</p>
 	<h2><a name="theme_functions" id="theme_functions"></a>Functions you can
 		use in your themes</h2>
 	<p>There are two functions you might find useful in your own themes.</p>
@@ -610,6 +635,15 @@ Params: 1) default template URL</li>
 		<li><strong>file_gallery_default_template_abspath</strong> - path to the default template
 			directory, see use example below<br />
 Params: 1) default template path</li>
+		<li><strong>file_gallery_approved_attachment_post_statuses</strong> -
+			This is for filtering the accepted 'post_status' list (planning
+			for the future and custom post statuses).<br />
+			Params: 1) array of accepted post statuses for attachments (just
+			'inherit' by default)</li>
+		<li><strong>file_gallery_ignored_attachment_post_statuses</strong> - Same
+			as above, just for the ignored 'post_status' list.<br />
+Params: 1) array of ignored post statuses for attachments ('trash', 'private'
+and 'pending' by default)</li>
 	</ul>
 	<h3><a name="filters_examples" id="filters_examples"></a>Examples</h3>
 	<h4>Set name, path and URL of default template</h4>
