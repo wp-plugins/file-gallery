@@ -4,7 +4,7 @@ Donate link: http://skyphe.org/donate/
 Tags: attachment, attachments, gallery, galleries, template, templates, shortcode, file, files, attach, detach, unattach, copy, media, tags, library
 Requires at least: 2.9.2
 Tested up to: 3.1-alpha
-Stable tag: 1.6.4
+Stable tag: 1.6.4.1
 
 File Gallery extends WordPress media (attachments) capabilities 
 by adding a new gallery shortcode handler with templating support 
@@ -75,6 +75,11 @@ more... Here's the full list of features:
 
 
 == Changelog ==
+
+= 1.6.4.1 =
+* October 12th, 2010
+* bugfix: single image alignment class wasn't showing
+* updated the translations
 
 = 1.6.4 =
 * October 10th 2010

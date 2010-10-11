@@ -24,20 +24,16 @@ function file_gallery_get_attachment_data()
 	$linkclass 	  = $_POST['linkclass'];
 	$imageclass   = $_POST['imageclass'];
 	$align        = $_POST['align'];
-	$rel          = false;
+	$rel          = "";
 	$caption      = "true" == $_POST['caption'] ? true : false;
 	
 	if( "external_url" == $linkto )
 		$linkto = $external_url;
 	
-	if( "undefined" != $linkclass && "" != $linkclass )
-		$linkclass = ' class="' . $linkclass . '"';
-	else
+	if( "undefined" == $linkclass || "" == $linkclass )
 		$linkclass = "";
 		
-	if( "undefined" != $imageclass && "" != $imageclass )
-		$imageclass = ' ' . $imageclass;
-	else
+	if( "undefined" == $imageclass || "" == $imageclass )
 		$imageclass = "";
 	
 	if( "undefined" == $align || "" == $align )
@@ -57,12 +53,14 @@ function file_gallery_get_attachment_data()
 	
 	if( "none" == $linkto )
 		$imageclass .= " align" . $align;
+	else
+		$linkclass  .= " align" . $align;
 		
 	$imageclass .= " size-" . $size;
 	
-	foreach( $attachments as $attachment )
+	foreach( $attachments as $attachment_id )
 	{
-		echo file_gallery_parse_attachment_data( $attachment, $size, $linkto, $linkclass, $imageclass, $rel, $caption, $align );
+		echo file_gallery_parse_attachment_data( $attachment_id, $size, $linkto, $linkclass, $imageclass, $rel, $caption, $align );
 	}
 	
 	exit();
@@ -92,9 +90,9 @@ function file_gallery_parse_attachment_data( $attachment_id, $size, $linkto, $li
 
 	$title = $attachment->post_title;
 	
-	if( file_gallery_file_is_displayable_image( get_attached_file( $attachment_id ) ) )
+	if( file_gallery_file_is_displayable_image( get_attached_file($attachment_id) ) )
 	{
-		$size_src    = wp_get_attachment_image_src( $attachment_id, $size, false );
+		$size_src    = wp_get_attachment_image_src($attachment_id, $size, false);
 		$width       = $size_src[1];
 		$height      = $size_src[2];
 		$size_src    = $size_src[0];
@@ -113,7 +111,7 @@ function file_gallery_parse_attachment_data( $attachment_id, $size, $linkto, $li
 	switch( $linkto )
 	{
 		case "parent_post" :
-			$link = get_permalink( $wpdb->get_var("SELECT post_parent FROM $wpdb->posts WHERE ID = '" . $attachment_id . "'") );
+			$link = get_permalink( $wpdb->get_var("SELECT `post_parent` FROM $wpdb->posts WHERE ID = '" . $attachment_id . "'") );
 			break;
 		case "file" :
 			$link = wp_get_attachment_url( $attachment_id );
@@ -130,7 +128,7 @@ function file_gallery_parse_attachment_data( $attachment_id, $size, $linkto, $li
 	}
 	
 	if( "" != $link )
-		$output = '<a href="' . $link . '"' . trim($linkclass) . $rel . '>' . $output . '</a>';
+		$output = '<a href="' . $link . '" class="' . trim($linkclass) . '"' . $rel . '>' . $output . '</a>';
 	
 	if( false !== $caption )
 	{
@@ -159,7 +157,7 @@ function file_gallery_edit_attachment()
 	
 	$attachment		= get_post( $attachment_id );
 	
-	if( !$attachment )
+	if( ! $attachment )
 	{
 		printf( __("Attachment with ID <strong>%d</strong> does not exist!", "file-gallery"), $attachment_id );
 		exit();
