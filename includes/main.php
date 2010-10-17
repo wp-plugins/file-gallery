@@ -5,8 +5,9 @@
  */
 function file_gallery_list_attachments(&$count_attachments, $post_id, $attachment_order, $checked_attachments)
 {
-	global $wpdb;
+	global $wpdb, $_wp_additional_image_sizes;
 	
+	$options = get_option("file_gallery");
 	$thumb_id = false;
 	$attached_files = "";
 	
@@ -39,6 +40,19 @@ function file_gallery_list_attachments(&$count_attachments, $post_id, $attachmen
 		
 		$count_attachments = count($attachments);
 		
+		$attachment_thumb_size  = isset($options["default_metabox_image_size"]) ? $options["default_metabox_image_size"] : 'thumbnail';
+		$attachment_thumb_width = isset($options["default_metabox_image_width"]) ? $options["default_metabox_image_width"] : 75;	
+		
+		if( isset($_wp_additional_image_sizes[$attachment_thumb_size]) )
+			$attachment_thumb_ratio = $_wp_additional_image_sizes[$attachment_thumb_size]['width'] / $_wp_additional_image_sizes[$attachment_thumb_size]['height'];
+		else
+			$attachment_thumb_ratio = get_option($attachment_thumb_size . '_size_w') / get_option($attachment_thumb_size . '_size_h');
+		
+		if( "" == strval($attachment_thumb_ratio) )
+			$attachment_thumb_ratio = 1;
+
+		$attachment_thumb_height = $attachment_thumb_width / $attachment_thumb_ratio;
+		
 		foreach( $attachments as $attachment )
 		{
 			$classes         = array("sortableitem");
@@ -57,12 +71,9 @@ function file_gallery_list_attachments(&$count_attachments, $post_id, $attachmen
 				$classes[]       = "post_thumb";
 				$post_thumb_link = "unset";
 			}
-
-			$attachment_thumb  = wp_get_attachment_thumb_url($attachment->ID);
-			$attachment_width  = "70";
-			$attachment_height = "70";
 			
-			$large = wp_get_attachment_image_src($attachment->ID, "large");
+			$attachment_thumb = wp_get_attachment_image_src($attachment->ID, $attachment_thumb_size);
+			$large            = wp_get_attachment_image_src($attachment->ID, "large");
 			
 			$non_image = "";
 			$checked   = "";
@@ -73,25 +84,25 @@ function file_gallery_list_attachments(&$count_attachments, $post_id, $attachmen
 			// if it's not an image...
 			if( "" == $attachment_thumb )
 			{
-				$attachment_thumb  = FILE_GALLERY_CRYSTAL_URL . "/" . file_gallery_get_file_type($attachment->post_mime_type) . ".png";
-				$attachment_width  = "";
-				$attachment_height = "";
-				$non_image         = " non_image";
+				$attachment_thumb[0] = FILE_GALLERY_CRYSTAL_URL . "/" . file_gallery_get_file_type($attachment->post_mime_type) . ".png";
+				$attachment_width    = "";
+				$attachment_height   = "";
+				$non_image           = " non_image";
 			}
 			
 			$attached_files .= '
-			<li id="image-' . $attachment->ID . '" class="' . implode(" ", $classes) . '">
+			<li id="image-' . $attachment->ID . '" class="' . implode(" ", $classes) . '" style="width: ' . $attachment_thumb_width . 'px; height: ' . $attachment_thumb_height . 'px">
 				
-				<img src="' . $attachment_thumb . '" alt="' . $attachment->post_title . '" id="in-' . $attachment->ID . '" title="' . $attachment->post_title . '" width="' . $attachment_width . '" height="' . $attachment_height . '" class="fgtt' . $non_image . '" />';
+				<img src="' . $attachment_thumb[0] . '" alt="' . $attachment->post_title . '" id="in-' . $attachment->ID . '" title="' . $attachment->post_title . '" class="fgtt' . $non_image . '" />';
 				
 				if( "" == $non_image ) :
-					$attached_files .= '<a href="' . $large[0] . '" id="in-' . $attachment->ID . '-zoom" class="img_zoom colorbox">
-						<img src="' . FILE_GALLERY_URL . '/images/famfamfam_silk/magnifier_zoom_in.png" alt="' . __("Zoom", "file-gallery") . '" title="' . __("Zoom", "file-gallery") . '" />
+					$attached_files .= '<a href="' . $large[0] . '" id="in-' . $attachment->ID . '-zoom" class="img_zoom">
+						<img src="' . FILE_GALLERY_URL . '/images/famfamfam_silk/magnifier.png" alt="' . __("Zoom", "file-gallery") . '" title="' . __("Zoom", "file-gallery") . '" />
 					</a>';
 				endif;
 				
 				$attached_files .= '<a href="#" id="in-' . $attachment->ID . '-edit" class="img_edit">
-					<img src="' . FILE_GALLERY_URL . '/images/famfamfam_silk/image_edit.png" alt="' . __("Edit", "file-gallery") . '" title="' . __("Edit", "file-gallery") . '" />
+					<img src="' . FILE_GALLERY_URL . '/images/famfamfam_silk/pencil.png" alt="' . __("Edit", "file-gallery") . '" title="' . __("Edit", "file-gallery") . '" />
 				</a>
 				<input type="checkbox" id="att-chk-' . $attachment->ID . '" class="checker"' . $checked . ' />';
 		
@@ -105,7 +116,7 @@ function file_gallery_list_attachments(&$count_attachments, $post_id, $attachmen
 						$as_featured = __("Unset as featured image", "file-gallery");
 				
 					$attached_files .= '<a href="#" class="post_thumb_status" rel="' . $attachment->ID . '" title="' . $as_featured . '">
-							<img src="' . FILE_GALLERY_URL . '/images/famfamfam_silk/bell_' . $post_thumb_link . '.png" alt="' . $as_featured . '" />
+							<img src="' . FILE_GALLERY_URL . '/images/famfamfam_silk/star_' . $post_thumb_link . '.png" alt="' . $as_featured . '" />
 						</a>';
 					
 					$attached_files .= '<div id="post_thumb_setter_' . $attachment->ID . '" class="post_thumb_setter">

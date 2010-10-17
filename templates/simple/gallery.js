@@ -31,10 +31,9 @@ jQuery(document).ready(function()
 					
 					// append the linked bigger image and its caption on the left
 					jQuery(id + " .gallery_simple_current")
-						.append('<img src="' + file_gallery_loading_img + '" width="16" height="16" alt="" class="file_gallery_simple_loading" style="display: none; border: none;" /><a href="' + current_image_href + '" title="' + current_caption + '"><img src="' + current_image_src + '" class="gallery_simple_current_image colorbox-' + file_gallery_simple_gallery_counter + '" style="display: none;" /></a><div class="gallery_simple_current_image_caption"><p>' + current_caption + '</p></div>');
+						.append('<img src="' + file_gallery_loading_img + '" width="16" height="16" alt="" class="file_gallery_simple_loading" style="display: none; border: none;" /><a href="' + current_image_href + '" title="' + current_caption + '"><img src="' + current_image_src + '" class="gallery_simple_current_image ' + file_gallery_simple_linkclass + '-' + file_gallery_simple_gallery_counter + '" style="display: none;" /></a><div class="gallery_simple_current_image_caption"><p>' + current_caption + '</p></div>');
 					
-					if( current_anchor.hasClass("colorbox") )
-						jQuery(id + " .gallery_simple_current a").addClass("cboxElement");
+					jQuery(id + " .gallery_simple_current a").addClass("thickbox");
 					
 					// and fade in the image and its caption
 					jQuery(id + " .gallery_simple_current_image_caption").css({"opacity":0}).fadeTo(500, 1);
@@ -50,6 +49,17 @@ jQuery(document).ready(function()
 			// advance gallery counter
 			file_gallery_simple_gallery_counter++;
 		});
+		
+
+
+		// remove thickbox class from thumbnail links...
+		jQuery(".gallery_simple_thumbnails a").removeClass("thickbox");
+		
+		// and bind thickbox to the bigger image
+		if( jQuery.fn.thickbox )
+			jQuery("a.thickbox").thickbox();
+		
+		
 		
 		// bind a function to each thumbnail link to replace the bigger image on the left
 		jQuery(".gallery.simple .gallery-item a").live("click", function()
@@ -94,9 +104,5 @@ jQuery(document).ready(function()
 			
 			return false;
 		});
-		// remove colorbox class from thumbnail links...
-		jQuery(".gallery_simple_thumbnails a").removeClass("cboxElement");
-		// and bind colorbox to the bigger image
-		jQuery("a.cboxElement").colorbox();
 	}
 });

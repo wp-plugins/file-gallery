@@ -46,12 +46,12 @@ function file_gallery_options_init()
 	
 	
 	
-	/* for [gallery] */
-	
-	
-	
 	register_setting('media', "file_gallery");
 	
+
+
+	/* general options */
+
 	// disable shortcode handler
 	add_settings_field("file_gallery_disable_shortcode_handler", __("Disable 'File Gallery' handling of [gallery] shortcode?", 'file-gallery'), create_function("", 'return file_gallery_options_fields( array("name" => "file_gallery_disable_shortcode_handler") );'), 'media', 'file_gallery_options');
 	
@@ -61,6 +61,16 @@ function file_gallery_options_init()
 	// auto enqueue which scripts based on link classes
 	add_settings_field("file_gallery_auto_enqueued_scripts", __("Auto enqueue lightbox scripts for which link classes (separate with commas)?", 'file-gallery'), create_function("", 'return file_gallery_options_fields( array("name" => "file_gallery_auto_enqueued_scripts") );'), 'media', 'file_gallery_options');
 	
+	// default wordpress image size for thumbs in file gallery metabox
+	add_settings_field("file_gallery_default_metabox_image_size", __("Default WordPress image size for thumbnails in File Gallery metabox on post editing screens?", 'file-gallery'), create_function("", 'return file_gallery_options_fields( array("name" => "file_gallery_default_metabox_image_size") );'), 'media', 'file_gallery_options');
+	
+	// default image width thumbs in file gallery metabox
+	add_settings_field("file_gallery_default_metabox_image_width", __("Default width (in pixels) for thumbnails in File Gallery metabox on post editing screens?", 'file-gallery'), create_function("", 'return file_gallery_options_fields( array("name" => "file_gallery_default_metabox_image_width") );'), 'media', 'file_gallery_options');
+	
+	
+	
+	/* for [gallery] */
+
 	// size
 	add_settings_field("file_gallery_default_image_size", "</th></tr><tr><td colspan=\"2\"><strong style=\"display: block; margin-top: -15px; font-size: 115%; color: #21759B;\">" . __("Some default values for when inserting a gallery into a post", 'file-gallery') . "...</strong></td></tr><tr valign=\"top\"><th scope=\"row\">" . __("size", 'file-gallery'), create_function("", 'return file_gallery_options_fields( array("name" => "file_gallery_default_image_size") );'), 'media', 'file_gallery_options');
 	
@@ -94,9 +104,7 @@ function file_gallery_options_init()
 	
 	
 	/* for single images */
-	
-	
-	
+
 	// size
 	add_settings_field("file_gallery_single_default_image_size", "</th></tr><tr><td colspan=\"2\"><strong style=\"display: block; margin-top: -15px; font-size: 115%; color: #21759B;\">" . __("...and for when inserting (a) single image(s) into a post", 'file-gallery') . "</strong></td></tr><tr valign=\"top\"><th scope=\"row\">" . __("size", 'file-gallery'), create_function("", 'return file_gallery_options_fields( array("name" => "file_gallery_single_default_image_size") );'), 'media', 'file_gallery_options');
 	
@@ -118,9 +126,7 @@ function file_gallery_options_init()
 	
 	
 	/* cache */
-	
-	
-	
+
 	add_settings_field("file_gallery_cache", "</th></tr><tr><td colspan=\"2\"><strong style=\"display: block; margin-top: -15px; font-size: 115%; color: #21759B;\">" . __("Cache", 'file-gallery') . "</strong></td></tr><tr valign=\"top\"><th scope=\"row\">" . __("Enable caching?", 'file-gallery'), create_function("", 'return file_gallery_options_fields( array("name" => "file_gallery_cache") );'), 'media', 'file_gallery_options');
 	
 	add_settings_field("file_gallery_cache_non_html_output", __("Cache non-HTML gallery output (<em>array, object, json</em>)?", 'file-gallery'), create_function("", 'return file_gallery_options_fields( array("name" => "file_gallery_cache_non_html_output") );'), 'media', 'file_gallery_options');
@@ -130,9 +136,7 @@ function file_gallery_options_init()
 	
 	
 	/* edit screens options */
-	
-	
-	
+
 	add_settings_field("file_gallery_e_display_attachment_count", "</th></tr><tr><td colspan=\"2\"><strong style=\"display: block; margin-top: -15px; font-size: 115%; color: #21759B;\">" . __("Edit screens options", 'file-gallery') . "</strong></td></tr><tr valign=\"top\"><th scope=\"row\">" . __("Display attachment count?", 'file-gallery'), create_function("", 'return file_gallery_options_fields( array("name" => "file_gallery_e_display_attachment_count") );'), 'media', 'file_gallery_options');
 	
 	add_settings_field("file_gallery_e_display_post_thumb", __("Display post thumb (if set)?", 'file-gallery'), create_function("", 'return file_gallery_options_fields( array("name" => "file_gallery_e_display_post_thumb") );'), 'media', 'file_gallery_options');
@@ -144,9 +148,7 @@ function file_gallery_options_init()
 	
 	
 	/* other options */
-	
-	
-	
+
 	// display galleries within excerpts
 	add_settings_field("file_gallery_in_excerpt", "</th></tr><tr><td colspan=\"2\"><strong style=\"display: block; margin-top: -15px; font-size: 115%; color: #21759B;\">" . __("Other options", 'file-gallery') . "</strong></td></tr><tr valign=\"top\"><th scope=\"row\">" . __("Display galleries within post excerpts?", 'file-gallery'), create_function("", 'return file_gallery_options_fields( array("name" => "file_gallery_in_excerpt") );'), 'media', 'file_gallery_options');
 	
@@ -158,12 +160,6 @@ function file_gallery_options_init()
 	// delete options on deactivation
 	add_settings_field("file_gallery_del_options_on_deactivate", __("Delete all options on deactivation?", 'file-gallery'), create_function("", 'return file_gallery_options_fields( array("name" => "file_gallery_del_options_on_deactivate") );'), 'media', 'file_gallery_options');
 
-
-
-	/**/
-	
-	
-	
 	// url and path to plugin folder
 	add_settings_field("file_gallery_url",  __("File gallery folder", 'file-gallery'), create_function("", 'return file_gallery_options_fields( array("name" => "folder",  "data" => "' . $so["folder"]  . '") );'),  'media', 'file_gallery_options');
 	add_settings_field("file_gallery_abspath", __("File gallery path",   'file-gallery'), create_function("", 'return file_gallery_options_fields( array("name" => "abspath", "data" => "' . $so["abspath"] . '") );'), 'media', 'file_gallery_options');
@@ -183,7 +179,7 @@ function file_gallery_options_sections( $args )
 			$output = __("Here you can specify width, height and crop attributes for intermediate image sizes added by plugins and/or themes, as well as crop options for the default medium and large sizes", "file-gallery");
 			break;
 		case "file_gallery_options" :
-			$output = '<p style="margin: 5px 0 15px; background-color: #FFFFE8; border-color: #EEEED0; -moz-border-radius: 3px; -webkit-border-radius: 3px; border-radius: 3px; border-style: solid; border-width: 1px; margin: 5px 15px 2px; padding: 0.6em;">' . sprintf(__('File Gallery help file is located in the "help" subfolder of the plugin. You can <a href="%s/help/index.html" target="_blank">click here to open it in new window</a>.', "file-gallery"), FILE_GALLERY_URL) . '</p>';
+			$output = '<p id="file-gallery-help-notice" style="margin: 5px 0 15px; background-color: #FFFFE8; border-color: #EEEED0; -moz-border-radius: 3px; -webkit-border-radius: 3px; border-radius: 3px; border-style: solid; border-width: 1px; margin: 5px 15px 2px; padding: 0.6em;">' . sprintf(__('File Gallery help file is located in the "help" subfolder of the plugin. You can <a href="%s/help/index.html" target="_blank">click here to open it in new window</a>.', "file-gallery"), FILE_GALLERY_URL) . '</p>';
 			break;
 	}
 	
@@ -333,6 +329,35 @@ function file_gallery_options_fields( $args )
 		$sizes_single_dropdown .= ' selected="selected"';
 	
 	$sizes_single_dropdown .= '>' . __('full', 'file-gallery') . '</option>';
+	
+	// default sizes dropdown list for metabox	
+	$metabox_sizes_dropdown .= '<option value="thumbnail"';
+	
+	if( $file_gallery_options["default_metabox_image_size"] == "thumbnail" )
+		$metabox_sizes_dropdown .= ' selected="selected"';
+	
+	$metabox_sizes_dropdown .= '>' . __('thumbnail', 'file-gallery') . '</option>';
+	
+	$metabox_sizes_dropdown .= '<option value="medium"';
+	
+	if( $file_gallery_options["default_metabox_image_size"] == "medium" )
+		$metabox_sizes_dropdown .= ' selected="selected"';
+	
+	$metabox_sizes_dropdown .= '>' . __('medium', 'file-gallery') . '</option>';
+	
+	$metabox_sizes_dropdown .= '<option value="large"';
+	
+	if( $file_gallery_options["default_metabox_image_size"] == "large" )
+		$metabox_sizes_dropdown .= ' selected="selected"';
+	
+	$metabox_sizes_dropdown .= '>' . __('large', 'file-gallery') . '</option>';
+	
+	$metabox_sizes_dropdown .= '<option value="full"';
+	
+	if( $file_gallery_options["default_metabox_image_size"] == "full" )
+		$metabox_sizes_dropdown .= ' selected="selected"';
+	
+	$metabox_sizes_dropdown .= '>' . __('full', 'file-gallery') . '</option>';
 
 	// size dropdown lists
 	foreach( $file_gallery_sizes as $size )
@@ -354,6 +379,14 @@ function file_gallery_options_fields( $args )
 			$sizes_single_dropdown .= ' selected="selected"';
 		
 		$sizes_single_dropdown .= '>' . $size . '</option>';
+		
+		// for metabox	
+		$metabox_sizes_dropdown .= '<option value="' . $size . '"';
+		
+		if( $file_gallery_options["default_metabox_image_size"] == $size )
+			$metabox_sizes_dropdown .= ' selected="selected"';
+		
+		$metabox_sizes_dropdown .= '>' . $size . '</option>';
 	}
 	
 	// align dropdowns
@@ -447,6 +480,11 @@ function file_gallery_options_fields( $args )
 						' . $sizes_dropdown . '			
 					</select>';
 				break;
+			case "file_gallery_default_metabox_image_size" :
+					$output = '<select name="file_gallery[default_metabox_image_size]" id="file_gallery_default_metabox_image_size" style="width: 415px;">
+						' . $metabox_sizes_dropdown . '			
+					</select>';
+				break;
 			case "file_gallery_single_default_image_size" :
 					$output = '<select name="file_gallery[single_default_image_size]" id="file_gallery_single_default_image_size" style="width: 415px;">
 						' . $sizes_single_dropdown . '			
@@ -504,6 +542,9 @@ function file_gallery_options_fields( $args )
 				break;
 			case "file_gallery_default_external_url" :
 					$output = '<input type="text" name="file_gallery[default_external_url]" id="file_gallery_default_external_url" value="' . $file_gallery_options["default_external_url"] . '" size="63" />';
+				break;
+			case "file_gallery_default_metabox_image_width" :
+					$output = '<input type="text" name="file_gallery[default_metabox_image_width]" id="file_gallery_default_metabox_image_width" value="' . $file_gallery_options["default_metabox_image_width"] . '" size="63" />';
 				break;
 			case "file_gallery_single_default_imageclass" :
 					$output = '<input type="text" name="file_gallery[single_default_imageclass]" id="file_gallery_single_default_imageclass" value="' . $file_gallery_options["single_default_imageclass"] . '" size="63" />';

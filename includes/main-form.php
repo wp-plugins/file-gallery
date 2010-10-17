@@ -19,11 +19,13 @@
 		<input type="button" value="<?php _e("Refresh attachments", "file-gallery"); ?>" title="<?php _e("Refresh attachments", "file-gallery"); ?>" class="button" id="file_gallery_refresh" />
 		<input type="button" value="<?php _e("Check all", "file-gallery"); ?>" title="<?php _e("Check all", "file-gallery"); ?>" class="button" id="file_gallery_check_all" />
 		<input type="button" value="<?php _e("Uncheck all", "file-gallery"); ?>" title="<?php _e("Uncheck all", "file-gallery"); ?>" class="button" id="file_gallery_uncheck_all" />
-		<input type="button" value="<?php _e("Save as menu order", "file-gallery"); ?>" title="<?php _e("Save as menu order", "file-gallery"); ?>" class="button" id="file_gallery_save_menu_order" />
+		<input type="button" value="<?php _e("Save attachment order", "file-gallery"); ?>" title="<?php _e("Save attachment order", "file-gallery"); ?>" class="button" id="file_gallery_save_menu_order" />
 		<input type="button" value="<?php _e("Copy all attachments from another post", "file-gallery"); ?>" title="<?php _e("Copy all attachments from another post", "file-gallery"); ?>" class="button" id="file_gallery_copy_all" />
 		<input type="button" value="<?php _e("Delete all checked", "file-gallery"); ?>" title="<?php _e("Delete all checked", "file-gallery"); ?>" class="button" id="file_gallery_delete_checked" />
 		<input type="button" value="<?php _e("Detach all checked", "file-gallery"); ?>" title="<?php _e("Detach all checked", "file-gallery"); ?>" class="button" id="file_gallery_detach_checked" />
 		<input type="button" value="<?php _e("Clear File Gallery cache", "file-gallery"); ?>" title="<?php _e("Clear File Gallery cache", "file-gallery"); ?>" class="button" id="file_gallery_clear_cache_manual" />
+		<input type="button" value="<?php _e("Adjust media settings", "file-gallery"); ?>" title="<?php _e("Adjust media settings", "file-gallery"); ?>" class="button thickbox" alt="<?php echo admin_url("options-media.php"); ?>?TB_iframe=1" id="file_gallery_adjust_media_settings"  />
+		<input type="button" value="<?php _e("Open help file", "file-gallery"); ?>" title="<?php _e("Open help file", "file-gallery"); ?>" class="button thickbox" alt="<?php echo FILE_GALLERY_URL; ?>/help/index.html?TB_iframe=1" id="file_gallery_open_help"  />
 	</div>
 
 	<p id="fg_info">

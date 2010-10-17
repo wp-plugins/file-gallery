@@ -44,7 +44,7 @@ function file_gallery_save_menu()
 	
 	if( false !== $r )
 	{
-		echo __("Menu order saved successfully.", "file-gallery");
+		echo __("Attachment order saved successfully.", "file-gallery");
 	}
 	else
 	{
