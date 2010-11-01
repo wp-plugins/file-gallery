@@ -1,17 +1,19 @@
+var file_gallery =
+{
+	L10n : file_gallery_L10n
+};
+
 jQuery(document).ready(function()
 {
-	var admin_url   = ajaxurl.split("/wp-admin").shift() + "/wp-admin",
-		current_tab = window.location.toString().split("wp-admin/").pop();
+	var admin_url    = ajaxurl.split("/wp-admin").shift() + "/wp-admin",
+		current_tab  = window.location.toString().split("wp-admin/").pop(),
+		fg_inex_href = current_tab + "&amp;exclude=current",
+		fg_inex      = file_gallery.L10n.exclude_current;
 
-	if( "-1" == current_tab.search("exclude=current") )
-	{
-		fg_inex_href = current_tab + "&amp;exclude=current";
-		fg_inex = fgL10n["exclude_current"];
-	}
-	else
+	if( "-1" != current_tab.search("exclude=current") )
 	{
 		fg_inex_href = current_tab.replace(/&exclude=current/, "");
-		fg_inex = fgL10n["include_current"];
+		fg_inex = file_gallery.L10n.include_current;
 	}
 	
 	// displays a link to include / exclude current post's attachments from media library listing
@@ -20,42 +22,30 @@ jQuery(document).ready(function()
 	// adds a checkbox to each attachment not already attached to current post
 	jQuery('.media-item').each(function()
 	{
-		var id  = jQuery(this).attr('id').split('-').pop(),
-			cpa = "child-of-" + post_id;
-
-		if( !jQuery(this).hasClass(cpa) )
-			jQuery(this).prepend('<input type=\"checkbox\" class=\"attach_me\" value=\"' + id + '\" />');
+		if( ! jQuery(this).hasClass("child-of-" + post_id) )
+			jQuery(this).prepend('<input type=\"checkbox\" class=\"attach_me\" value=\"' + jQuery(this).attr('id').split('-').pop() + '\" />');
 	});
 	
 	// appends a div in which we display the ajax response
 	jQuery('#library-form')
-		.append('<p id="file_gallery_attach_response" class="updated fade" style="visibility: hidden; margin: 0 18px 15px 0; padding:3px 10px;">&nbsp;</p>')
-		.append('<input type="button" class="button" id="file_gallery_attach_button" value="' + fgL10n["attach_all_checked_copy"] + '" />');
+		.append('<p id="file_gallery_attach_response" class="updated fade" style="visibility: hidden; margin: 0 18px 15px 0; padding:3px 10px;">&nbsp;</p><input type="button" class="button" id="file_gallery_attach_button" value="' + file_gallery.L10n.attach_all_checked_copy + '" />');
 	
 	// attaches checked attachments to current post
 	jQuery("#file_gallery_attach_button").bind("click", function()
 	{
-		var data,
-			ids = jQuery.map(jQuery('.attach_me:checked'), function(i)
-		{
-			return jQuery(i).val();
-		});
-
-		data = {
-			action  	: "file_gallery_copy_attachments_to_post",
-			post_id	 	: post_id,
-			ids     	: ids.join(","),
-			_ajax_nonce : file_gallery_attach_nonce
-		};
-		
 		jQuery.post
 		(
 			ajaxurl,
-			data,
+			{
+				action  	: "file_gallery_copy_attachments_to_post",
+				post_id	 	: post_id,
+				ids     	: jQuery.map(jQuery('.attach_me:checked'),function(i){return jQuery(i).val();}).join(","),
+				_ajax_nonce : file_gallery_attach_nonce
+			},
 			function(response)
 			{
-				var data_vars    = response.split("#");
-				var attached_ids = data_vars[0];
+				var data_vars    = response.split("#"),
+					attached_ids = data_vars[0];
 					response     = data_vars[1];
 				
 				jQuery('.attach_me:checked').each(function()

@@ -13,6 +13,8 @@
 	<?php endif; ?>
 	</dt>
 	<?php if( "" != $caption ) : ?>
-		<dd class="gallery-caption"><?php echo $caption; ?></dd>
+	<dd class="gallery-caption">
+		<?php echo $caption; ?>
+	</dd>
 	<?php endif; ?>
 </dl>

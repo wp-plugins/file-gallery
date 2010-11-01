@@ -305,9 +305,12 @@ add_action('wp_print_scripts', 'file_gallery_print_scripts');
 /**
  * Main shortcode function
  */
-function file_gallery_shortcode( $attr )
+function file_gallery_shortcode( $content = false, $attr = false )
 {
 	global $wp, $wpdb, $post;
+	
+	if( false !== $content && false === $attr )
+		$attr = $content;
 		
 	if( ! isset($wp->file_gallery_gallery_id) )
 		$wp->file_gallery_gallery_id = 1;
@@ -425,7 +428,7 @@ function file_gallery_shortcode( $attr )
 	
 	$sql_mimetype = "";
 	
-	if(  '' != $mimetype )
+	if( '' != $mimetype )
 	{
 		$mimetype     = file_gallery_get_mime_type($mimetype);
 		$sql_mimetype = wp_post_mime_type_where($mimetype);
@@ -736,7 +739,7 @@ function file_gallery_register_shortcode_handler()
 	if( true == $options['disable_shortcode_handler'] )
 		return;
 		
-	add_shortcode('gallery', 'file_gallery_shortcode');
+	add_filter('post_gallery', 'file_gallery_shortcode', 10, 2);
 }
 add_action('init', 'file_gallery_register_shortcode_handler');
 

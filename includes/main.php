@@ -57,6 +57,8 @@ function file_gallery_list_attachments(&$count_attachments, $post_id, $attachmen
 		{
 			$classes         = array("sortableitem");
 			$post_thumb_link = "set";
+			$non_image       = "";
+			$checked         = "";
 			
 			$original_id = get_post_meta($attachment->ID, "_is_copy_of", true);
 			$copies 	 = get_post_meta($attachment->ID, "_has_copies", true);
@@ -75,9 +77,6 @@ function file_gallery_list_attachments(&$count_attachments, $post_id, $attachmen
 			$attachment_thumb = wp_get_attachment_image_src($attachment->ID, $attachment_thumb_size);
 			$large            = wp_get_attachment_image_src($attachment->ID, "large");
 			
-			$non_image = "";
-			$checked   = "";
-			
 			if( in_array($attachment->ID, $checked_attachments) )
 				$checked = ' checked="checked"';
 			
@@ -88,10 +87,16 @@ function file_gallery_list_attachments(&$count_attachments, $post_id, $attachmen
 				$attachment_width    = "";
 				$attachment_height   = "";
 				$non_image           = " non_image";
+				$_attachment_thumb_width = 55;
+			}
+			else
+			{
+				$classes[] = "image";
+				$_attachment_thumb_width = $attachment_thumb_width;
 			}
 			
 			$attached_files .= '
-			<li id="image-' . $attachment->ID . '" class="' . implode(" ", $classes) . '" style="width: ' . $attachment_thumb_width . 'px; height: ' . $attachment_thumb_height . 'px">
+			<li id="image-' . $attachment->ID . '" class="' . implode(" ", $classes) . '" style="width: ' . $_attachment_thumb_width . 'px; height: ' . $attachment_thumb_height . 'px">
 				
 				<img src="' . $attachment_thumb[0] . '" alt="' . $attachment->post_title . '" id="in-' . $attachment->ID . '" title="' . $attachment->post_title . '" class="fgtt' . $non_image . '" />';
 				
@@ -104,7 +109,7 @@ function file_gallery_list_attachments(&$count_attachments, $post_id, $attachmen
 				$attached_files .= '<a href="#" id="in-' . $attachment->ID . '-edit" class="img_edit">
 					<img src="' . FILE_GALLERY_URL . '/images/famfamfam_silk/pencil.png" alt="' . __("Edit", "file-gallery") . '" title="' . __("Edit", "file-gallery") . '" />
 				</a>
-				<input type="checkbox" id="att-chk-' . $attachment->ID . '" class="checker"' . $checked . ' />';
+				<input type="checkbox" id="att-chk-' . $attachment->ID . '" class="checker"' . $checked . ' title="' . __("Click to select", "file-gallery") . '" />';
 		
 			if( current_user_can('edit_post', $attachment->ID) ) :
 				
@@ -445,12 +450,23 @@ function file_gallery_main( $ajax = true )
 	{
 		$attachment_id = intval($_POST['attachment_id']);
 
-		$attachment_data['ID'] 			 = $attachment_id;
-		$attachment_data['post_alt']     = $_POST['post_alt'];
-		$attachment_data['post_title']   = $_POST['post_title'];
-		$attachment_data['post_content'] = $_POST['post_content'];
-		$attachment_data['post_excerpt'] = $_POST['post_excerpt'];
-		$attachment_data['menu_order'] 	 = $_POST['menu_order'];
+		$attachment_data['ID'] 			  = $attachment_id;
+		$attachment_data['post_alt']      = $_POST['post_alt'];
+		$attachment_data['post_title']    = $_POST['post_title'];
+		$attachment_data['post_content']  = $_POST['post_content'];
+		$attachment_data['post_excerpt']  = $_POST['post_excerpt'];
+		$attachment_data['menu_order'] 	  = $_POST['menu_order'];
+		
+		// attachment custom fields
+		$custom = get_post_custom($attachment_id);
+		$custom_fields = $_POST['custom_fields'];
+		
+		if( ! empty($custom) && ! empty($custom_fields) )
+		foreach( $custom_fields as $key => $val )
+		{
+			if( $custom[$key][0] != $val )
+				update_post_meta($attachment_id, $key, $val);
+		}
 		
 		// media_tag taxonomy - attachment tags
 		$tax_input = "";

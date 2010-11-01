@@ -132,12 +132,37 @@ function file_gallery_parse_attachment_data( $attachment_id, $size, $linkto, $li
 	
 	if( false !== $caption )
 	{
-		$caption_text = $attachment->post_excerpt; 
-		$output = '[caption id="attachment_' . $attachment_id . '" align="align' . $align . '" width="' . $width . '" caption="' . $caption_text .'"]' . $output . '[/caption] ';
+		$output = '[caption id="attachment_' . $attachment_id . '" align="align' . $align . '" width="' . $width . '" caption="' . urlencode($attachment->post_excerpt) .'"]' . $output . '[/caption] ';
 	}
 
 	return apply_filters("file_gallery_parse_attachment_data", $output, $attachment_id);
 }
+
+
+
+function file_gallery_caption_shortcode( $output = "", $attr, $content = null)
+{
+	extract(
+		shortcode_atts(
+			array(
+				'id'	=> '',
+				'align'	=> 'alignnone',
+				'width'	=> '',
+				'caption' => ''
+	), $attr));
+
+	if ( 1 > (int) $width || empty($caption) )
+		return $content;
+
+	if ( $id )
+		$id = 'id="' . esc_attr($id) . '" ';
+	
+	$caption = urldecode($caption);
+
+	return '<div ' . $id . 'class="wp-caption ' . esc_attr($align) . '" style="width: ' . (10 + (int) $width) . 'px">'
+	. do_shortcode( $content ) . '<p class="wp-caption-text">' . $caption . '</p></div>';
+}
+add_filter('img_caption_shortcode', 'file_gallery_caption_shortcode', 10, 3);
 
 
 
@@ -211,7 +236,7 @@ function file_gallery_edit_attachment()
 <?php do_action('file_gallery_edit_attachment_pre_form', $attachment_id); ?>
 	
 	<div id="attachment_data_edit_form">
-
+	
 		<input type="hidden" name="post_id" id="fgae_post_id" value="<?php echo $_POST['post_id']; ?>" />
 		<input type="hidden" name="attachment_id" id="fgae_attachment_id" value="<?php echo $_POST['attachment_id']; ?>" />
 		<input type="hidden" name="abspath" id="fgae_abspath" value="<?php echo $_POST['abspath']; ?>" />
@@ -228,7 +253,7 @@ function file_gallery_edit_attachment()
 		<input type="text" name="post_title" id="fgae_post_title" value="<?php echo $attachment->post_title; ?>" class="roundborder"<?php if (!current_user_can('edit_post', $attachment->ID)){ echo ' readonly="readonly"';} ?> /><br />
 		
 		<label for="post_excerpt"><?php _e("Caption", "file-gallery"); ?>: </label>
-		<input type="text" name="post_excerpt" id="fgae_post_excerpt" value="<?php echo $attachment->post_excerpt; ?>" class="roundborder"<?php if (!current_user_can('edit_post', $attachment->ID)){ echo ' readonly="readonly"';} ?> /><br />
+		<textarea name="post_excerpt" id="fgae_post_excerpt" class="roundborder"<?php if (!current_user_can('edit_post', $attachment->ID)){ echo ' readonly="readonly"';} ?>><?php echo $attachment->post_excerpt; ?></textarea><br />
 		
 		<label for="post_content"><?php _e("Description", "file-gallery"); ?>: </label>
 		<textarea name="post_content" id="fgae_post_content" rows="4" cols="20" class="roundborder"<?php if (!current_user_can('edit_post', $attachment->ID)){ echo ' readonly="readonly"';} ?>><?php echo $attachment->post_content; ?></textarea><br />
@@ -241,6 +266,7 @@ function file_gallery_edit_attachment()
 		
 		<label for="attachment_uri"><?php _e("Attachment file URL:", "file-gallery"); ?></label>
 		<input type="text" name="attachment_uri" id="fgae_attachment_uri" readonly="readonly" value="<?php echo $fullsize_src; ?>" class="roundborder" /><br /><br />
+		<?php file_gallery_attachment_custom_fields_table($attachment->ID); ?>
 		
 		<input type="button" id="file_gallery_edit_attachment_save" value="<?php _e("save and return", "file-gallery"); ?>" class="button-primary" />
 		

@@ -22,7 +22,7 @@ more... Here's the full list of features:
 **Features:**
 
 1.  multiple galleries per post with custom attachment order
-2.  a flexible templating system (PHP, CSS, JS) – choose a different 
+2.  a flexible templating system (PHP, CSS, JS) - choose a different 
     template for each gallery, even within the same post (4 templates 
 	included with plugin)
 3.  simple, easy to use UI with drag and drop sorting shows attachment 
@@ -39,13 +39,14 @@ more... Here's the full list of features:
 9.  media tags = tag your attachments and then use those tags to choose 
     which attachments you want to display in your gallery or to filter 
 	your media library items.
-10.  different background colors for items in media library depending 
+10. custom fields for attachments
+11. different background colors for items in media library depending 
     on their status = completely unattached (white), attached to other 
     posts (red), or attached to current post (yellow)
-11. compatible with "WordPress Mobile Edition", "Media Tags" and 
+12. compatible with "WordPress Mobile Edition", "Media Tags" and 
     "WPML Multilingual CMS" plugins	
-12. basic caching of gallery output and frequent queries (transients)
-13. please see the help file for complete list of features
+13. basic caching of gallery output and frequent queries (transients)
+14. please see the help file for complete list of features :)
 
 
 
@@ -75,6 +76,14 @@ more... Here's the full list of features:
 
 
 == Changelog ==
+
+= 1.6.5 =
+* November 1st, 2010
+* custom fields for attachments
+* variable width/height for thumbnails in File Gallery metabox (backend)
+* fixed the "simple" theme so it does not rely on colorbox being 
+  installed and checks if thickbox is available
+* some JavaScript improvements
 
 = 1.6.4.1 =
 * October 12th, 2010
