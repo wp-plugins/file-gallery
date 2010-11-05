@@ -50,13 +50,8 @@ function file_gallery_get_attachment_data()
 
 		$rel = ' rel="' . $linkclass . '[' . $wp->file_gallery_gallery_id . ']"';
 	}
-	
-	if( "none" == $linkto )
-		$imageclass .= " align" . $align;
-	else
-		$linkclass  .= " align" . $align;
 		
-	$imageclass .= " size-" . $size;
+	$imageclass .= " align" . $align . " size-" . $size;
 	
 	foreach( $attachments as $attachment_id )
 	{
@@ -128,7 +123,12 @@ function file_gallery_parse_attachment_data( $attachment_id, $size, $linkto, $li
 	}
 	
 	if( "" != $link )
-		$output = '<a href="' . $link . '" class="' . trim($linkclass) . '"' . $rel . '>' . $output . '</a>';
+	{
+		if( "" != trim($linkclass) )
+			$linkclass = 'class="' . trim($linkclass) . '"';
+
+		$output = '<a href="' . $link . '"' . $linkclass . $rel . '>' . $output . '</a>';
+	}
 	
 	if( false !== $caption )
 	{
