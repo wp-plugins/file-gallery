@@ -4,7 +4,7 @@ Donate link: http://skyphe.org/donate/
 Tags: attachment, attachments, gallery, galleries, template, templates, shortcode, file, files, attach, detach, unattach, copy, media, tags, library
 Requires at least: 2.9.2
 Tested up to: 3.1-alpha
-Stable tag: 1.6.4.1
+Stable tag: 1.6.5
 
 File Gallery extends WordPress media (attachments) capabilities 
 by adding a new gallery shortcode handler with templating support 
@@ -52,16 +52,17 @@ more... Here's the full list of features:
 
 == Screenshots ==
 
-1. File Gallery main box on editing screen
-2. Edit attachment data
-3. Copy all attachments from another post
-4. Deleting attachments that have copies
-5. Build a gallery by choosing media tags
-6. Settings page
-7. Post thumb and number of attachments as extras in this view
-8. Copying attachments from media library
-9. With "WPML Multilingual CMS" plugin istalled, you'll be able to copy 
-   all attachments from the original post to translated one in two clicks
+1.  File Gallery main box on editing screen
+2.  Edit attachment data
+3.  Copy all attachments from another post
+4.  Deleting attachments that have copies
+5.  Build a gallery by choosing media tags
+6.  Settings page
+7.  Post thumb and number of attachments as extras in this view
+8.  Copying attachments from media library
+9.  With "WPML Multilingual CMS" plugin istalled, you'll be able to copy 
+    all attachments from the original post to translated one in two clicks
+10. custom fields for attachments
 
 
 

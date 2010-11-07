@@ -154,16 +154,16 @@ ul li
 	<p>Just a notification and some buttons on the right.</p>
 	<p>When you add some attachments to the post, the box will automatically
 		refresh itself and it will look something like this:</p>
-	<p><img src="images/02.png" alt="" width="782" height="617" /></p>
+	<p><img src="images/02.png" alt="" width="782" height="881" /></p>
 	<h3><a name="attachment_colors" id="attachment_colors"></a>Attachment colors</h3>
 	<p>Some attachments might appear with background colors set to other than
 		grey.</p>
-	<p><img src="images/15.png" alt="" width="419" height="106" /></p>
+	<p><img src="images/15.png" alt="" width="536" height="116" /></p>
 	<p>Here's what each color means:</p>
 	<ul>
 		<li>Grey - <strong>default</strong> (<em>original</em> with no copies)</li>
 		<li>Blue - a <strong>copy</strong></li>
-		<li>Yellow - set as <strong>featured</strong> image</li>
+		<li>(striped)  - set as <strong>featured</strong> image</li>
 		<li>Green - an <em><strong>original</strong></em><strong> with copies</strong></li>
 	</ul>
 	<h3><a name="main_buttons" id="main_buttons"></a>Main buttons</h3>
@@ -179,6 +179,10 @@ ul li
 		<li>Button number six will <strong>delete</strong> all the checked attachments</li>
 		<li>Button number seven will <strong>detach</strong> all the checked attachments</li>
 		<li>Button number eight will <strong>clear the file gallery cache</strong></li>
+		<li>Button number nine will <strong>open the media settings page in a
+		thickbox window</strong></li>
+		<li>Button number ten will <strong>open this help file in a thickbox
+		window</strong></li>
 	</ul>
 	<h3><a name="inserting" id="inserting"></a>Inserting a gallery and inserting
 		single images</h3>
@@ -189,7 +193,7 @@ ul li
 		more <strong>single images</strong> into a post.</p>
 	<p>They both operate on attachments you <em>check</em> in the attachment
 		list below the fieldsets.</p>
-	<p><img src="images/04.png" alt="" width="107" height="110" />You can check
+	<p><img src="images/04.png" alt="" width="135" height="110" />You can check
 		attachments either by <strong>single clicking the attachment thumbnail</strong>,
 		or by <strong>clicking the checkbox</strong> in the lower right corner
 		of each attachment representation.</p>
@@ -205,35 +209,36 @@ ul li
 	<h3><a name="manipulating" id="manipulating"></a>Manipulating the attachments</h3>
 	<p><img src="images/13.png" alt="" width="250" height="175" /></p>
 	<p>Each attachment representation has a few buttons / icons.</p>
-	<p>Top left button (a magnifying glass) <strong>opens a bigger version
-			of the image in a lightbox</strong>, if that attachment is an image viewable
-			in browser. This icon is not present if the attachment is not an image.</p>
-	<p>Beneath the magnifying glass button is edit button which <strong>opens
-			attachment editing screen</strong>. You can also <strong>double click
-			on the attachment thumbnail</strong> to trigger the same action.</p>
+	<p>Top left button is the <em>edit</em> button which <strong>opens attachment
+			editing screen</strong>. You can also <strong>double click on the attachment
+	thumbnail</strong> to trigger the same action.</p>
+	<p>Beneath the edit button is the <em>zoom</em> button (a magnifying glass) <strong>opens
+			a bigger version of the image in a lightbox</strong>, if that attachment
+			is an image viewable in browser. This icon is not present if
+			the attachment is not an image.</p>
 	<p><img src="images/06.png" alt="" width="105" height="99" />In the bottom
 		left corner is the <strong>delete / detach</strong> button. It will open
 		a small dialog over the thumbnail when clicked: Clicking on the button
 		again will hide the dialog, and clicking on either &quot;Delete&quot;
 		or
 		&quot;Detach&quot; links will open another dialog for confirmation.</p>
-	<p> <img src="images/07.png" alt="" width="105" height="101" />Click
+	<p> <img src="images/07.png" alt="" width="155" height="101" />Click
 		&quot;Continue&quot; to delete / detach that attachment, or &quot;Cancel&quot; to,
 		well, cancel the operation :)</p>
 	<p>At the bottom, in the middle, is the <strong>set / unset featured image
-			(post thumbnail)</strong> button.</p>
+			(post thumbnail)</strong> button (a star).</p>
 	<p>In the bottom right corner is the checkbox used to check attachments
 		for operations involving the Main buttons or the fieldsets beneath them.</p>
 	<h4><a name="reordering" id="reordering"></a>(Re)ordering the attachments</h4>
 	<p>Use your mouse to <strong>click on an attachment thumbnail and then
-			drag it</strong> to another position in the list: <img src="images/08.png" alt="" width="726" height="214" /></p>
+			drag it</strong> to another position in the list: <img src="images/08.png" alt="" width="678" height="214" /></p>
 	<p><strong>Attachment order is not saved automatically so please use the
 			third main button the save it.</strong></p>
 	<h3><a name="attachment_edit" id="attachment_edit"></a>Attachment editing
 		screen</h3>
 	<p>When you click the &quot;Edit attachment&quot; button, or double click
 		the attachment thumbnail, you will be presented with the following screen:</p>
-	<p><img src="images/09.png" alt="" width="781" height="561" /></p>
+	<p><img src="images/09.png" alt="" width="780" height="900" /></p>
 	<p><strong>Use this form to edit attachment data</strong> and then click
 		&quot;save and return&quot;. Or just click &quot;cancel and return&quot; to
 		do just that - return to the attachment list.</p>
@@ -242,6 +247,9 @@ ul li
 	<p>Clicking the image thumbnail in the top right corner will <strong>open
 			its enlarged version in an lightbox</strong>, if the attachment is an
 			image.</p>
+	<p>Sinve v1.6.5 of the plugin, <strong>attachment custom fields</strong> are
+		also present in this dialog box. If you edit any of the custom fields
+		here, they too will be updated when you press the 'save and return' button.</p>
 	<h3><a name="tinymce_integration" id="tinymce_integration"></a>TinyMCE integration</h3>
 	<p>When you insert a gallery, a placeholder image will appear in the visual
 		editor. When you click on that placeholder, File Gallery box options
@@ -273,7 +281,7 @@ TinyMCE upgrade  in v3.1.</p>
 		the File Gallery box. When that button is clicked, it will open an dialog.
 		The dialog looks something like this:<br />
 		<br />
-		<img src="images/03.png" alt="" width="590" height="241" /><br />
+		<img src="images/03.png" alt="" width="590" height="224" /><br />
 		Currently, it's this simple: just type the post ID into the field
 		and click continue to copy all attachments from the post with that ID.
 		I might improve this feature in the future :)</p>
@@ -377,11 +385,12 @@ TinyMCE upgrade  in v3.1.</p>
 		or deactivate the plugin.</p>
 	<h2><a name="custom_templates" id="custom_templates"></a>Custom gallery
 		templates</h2>
-	<p>With this plugin are included three gallery templates:</p>
+	<p>With this plugin are included four gallery templates:</p>
 	<ul>
 		<li>default (standard WordPress template)</li>
 		<li>'File Gallery' (example with thumbnails)</li>
 		<li> 'List' (text-only example)</li>
+		<li>'Simple' (JavaScript enhanced, since v1.6.4)</li>
 	</ul>
 	<p>These serve only as examples so you could create your own templates.</p>
 	<h3><a name="your_own_templates" id="your_own_templates"></a>How can I
