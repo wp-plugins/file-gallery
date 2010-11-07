@@ -458,8 +458,8 @@ function file_gallery_js_admin()
 	{
 		$file_gallery_localize = array(
 			'attach_all_checked_copy' => __("Attach all checked items to current post", "file-gallery"),
-			'exclude_current' => __("Exclude current post\'s attachments", "file-gallery"),
-			'include_current' => __("Include current post\'s attachments", "file-gallery")
+			'exclude_current' => __("Exclude current post's attachments", "file-gallery"),
+			'include_current' => __("Include current post's attachments", "file-gallery")
 		);
 
 		wp_enqueue_script('file-gallery-attach', FILE_GALLERY_URL . '/js/file-gallery-attach.js');
