@@ -90,10 +90,11 @@ jQuery(document).ready(function()
 				attachment_ids = opt.match(/attachment_ids=['"]([0-9,]+)['"]/),
 				attachment_includes = opt.match(/include=['"]([0-9,]+)['"]/),
 				post_id = opt.match(/id=['"](\d+)['"]/),
-				size = opt.match(/size=['"]([^'"]+)['"]/i),
+				size = opt.match(/\ssize=['"]([^'"]+)['"]/i),
 				linkto = opt.match(/link=['"]([^'"]+)['"]/i),
 				thelink = linkto ? linkto[1] : 'attachment',
 				linkrel = opt.match(/rel=['"]([^'"]+)['"]/i),
+				linksize = opt.match(/link_size=['"]([^'"]+)['"]/i),
 				external_url = '',
 				template = opt.match(/template=['"]([^'"]+)['"]/i),
 				order = opt.match(/order=['"]([^'"]+)['"]/i),
@@ -116,6 +117,7 @@ jQuery(document).ready(function()
 			jQuery("#file_gallery_size").val(size ? size[1] : 'thumbnail' );
 			jQuery("#file_gallery_linkto").val( thelink );
 			jQuery("#file_gallery_linkrel").val(linkrel ? linkrel[1] : 'true' );
+			jQuery("#file_gallery_linksize").val(linksize ? linksize[1] : 'full' );
 			jQuery("#file_gallery_external_url").val( external_url );
 			jQuery("#file_gallery_template").val(template ? template[1] : 'default' );
 			jQuery("#file_gallery_order").val(order ? order[1] : 'ASC' );
@@ -348,6 +350,7 @@ jQuery(document).ready(function()
 				size = "",
 				linkto = "",
 				linkrel = "",
+				linksize = "",
 				linkto_val = jQuery("#file_gallery_linkto").val(),
 				external_url = jQuery("#file_gallery_external_url").val(),
 				template = "",
@@ -375,9 +378,13 @@ jQuery(document).ready(function()
 			if( 'false' == jQuery("#file_gallery_linkrel").val() )
 				linkrel = ' rel=false';
 			
+			
+			
 			if( "external_url" == linkto_val )
 				linkto_val = encodeURIComponent(external_url);
-				
+
+
+			// tags
 			if( 0 < jQuery("#fg_gallery_tags").length )
 			{
 				if( "undefined" == typeof( jQuery("#fg_gallery_tags").val() ) || "undefined" == jQuery("#fg_gallery_tags").val() )
@@ -410,7 +417,8 @@ jQuery(document).ready(function()
 						jQuery(this).css({"color" : "#21759B"});
 				});
 			}
-			
+
+
 			if( 0 < jQuery("#file_gallery_list li").length )
 				serial = jQuery("#file_gallery_list").sortable("serialize");
 			
@@ -472,16 +480,27 @@ jQuery(document).ready(function()
 				jQuery("#file_gallery_linkclass_label").hide();
 			else
 				jQuery("#file_gallery_linkclass_label").show();
-				
-			if( "file" == jQuery("#file_gallery_linkto").val() || "external_url" == jQuery("#file_gallery_linkto").val())
-				jQuery("#file_gallery_linkrel_label").show();
-			else
-				jQuery("#file_gallery_linkrel_label").hide();
 
 			if( "none" == jQuery("#file_gallery_single_linkto").val() )
 				jQuery("#file_gallery_single_linkclass_label").hide();
 			else
 				jQuery("#file_gallery_single_linkclass_label").show();
+			
+						if( "file" == jQuery("#file_gallery_linkto").val() || "external_url" == jQuery("#file_gallery_linkto").val())
+			{
+				jQuery("#file_gallery_linkrel_label").show();
+				jQuery("#file_gallery_linksize_label").show();
+
+				if( "full" != jQuery("#file_gallery_linksize").val() )
+					linksize = ' link_size="' + jQuery("#file_gallery_linksize").val() + '"';
+			}
+			else
+			{
+				jQuery("#file_gallery_linkrel_label").hide();
+				jQuery("#file_gallery_linksize_label").hide();
+				linksize = "";
+			}
+			
 			
 			if( tags_from )
 				tags_from = "";
@@ -497,7 +516,7 @@ jQuery(document).ready(function()
 		
 			if( "thumbnail" != jQuery("#file_gallery_size").val() )
 				size = ' size="' + jQuery("#file_gallery_size").val() + '"';
-			
+
 			if( "attachment" != jQuery("#file_gallery_linkto").val() )
 				linkto = ' link="' + linkto_val + '"';
 		
@@ -522,7 +541,7 @@ jQuery(document).ready(function()
 			if( "" != jQuery("#file_gallery_columns").val() && "3" != jQuery("#file_gallery_columns").val() )
 				columns = ' columns="' + jQuery("#file_gallery_columns").val() + '"';
 			
-			serial += id + size + linkto + linkclass + imageclass + mimetype + limit + order + orderby + template + columns + linkrel + "]\n";
+			serial += id + size + linkto + linksize + linkclass + imageclass + mimetype + limit + order + orderby + template + columns + linkrel + "]\n";
 			
 			jQuery("#data_collector").val(serial);
 			
@@ -1756,7 +1775,7 @@ jQuery(document).ready(function()
 	/* other bindings */
 	
 	// bind dropdown select boxes change to serialize attachments list
-	jQuery("#file_gallery_size, #file_gallery_linkto, #file_gallery_orderby, #file_gallery_order, #file_gallery_template, #file_gallery_single_linkto, #fg_container .sortableitem .checker, #file_gallery_columns, #file_gallery_linkrel").live("change", function()
+	jQuery("#file_gallery_size, #file_gallery_linkto, #file_gallery_orderby, #file_gallery_order, #file_gallery_template, #file_gallery_single_linkto, #fg_container .sortableitem .checker, #file_gallery_columns, #file_gallery_linkrel, #file_gallery_linksize").live("change", function()
 	{
 		file_gallery.serialize();
 	});
@@ -1827,4 +1846,20 @@ if( ! Array.indexOf )
 		
 		return -1;
 	}
+}
+
+
+/**
+ * thanks to http://phpjs.org/functions/strip_tags:535
+ */
+function strip_tags (input, allowed) {
+   allowed = (((allowed || "") + "")
+	  .toLowerCase()
+	  .match(/<[a-z][a-z0-9]*>/g) || [])
+	  .join(''); // making sure the allowed arg is a string containing only tags in lowercase (<a><b><c>)
+   var tags = /<\/?([a-z][a-z0-9]*)\b[^>]*>/gi,
+	   commentsAndPhpTags = /<!--[\s\S]*?-->|<\?(?:php)?[\s\S]*?\?>/gi;
+   return input.replace(commentsAndPhpTags, '').replace(tags, function($0, $1){
+	  return allowed.indexOf('<' + $1.toLowerCase() + '>') > -1 ? $0 : '';
+   });
 }

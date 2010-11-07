@@ -376,7 +376,8 @@ function file_gallery_shortcode( $content = false, $attr = false )
 				'output_params'		=> 1,				// needed when outputting html
 				'attachment_ids'	=> '',				// alias of 'include'
 				'mimetype'			=> '',
-				'limit' 			=> -1
+				'limit' 			=> -1,
+				'link_size'			=> 'full'
 			)
 	, $attr));
 	
@@ -442,19 +443,18 @@ function file_gallery_shortcode( $content = false, $attr = false )
 	{
 		$tags = str_replace(",", "','", $tags);
 		
-		$query = "SELECT * FROM $wpdb->posts 
-						LEFT JOIN $wpdb->term_relationships ON($wpdb->posts.ID = $wpdb->term_relationships.object_id)
-						LEFT JOIN $wpdb->term_taxonomy ON($wpdb->term_relationships.term_taxonomy_id = $wpdb->term_taxonomy.term_taxonomy_id)
-						LEFT JOIN $wpdb->terms ON($wpdb->term_taxonomy.term_id = $wpdb->terms.term_id)
-						WHERE $wpdb->posts.post_type = 'attachment' 
-						" . $sql_mimetype . "
-						AND $wpdb->posts.post_status IN ('" . implode("', '", $approved_attachment_post_statuses) . "') 
-						AND $wpdb->posts.post_status NOT IN ('" . implode("', '", $ignored_attachment_post_statuses) . "') 
-						AND $wpdb->term_taxonomy.taxonomy = '" . FILE_GALLERY_MEDIA_TAG_NAME . "'";
+		$query = 
+		"SELECT * FROM $wpdb->posts 
+		 LEFT JOIN $wpdb->term_relationships ON($wpdb->posts.ID = $wpdb->term_relationships.object_id)
+		 LEFT JOIN $wpdb->term_taxonomy ON($wpdb->term_relationships.term_taxonomy_id = $wpdb->term_taxonomy.term_taxonomy_id)
+		 LEFT JOIN $wpdb->terms ON($wpdb->term_taxonomy.term_id = $wpdb->terms.term_id)
+		 WHERE $wpdb->posts.post_type = 'attachment' 
+		 " . $sql_mimetype . "
+		 AND $wpdb->posts.post_status IN ('" . implode("', '", $approved_attachment_post_statuses) . "') 
+		 AND $wpdb->posts.post_status NOT IN ('" . implode("', '", $ignored_attachment_post_statuses) . "') 
+		 AND $wpdb->term_taxonomy.taxonomy = '" . FILE_GALLERY_MEDIA_TAG_NAME . "'";
 		
-		$query .= sprintf("
-						AND ($wpdb->terms.name IN ('%s') OR $wpdb->terms.slug IN ('%s'))",
-		$tags, $tags);
+		$query .= sprintf("	AND ($wpdb->terms.name IN ('%s') OR $wpdb->terms.slug IN ('%s'))", $tags, $tags);
 		
 		if( "current" == $tags_from )
 			$query .= sprintf(" AND $wpdb->posts.post_parent = '%d' ", $id);
@@ -496,19 +496,16 @@ function file_gallery_shortcode( $content = false, $attr = false )
 			$orderby = "$wpdb->posts.post_title";
 		}
 		
-		$query = sprintf("SELECT * FROM $wpdb->posts 
-						  WHERE $wpdb->posts.ID IN (%s) 
-						  	AND $wpdb->posts.post_type = 'attachment' 
-							AND $wpdb->posts.post_status IN ('" . implode("', '", $approved_attachment_post_statuses) . "') 
-							AND $wpdb->posts.post_status NOT IN ('" . implode("', '", $ignored_attachment_post_statuses) . "') ", 
+		$query = sprintf(
+			"SELECT * FROM $wpdb->posts 
+			 WHERE $wpdb->posts.ID IN (%s) 
+			 AND $wpdb->posts.post_type = 'attachment' 
+			 AND $wpdb->posts.post_status IN ('" . implode("', '", $approved_attachment_post_statuses) . "') 
+			 AND $wpdb->posts.post_status NOT IN ('" . implode("', '", $ignored_attachment_post_statuses) . "') ", 
 		$attachment_ids);
 		
 		$query .= $sql_mimetype;
-		
-		$query .= sprintf("
-						  ORDER BY %s %s 
-						  LIMIT %d", 
-		$orderby, $order, $sql_limit);
+		$query .= sprintf(" ORDER BY %s %s LIMIT %d", $orderby, $order, $sql_limit);
 		
 		$attachments = $wpdb->get_results( $query );
 	}
@@ -642,7 +639,13 @@ function file_gallery_shortcode( $content = false, $attr = false )
 				$thumb_src             = wp_get_attachment_image_src($attachment->ID, $size);
 				$param['thumb_link']   = $thumb_src[0];
 				$param['thumb_width']  = 0 == $thumb_src[1] ? file_gallery_get_image_size($param['thumb_link'])       : $thumb_src[1];
-				$param['thumb_height'] = 0 == $thumb_src[2] ? file_gallery_get_image_size($param['thumb_link'], true) : $thumb_src[2];
+				$param['thumb_height'] = 0 == $thumb_src[2] ? file_gallery_get_image_size($param['thumb_link'], true) : $thumb_src[2];	
+				
+				if( 'full' != $link_size && in_array($link_size, file_gallery_get_intermediate_image_sizes()) )
+				{
+					$full_src = wp_get_attachment_image_src($attachment->ID, $link_size);
+					$param['link'] = $full_src[0];
+				}
 			}
 			else
 			{

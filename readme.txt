@@ -78,12 +78,15 @@ more... Here's the full list of features:
 == Changelog ==
 
 = 1.6.5 =
-* November 1st, 2010
+* November 7th, 2010
 * custom fields for attachments
-* variable width/height for thumbnails in File Gallery metabox (backend)
+* variable width/height for thumbnails in File Gallery metabox
 * fixed the "simple" theme so it does not rely on colorbox being 
   installed and checks if thickbox is available
 * some JavaScript improvements
+* new [gallery] attribute, 'link_size' - choose which image size 
+  thumbnails should be linked to
+* bugfix: image align class
 
 = 1.6.4.1 =
 * October 12th, 2010
@@ -379,14 +382,14 @@ later:
 
 maybe:
 
-- ability to load attachments from other posts
+- 
 
 probably not, but who knows:
 
 - watermarking - probably in another plugin...
 - when detaching / deleting attachments, just remove them from DOM
-  without refreshing the entire file gallery box - need to think of 
-  a nice, elegant solution? any ideas? :)
+  without refreshing the entire file gallery box, but take care of 
+  originals and copies
 
 
 And thank you for reading this :)

@@ -79,11 +79,6 @@
 	margin: -1px 0 0 3px;
 }
 
-#fg_info
-{
-	float: left;
-}
-
 #file_gallery .button-primary
 {
 	float: right;
@@ -355,12 +350,19 @@
 	-webkit-border-radius:4px;
 }
 
+#fg_info
+{
+	float: left;
+	width: 40%;
+}
+
 #fg_buttons
 {
 	float: right;
 	position:relative;
 	margin-right: 2px;
 	text-align: right;
+	width: 50%;
 }
 
 #fg_buttons.alt

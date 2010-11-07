@@ -139,7 +139,9 @@ function file_gallery_parse_attachment_data( $attachment_id, $size, $linkto, $li
 }
 
 
-
+/**
+ * Soon...
+ */
 function file_gallery_caption_shortcode( $output = "", $attr, $content = null)
 {
 	extract(
@@ -162,7 +164,7 @@ function file_gallery_caption_shortcode( $output = "", $attr, $content = null)
 	return '<div ' . $id . 'class="wp-caption ' . esc_attr($align) . '" style="width: ' . (10 + (int) $width) . 'px">'
 	. do_shortcode( $content ) . '<p class="wp-caption-text">' . $caption . '</p></div>';
 }
-add_filter('img_caption_shortcode', 'file_gallery_caption_shortcode', 10, 3);
+//add_filter('img_caption_shortcode', 'file_gallery_caption_shortcode', 10, 3);
 
 
 

@@ -15,19 +15,22 @@ function file_gallery_list_attachments(&$count_attachments, $post_id, $attachmen
 	{
 		$attachment_ids = str_replace(",", "','", trim($attachment_order, ",") );
 		
-		$attachments = $wpdb->get_results("SELECT * FROM $wpdb->posts 
-										   WHERE $wpdb->posts.post_parent = " . $post_id . "
-										   AND $wpdb->posts.post_type = 'attachment' 
-										   ORDER BY FIELD(ID,'" . $attachment_ids . "') ");
+		$attachments = $wpdb->get_results(
+			"SELECT * FROM $wpdb->posts 
+			 WHERE $wpdb->posts.post_parent = " . $post_id . "
+			 AND $wpdb->posts.post_type = 'attachment' 
+			 ORDER BY FIELD(ID,'" . $attachment_ids . "') "
+		);
 	}
 	else
 	{
 		$attachments = get_children(
-							array('post_parent' => $post_id, 
-								  'post_type' => 'attachment', 
-								  'order' => 'ASC', 
-								  'orderby' => 'menu_order',
-								  'post_status' => 'inherit'
+			array(
+			  'post_parent' => $post_id, 
+			  'post_type' => 'attachment', 
+			  'order' => 'ASC', 
+			  'orderby' => 'menu_order',
+			  'post_status' => 'inherit'
 		));
 	}
 
@@ -229,14 +232,14 @@ function file_gallery_list_tags( $args = array() )
 		}
 	}
 
-	$media_tags = $wpdb->get_results("SELECT * FROM $wpdb->terms 
-									  LEFT JOIN $wpdb->term_taxonomy 
-									  	ON ( $wpdb->terms.term_id = $wpdb->term_taxonomy.term_id ) 
-									  LEFT JOIN $wpdb->term_relationships 
-									  	ON ( $wpdb->term_taxonomy.term_taxonomy_id = $wpdb->term_relationships.term_taxonomy_id ) 
-									  WHERE $wpdb->term_taxonomy.taxonomy = '" . FILE_GALLERY_MEDIA_TAG_NAME . "'
-									  GROUP BY $wpdb->terms.term_id
-									  ORDER BY `name` ASC");
+	$media_tags = $wpdb->get_results(		 
+		"SELECT * FROM $wpdb->terms 
+		 LEFT JOIN $wpdb->term_taxonomy ON ( $wpdb->terms.term_id = $wpdb->term_taxonomy.term_id ) 
+		 LEFT JOIN $wpdb->term_relationships ON ( $wpdb->term_taxonomy.term_taxonomy_id = $wpdb->term_relationships.term_taxonomy_id ) 
+		 WHERE $wpdb->term_taxonomy.taxonomy = '" . FILE_GALLERY_MEDIA_TAG_NAME . "'
+		 GROUP BY $wpdb->terms.term_id
+		 ORDER BY `name` ASC"
+	);
 
 	if( !empty($media_tags) )
 	{
@@ -245,18 +248,18 @@ function file_gallery_list_tags( $args = array() )
 			foreach( $media_tags as $tag )
 			{
 				$list[] = array(
-									"term_id" => $tag->term_id,
-									"name" => $tag->name,
-									"slug" => $tag->slug,
-									"term_group" => $tag->term_group,
-									"term_taxonomy_id" => $tag->term_taxonomy_id,
-									"taxonomy" => $tag->taxonomy,
-									"description" => $tag->description,
-									"parent" => $tag->parent,
-									"count" => $tag->count,
-									"object_id" => $tag->object_id,
-									"term_order" => $tag->term_order
-								);
+					"term_id" => $tag->term_id,
+					"name" => $tag->name,
+					"slug" => $tag->slug,
+					"term_group" => $tag->term_group,
+					"term_taxonomy_id" => $tag->term_taxonomy_id,
+					"taxonomy" => $tag->taxonomy,
+					"description" => $tag->description,
+					"parent" => $tag->parent,
+					"count" => $tag->count,
+					"object_id" => $tag->object_id,
+					"term_order" => $tag->term_order
+				);
 			}
 			
 			if( "json" == $type )

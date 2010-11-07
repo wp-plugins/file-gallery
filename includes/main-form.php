@@ -69,6 +69,20 @@
 				</select>
 			</p>
 			
+			<p id="file_gallery_linksize_label">
+				<label for="file_gallery_linksize"><?php _e("linked image size", "file-gallery"); ?>:</label>
+				<select name="file_gallery_linksize" id="file_gallery_linksize">
+				<option value="thumbnail"<?php if( "thumbnail" == $file_gallery_options["default_linked_image_size"]){ ?> selected="selected"<?php } ?>><?php _e('thumbnail', 'file-gallery'); ?></option>
+					<option value="medium"<?php if( "medium" == $file_gallery_options["default_linked_image_size"]){ ?> selected="selected"<?php } ?>><?php _e('medium', 'file-gallery'); ?></option>
+					<option value="large"<?php if( "large" == $file_gallery_options["default_linked_image_size"]){ ?> selected="selected"<?php } ?>><?php _e('large', 'file-gallery'); ?></option>
+					<option value="full"<?php if( "full" == $file_gallery_options["default_linked_image_size"]){ ?> selected="selected"<?php } ?>><?php _e('full', 'file-gallery'); ?></option>
+
+					<?php foreach( $sizes as $size ) : if( in_array($size, array('thumbnail', 'medium', 'large', 'full')) ){ continue; } ?>
+					<option value="<?php echo $size; ?>"<?php if( $size == $file_gallery_options["default_linked_image_size"]){ ?> selected="selected"<?php } ?>><?php echo $size; ?></option>
+					<?php endforeach; ?>
+				</select>
+			</p>
+			
 			<p id="file_gallery_linkrel_label">
 				<label for="file_gallery_linkrel"><?php _e("link 'rel' attribute", "file-gallery"); ?>:</label>
 				<select type="text" name="file_gallery_linkrel" id="file_gallery_linkrel">

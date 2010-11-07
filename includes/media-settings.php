@@ -77,6 +77,9 @@ function file_gallery_options_init()
 	// link
 	add_settings_field("file_gallery_default_linkto", __("link", 'file-gallery'), create_function("", 'return file_gallery_options_fields( array("name" => "file_gallery_default_linkto") );'), 'media', 'file_gallery_options');
 	
+	// linked image size
+	add_settings_field("file_gallery_default_linked_image_size", __("linked image size", 'file-gallery'), create_function("", 'return file_gallery_options_fields( array("name" => "file_gallery_default_linked_image_size") );'), 'media', 'file_gallery_options');
+	
 	// external url
 	add_settings_field("file_gallery_default_external_url", __("external url", 'file-gallery'), create_function("", 'return file_gallery_options_fields( array("name" => "file_gallery_default_external_url") );'), 'media', 'file_gallery_options');
 	
@@ -329,6 +332,35 @@ function file_gallery_options_fields( $args )
 		$sizes_single_dropdown .= ' selected="selected"';
 	
 	$sizes_single_dropdown .= '>' . __('full', 'file-gallery') . '</option>';
+
+	// default sizes dropdown list for linked images	
+	$sizes_linked_dropdown .= '<option value="thumbnail"';
+	
+	if( $file_gallery_options["default_linked_image_size"] == "thumbnail" )
+		$sizes_linked_dropdown .= ' selected="selected"';
+	
+	$sizes_linked_dropdown .= '>' . __('thumbnail', 'file-gallery') . '</option>';
+	
+	$sizes_linked_dropdown .= '<option value="medium"';
+	
+	if( $file_gallery_options["default_linked_image_size"] == "medium" )
+		$sizes_linked_dropdown .= ' selected="selected"';
+	
+	$sizes_linked_dropdown .= '>' . __('medium', 'file-gallery') . '</option>';
+	
+	$sizes_linked_dropdown .= '<option value="large"';
+	
+	if( $file_gallery_options["default_linked_image_size"] == "large" )
+		$sizes_linked_dropdown .= ' selected="selected"';
+	
+	$sizes_linked_dropdown .= '>' . __('large', 'file-gallery') . '</option>';
+	
+	$sizes_linked_dropdown .= '<option value="full"';
+	
+	if( $file_gallery_options["default_linked_image_size"] == "full" )
+		$sizes_linked_dropdown .= ' selected="selected"';
+	
+	$sizes_linked_dropdown .= '>' . __('full', 'file-gallery') . '</option>';
 	
 	// default sizes dropdown list for metabox	
 	$metabox_sizes_dropdown .= '<option value="thumbnail"';
@@ -379,6 +411,14 @@ function file_gallery_options_fields( $args )
 			$sizes_single_dropdown .= ' selected="selected"';
 		
 		$sizes_single_dropdown .= '>' . $size . '</option>';
+		
+		// for linked images	
+		$sizes_linked_dropdown .= '<option value="' . $size . '"';
+		
+		if( $file_gallery_options["default_linked_image_size"] == $size )
+			$sizes_linked_dropdown .= ' selected="selected"';
+		
+		$sizes_linked_dropdown .= '>' . $size . '</option>';
 		
 		// for metabox	
 		$metabox_sizes_dropdown .= '<option value="' . $size . '"';
@@ -478,6 +518,11 @@ function file_gallery_options_fields( $args )
 			case "file_gallery_default_image_size" :
 					$output = '<select name="file_gallery[default_image_size]" id="file_gallery_default_image_size" style="width: 415px;">
 						' . $sizes_dropdown . '			
+					</select>';
+				break;
+			case "file_gallery_default_linked_image_size" :
+					$output = '<select name="file_gallery[default_linked_image_size]" id="file_gallery_default_linked_image_size" style="width: 415px;">
+						' . $sizes_linked_dropdown . '			
 					</select>';
 				break;
 			case "file_gallery_default_metabox_image_size" :
