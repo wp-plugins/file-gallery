@@ -1,7 +1,7 @@
 === File Gallery ===
 Contributors: aesqe
 Donate link: http://skyphe.org/donate/
-Tags: attachment, attachments, gallery, galleries, template, templates, shortcode, file, files, attach, detach, unattach, copy, media, tags, library
+Tags: attachment, attachments, gallery, galleries, template, templates, shortcode, file, files, attach, detach, unattach, copy, media, tags, library, custom, custom fields, custom fields for attachments, attachment custom fields
 Requires at least: 2.9.2
 Tested up to: 3.1-alpha
 Stable tag: 1.6.5
