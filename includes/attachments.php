@@ -132,7 +132,7 @@ function file_gallery_parse_attachment_data( $attachment_id, $size, $linkto, $li
 	
 	if( false !== $caption )
 	{
-		$output = '[caption id="attachment_' . $attachment_id . '" align="align' . $align . '" width="' . $width . '" caption="' . urlencode($attachment->post_excerpt) .'"]' . $output . '[/caption] ';
+		$output = '[caption id="attachment_' . $attachment_id . '" align="align' . $align . '" width="' . $width . '" caption="' . $attachment->post_excerpt .'"]' . $output . '[/caption] ';
 	}
 
 	return apply_filters("file_gallery_parse_attachment_data", $output, $attachment_id);

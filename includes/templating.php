@@ -641,7 +641,7 @@ function file_gallery_shortcode( $content = false, $attr = false )
 				$param['thumb_width']  = 0 == $thumb_src[1] ? file_gallery_get_image_size($param['thumb_link'])       : $thumb_src[1];
 				$param['thumb_height'] = 0 == $thumb_src[2] ? file_gallery_get_image_size($param['thumb_link'], true) : $thumb_src[2];	
 				
-				if( 'full' != $link_size && in_array($link_size, file_gallery_get_intermediate_image_sizes()) )
+				if( "" != $param['link'] && 'full' != $link_size && in_array($link_size, file_gallery_get_intermediate_image_sizes()) )
 				{
 					$full_src = wp_get_attachment_image_src($attachment->ID, $link_size);
 					$param['link'] = $full_src[0];

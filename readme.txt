@@ -78,6 +78,12 @@ more... Here's the full list of features:
 
 == Changelog ==
 
+= 1.6.5.1 =
+* November 8th, 2010
+* a few small bugfixes: urlencoded caption for single images; 
+  'simple' template no link variant; if link_size is set and 
+  link="none", images are still linked
+
 = 1.6.5 =
 * November 7th, 2010
 * custom fields for attachments
