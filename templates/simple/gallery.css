@@ -117,3 +117,29 @@
 
 
 
+/*
+Default style for WP-PageNavi plugin
+
+http://wordpress.org/extend/plugins/wp-pagenavi/
+*/
+
+.gallery.simple .wp-pagenavi {
+	clear: both;
+	padding: 10px 0;
+	margin-top: 1em;
+}
+
+.gallery.simple .wp-pagenavi a, .wp-pagenavi span {
+	text-decoration: none;
+	border: 1px solid #BFBFBF;
+	padding: 3px 5px;
+	margin: 2px;
+}
+
+.gallery.simple .wp-pagenavi a:hover, .wp-pagenavi span.current {
+	border-color: #000;
+}
+
+.gallery.simple .wp-pagenavi span.current {
+	font-weight: bold;
+}

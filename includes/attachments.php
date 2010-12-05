@@ -13,7 +13,7 @@
  */
 function file_gallery_get_attachment_data()
 {
-	global $wp;
+	global $file_gallery;
 
 	check_ajax_referer('file-gallery');
 
@@ -43,12 +43,12 @@ function file_gallery_get_attachment_data()
 	
 	if( 1 < count($attachments) && "" != $linkclass )
 	{
-		if( !isset($wp->file_gallery_gallery_id) )
-			$wp->file_gallery_gallery_id = 1;
+		if( !isset($file_gallery->gallery_id) )
+			$file_gallery->gallery_id = 1;
 		else
-			$wp->file_gallery_gallery_id++;
+			$file_gallery->gallery_id++;
 
-		$rel = ' rel="' . $linkclass . '[' . $wp->file_gallery_gallery_id . ']"';
+		$rel = ' rel="' . $linkclass . '[' . $file_gallery->gallery_id . ']"';
 	}
 		
 	$imageclass .= " align" . $align . " size-" . $size;

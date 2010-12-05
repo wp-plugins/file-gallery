@@ -2,7 +2,7 @@
 /*
 Plugin Name: File Gallery
 Plugin URI: http://skyphe.org/code/wordpress/file-gallery/
-Version: 1.6.5.1-beta
+Version: 1.6.5.1
 Description: "File Gallery" extends WordPress' media (attachments) capabilities by adding a new gallery shortcode handler with templating support, a new interface for attachment handling when editing posts, and much more.
 Author: Bruno "Aesqe" Babic
 Author URI: http://skyphe.org
@@ -30,26 +30,26 @@ Author URI: http://skyphe.org
 /**
  * Setup the WordPress constants
  */
-if ( !defined( 'WP_CONTENT_URL' ) )
+if ( ! defined( 'WP_CONTENT_URL' ) )
 	define( 'WP_CONTENT_URL', get_option('siteurl') . '/wp-content' );
-if ( !defined( 'WP_CONTENT_DIR' ) )
+if ( ! defined( 'WP_CONTENT_DIR' ) )
 	define( 'WP_CONTENT_DIR', ABSPATH . 'wp-content' );
-if ( !defined( 'WP_PLUGIN_URL' ) )
+if ( ! defined( 'WP_PLUGIN_URL' ) )
 	define( 'WP_PLUGIN_URL', WP_CONTENT_URL. '/plugins' );
-if ( !defined( 'WP_PLUGIN_DIR' ) )
+if ( ! defined( 'WP_PLUGIN_DIR' ) )
 	define( 'WP_PLUGIN_DIR', WP_CONTENT_DIR . '/plugins' );
 
 
 /**
  * Setup default File Gallery options
  */
-$file_gallery_abspath = WP_PLUGIN_DIR . "/" . basename(dirname(__FILE__));
-$file_gallery_abspath = str_replace("\\", "/", $file_gallery_abspath);
-$file_gallery_abspath = preg_replace("#/+#", "/", $file_gallery_abspath);
+$file_gallery_abspath = WP_PLUGIN_DIR . '/' . basename(dirname(__FILE__));
+$file_gallery_abspath = str_replace('\\', '/', $file_gallery_abspath);
+$file_gallery_abspath = preg_replace('#/+#', '/', $file_gallery_abspath);
 
-define("FILE_GALLERY_URL", WP_PLUGIN_URL . "/" . basename(dirname(__FILE__)));
-define("FILE_GALLERY_ABSPATH", $file_gallery_abspath);
-define("FILE_GALLERY_DEFAULT_TEMPLATES", serialize( array("default", "file-gallery", "list", "simple") ) );
+define('FILE_GALLERY_URL', WP_PLUGIN_URL . '/' . basename(dirname(__FILE__)));
+define('FILE_GALLERY_ABSPATH', $file_gallery_abspath);
+define('FILE_GALLERY_DEFAULT_TEMPLATES', serialize( array('default', 'file-gallery', 'list', 'simple') ) );
 
 
 /**
@@ -61,18 +61,18 @@ define("FILE_GALLERY_DEFAULT_TEMPLATES", serialize( array("default", "file-galle
  */
 function file_gallery_plugins_support()
 {
-	global $sitepress, $wp_taxonomies;
+	global $sitepress, $wp_taxonomies, $file_gallery;
 	
 	$mobile = false;
-	$file_gallery_media_tag_name = "media_tag";
-	$options = get_option("file_gallery");
+	$file_gallery_media_tag_name = 'media_tag';
+	$options = get_option('file_gallery');
 	
 	// WordPress Mobile Edition
-	if( function_exists("cfmobi_check_mobile") && cfmobi_check_mobile() )
+	if( function_exists('cfmobi_check_mobile') && cfmobi_check_mobile() )
 	{
 		$mobile = true;
 	
-		if( "" != $options && isset($options['disable_shortcode_handler']) && true != $options['disable_shortcode_handler'] )
+		if( '' != $options && isset($options['disable_shortcode_handler']) && true != $options['disable_shortcode_handler'] )
 			add_filter('stylesheet_uri', 'file_gallery_mobile_css');
 	}
 	
@@ -80,10 +80,10 @@ function file_gallery_plugins_support()
 	if( defined('MEDIA_TAGS_TAXONOMY') )
 		$file_gallery_media_tag_name = MEDIA_TAGS_TAXONOMY;
 		
-	define("FILE_GALLERY_MOBILE", $mobile);
-	define("FILE_GALLERY_MEDIA_TAG_NAME", $file_gallery_media_tag_name);
+	define('FILE_GALLERY_MOBILE', $mobile);
+	define('FILE_GALLERY_MEDIA_TAG_NAME', $file_gallery_media_tag_name);
 }
-add_action("plugins_loaded", "file_gallery_plugins_support", 100);
+add_action('plugins_loaded', 'file_gallery_plugins_support', 100);
 
 
 /*
@@ -94,21 +94,21 @@ add_action("plugins_loaded", "file_gallery_plugins_support", 100);
 function file_gallery_filtered_constants()
 {
 	$stylesheet_directory = get_stylesheet_directory();
-	$file_gallery_crystal_url = get_bloginfo('wpurl') . "/" . WPINC . "/images/crystal";
-	$file_gallery_theme_abspath = str_replace("\\", "/", $stylesheet_directory);
-	$file_gallery_theme_abspath = preg_replace("#/+#", "/", $file_gallery_theme_abspath);
+	$file_gallery_crystal_url = get_bloginfo('wpurl') . '/' . WPINC . '/images/crystal';
+	$file_gallery_theme_abspath = str_replace('\\', '/', $stylesheet_directory);
+	$file_gallery_theme_abspath = preg_replace('#/+#', '/', $file_gallery_theme_abspath);
 	
-	define("FILE_GALLERY_THEME_ABSPATH", $file_gallery_theme_abspath);
-	define("FILE_GALLERY_THEME_TEMPLATES_ABSPATH", apply_filters("file_gallery_templates_folder_abspath", $file_gallery_theme_abspath . "/file-gallery-templates"));
-	define("FILE_GALLERY_THEME_TEMPLATES_URL", apply_filters("file_gallery_templates_folder_url", get_bloginfo("stylesheet_directory") . "/file-gallery-templates"));
+	define('FILE_GALLERY_THEME_ABSPATH', $file_gallery_theme_abspath);
+	define('FILE_GALLERY_THEME_TEMPLATES_ABSPATH', apply_filters('file_gallery_templates_folder_abspath', $file_gallery_theme_abspath . '/file-gallery-templates'));
+	define('FILE_GALLERY_THEME_TEMPLATES_URL', apply_filters('file_gallery_templates_folder_url', get_bloginfo('stylesheet_directory') . '/file-gallery-templates'));
 	
-	define("FILE_GALLERY_CRYSTAL_URL", apply_filters("file_gallery_crystal_url", $file_gallery_crystal_url));
+	define('FILE_GALLERY_CRYSTAL_URL', apply_filters('file_gallery_crystal_url', $file_gallery_crystal_url));
 	
-	define("FILE_GALLERY_DEFAULT_TEMPLATE_NAME", apply_filters("file_gallery_default_template_name", "default"));
-	define("FILE_GALLERY_DEFAULT_TEMPLATE_URL", apply_filters("file_gallery_default_template_url", FILE_GALLERY_URL . "/templates/default"));
-	define("FILE_GALLERY_DEFAULT_TEMPLATE_ABSPATH", apply_filters("file_gallery_default_template_abspath", FILE_GALLERY_ABSPATH . "/templates/default"));
+	define('FILE_GALLERY_DEFAULT_TEMPLATE_NAME', apply_filters('file_gallery_default_template_name', 'default'));
+	define('FILE_GALLERY_DEFAULT_TEMPLATE_URL', apply_filters('file_gallery_default_template_url', FILE_GALLERY_URL . '/templates/default'));
+	define('FILE_GALLERY_DEFAULT_TEMPLATE_ABSPATH', apply_filters('file_gallery_default_template_abspath', FILE_GALLERY_ABSPATH . '/templates/default'));
 }
-add_action("after_setup_theme", "file_gallery_filtered_constants");
+add_action('after_setup_theme', 'file_gallery_filtered_constants');
 
 
 /**
@@ -124,7 +124,7 @@ function file_gallery_activate()
 		'media_tag_name'			  => FILE_GALLERY_MEDIA_TAG_NAME,
 		
 		'in_excerpt' 				  => true, 
-		'in_excerpt_replace_content'  => "<p><strong>(" . __("galleries are shown on full posts only", "file-gallery") . ")</strong></p>", 
+		'in_excerpt_replace_content'  => '<p><strong>(' . __('galleries are shown on full posts only', 'file-gallery') . ')</strong></p>', 
 		
 		'default_image_size' 		  => 'thumbnail', 
 		'default_linkto' 			  => 'attachment', 
@@ -172,14 +172,14 @@ function file_gallery_activate()
 	);
 	
 	// if options already exist, upgrade
-	if( $options = get_option("file_gallery") )
+	if( $options = get_option('file_gallery') )
 	{
 		$defaults = wp_parse_args( $options, $defaults); // $defaults = shortcode_atts( $defaults, $options );
 		$defaults['folder']  = FILE_GALLERY_URL;
 		$defaults['abspath'] = FILE_GALLERY_ABSPATH;
 	}
 	
-	update_option("file_gallery", $defaults);
+	update_option('file_gallery', $defaults);
 	
 	// clear any existing cache
 	file_gallery_clear_cache();
@@ -194,10 +194,10 @@ function file_gallery_deactivate()
 {
 	file_gallery_clear_cache();
 	
-	$options = get_option("file_gallery");
+	$options = get_option('file_gallery');
 	
-	if( isset($options["del_options_on_deactivate"]) && true == $options["del_options_on_deactivate"] )
-		delete_option("file_gallery");
+	if( isset($options['del_options_on_deactivate']) && true == $options['del_options_on_deactivate'] )
+		delete_option('file_gallery');
 }
 register_deactivation_hook( __FILE__, 'file_gallery_deactivate' );
 
@@ -208,11 +208,11 @@ register_deactivation_hook( __FILE__, 'file_gallery_deactivate' );
  */
 function file_gallery_add_settings_link( $links )
 { 
-	array_unshift( $links, '<a href="options-media.php">' . __("Settings", "file-gallery") . '</a>' ); 
+	array_unshift( $links, '<a href="options-media.php">' . __('Settings', 'file-gallery') . '</a>' ); 
 	
 	return $links; 
 }
-add_filter("plugin_action_links_" . plugin_basename(__FILE__), 'file_gallery_add_settings_link' );
+add_filter('plugin_action_links_' . plugin_basename(__FILE__), 'file_gallery_add_settings_link' );
 
 
 /**
@@ -220,7 +220,7 @@ add_filter("plugin_action_links_" . plugin_basename(__FILE__), 'file_gallery_add
  */
 function file_gallery_add_textdomain_and_taxonomies()
 {
-	load_plugin_textdomain('file-gallery', false, dirname(plugin_basename(__FILE__)) . "/languages");
+	load_plugin_textdomain('file-gallery', false, dirname(plugin_basename(__FILE__)) . '/languages');
 
 	$args = array(
 		"public"                => true,
@@ -278,7 +278,7 @@ function file_gallery_update_media_tag_term_count( $terms )
  */
 function file_gallery_media_submenu()
 {
-    add_submenu_page('upload.php', __("Media tags", "file-gallery"), __("Media tags", "file-gallery"), 8, 'edit-tags.php?taxonomy=' . FILE_GALLERY_MEDIA_TAG_NAME);
+    add_submenu_page('upload.php', __("Media tags", "file-gallery"), __("Media tags", "file-gallery"), 'upload_files', 'edit-tags.php?taxonomy=' . FILE_GALLERY_MEDIA_TAG_NAME);
 }
 add_action('admin_menu', 'file_gallery_media_submenu');
 
@@ -313,7 +313,7 @@ function file_gallery_add_library_query_vars( $input )
 	// affect the query only if we're on a certain page
 	if( "media-upload.php" == $pagenow && "library" == $_GET["tab"] && is_numeric($_GET['post_id']) )
 	{
-		if( "current" == $_GET['exclude'] )
+		if( isset($_GET['exclude']) && "current" == $_GET['exclude'] )
 			$input .= " AND `post_parent` != " . intval($_GET["post_id"]) . " ";
 
 		if( isset($options["library_filter_duplicates"]) && true == $options["library_filter_duplicates"] )
@@ -454,7 +454,7 @@ function file_gallery_js_admin()
 		</script>
 		';
 	}
-	elseif( "media-upload.php" == $pagenow && "library" == $_GET["tab"] )
+	elseif( "media-upload.php" == $pagenow && isset($_GET["tab"]) && "library" == $_GET["tab"] )
 	{
 		$file_gallery_localize = array(
 			'attach_all_checked_copy' => __("Attach all checked items to current post", "file-gallery"),
@@ -609,7 +609,7 @@ function file_gallery_posts_custom_column($column_name, $post_id)
 	{
 		if( $thumb_id = get_post_meta( $post_id, '_thumbnail_id', true ) )
 		{
-			$thumb_src = wp_get_attachment_image_src( $thumb_id, "thumbnail", false, $attr );
+			$thumb_src = wp_get_attachment_image_src( $thumb_id, "thumbnail", false );
 			$content   = '<img src="' . $thumb_src[0] .'" alt="Post thumb" />';
 			
 			echo apply_filters('file_gallery_post_thumb_content', $content, $post_id, $thumb_id);
@@ -713,6 +713,21 @@ function file_gallery_media_columns( $columns )
 add_filter( 'manage_media_columns', 'file_gallery_media_columns' );
 
 
+
+/**
+ * Just a variables placeholder for now
+ *
+ * @since 1.6.5.1
+ */
+class File_Gallery
+{
+	var $gallery_id;
+	var $overrides;
+};
+
+$file_gallery = new File_Gallery();
+
+
 /**
  * Includes
  */
@@ -726,5 +741,5 @@ include_once("includes/templating.php");
 include_once("includes/main.php");
 include_once("includes/functions.php");
 include_once("includes/cache.php");
-
+/**/
 ?>

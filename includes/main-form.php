@@ -151,6 +151,19 @@
 				<label for="file_gallery_limit"><?php _e("limit", "file-gallery"); ?>:</label>
 				<input type="text" name="file_gallery_limit" id="file_gallery_limit" value="" />
 			</p>
+            
+            <p>
+				<label for="file_gallery_offset"><?php _e("offset", "file-gallery"); ?>:</label>
+				<input type="text" name="file_gallery_offset" id="file_gallery_offset" value="" />
+			</p>
+            
+            <p id="file_gallery_paginate_label">
+				<label for="file_gallery_paginate"><?php _e("paginate", "file-gallery"); ?>:</label>
+				<select type="text" name="file_gallery_paginate" id="file_gallery_paginate">
+					<option value="true">true</option>
+					<option value="false">false</option>
+				</select>
+			</p>
 			
 			<p>
 				<label for="file_gallery_columns"><?php _e("columns", "file-gallery"); ?>:</label>
