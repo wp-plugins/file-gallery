@@ -515,7 +515,7 @@ function file_gallery_shortcode( $content = false, $attr = false )
 	$approved_attachment_post_statuses = apply_filters("file_gallery_approved_attachment_post_statuses", array('inherit'));
 	$ignored_attachment_post_statuses  = apply_filters("file_gallery_ignored_attachment_post_statuses", array('trash', 'private', 'pending'));
 	
-	$file_gallery_query = (object) array();
+	$file_gallery_query = new stdClass();
 
 	// start with tags because they negate everything else
 	if( "" != $tags )
