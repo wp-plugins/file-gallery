@@ -101,7 +101,7 @@ function file_gallery_list_attachments(&$count_attachments, $post_id, $attachmen
 			$attached_files .= '
 			<li id="image-' . $attachment->ID . '" class="' . implode(" ", $classes) . '" style="width: ' . $_attachment_thumb_width . 'px; height: ' . $attachment_thumb_height . 'px">
 				
-				<img src="' . $attachment_thumb[0] . '" alt="' . $attachment->post_title . '" id="in-' . $attachment->ID . '" title="' . $attachment->post_title . '" class="fgtt' . $non_image . '" />';
+				<img src="' . $attachment_thumb[0] . '" alt="' . $attachment->post_title . '" id="in-' . $attachment->ID . '" title="' . $attachment->post_title . '" class="fgtt' . $non_image . '"  style="width: ' . $_attachment_thumb_width . 'px;" />';
 				
 				if( "" == $non_image ) :
 					$attached_files .= '<a href="' . $large[0] . '" id="in-' . $attachment->ID . '-zoom" class="img_zoom">
@@ -333,18 +333,19 @@ function file_gallery_main( $ajax = true )
 	
 	check_ajax_referer('file-gallery');
 	
-	$post_id			  = $_POST['post_id'];
-	$attachment_order	  = $_POST['attachment_order'];
-	$files_or_tags		  = $_POST["files_or_tags"];
-	$tags_from			  = $_POST["tags_from"];
-	$action				  = $_POST['action'];
-	$attachment_ids		  = $_POST['attachment_ids'];
-	$attachment_data	  = $_POST['attachment_data'];
-	$delete_what          = $_POST['delete_what'];
-	$checked_attachments  = explode(",", $_POST['checked_attachments']);
-	$copies				  = $_POST['copies'];
-	$originals			  = $_POST['originals'];
-	$fieldsets			  = $_POST['fieldsets'];
+	$post_id			  = isset($_POST['post_id']) ? $_POST['post_id'] : "";
+	$attachment_order	  = isset($_POST['attachment_order']) ? $_POST['attachment_order'] : "";
+	$files_or_tags		  = isset($_POST['files_or_tags']) ? $_POST["files_or_tags"] : "";
+	$tags_from			  = isset($_POST['tags_from']) ? $_POST["tags_from"] : "";
+	$action				  = isset($_POST['action']) ? $_POST['action'] : "";
+	$attachment_ids		  = isset($_POST['attachment_ids']) ? $_POST['attachment_ids'] : "";
+	$attachment_data	  = isset($_POST['attachment_data']) ? $_POST['attachment_data'] : "";
+	$delete_what          = isset($_POST['delete_what']) ? $_POST['delete_what'] : "";
+	$checked_attachments  = isset($_POST['checked_attachments']) ? explode(",", $_POST['checked_attachments']) : array();
+	$normals			  = isset($_POST['normals']) ? $_POST['normals'] : "";
+	$copies				  = isset($_POST['copies']) ? $_POST['copies'] : "";
+	$originals			  = isset($_POST['originals']) ? $_POST['originals'] : "";
+	$fieldsets			  = isset($_POST['fieldsets']) ? $_POST['fieldsets'] : "";
 	
 	$file_gallery_options = get_option('file_gallery');
 	$states				  = explode(",", $file_gallery_options["insert_options_states"]);

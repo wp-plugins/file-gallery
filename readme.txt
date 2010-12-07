@@ -3,8 +3,8 @@ Contributors: aesqe
 Donate link: http://skyphe.org/donate/
 Tags: attachment, attachments, gallery, galleries, template, templates, shortcode, file, files, attach, detach, unattach, copy, media, tags, library, custom, custom fields, custom fields for attachments, attachment custom fields
 Requires at least: 2.9.2
-Tested up to: 3.1-alpha
-Stable tag: 1.6.5
+Tested up to: 3.1-beta1
+Stable tag: 1.6.5.1
 
 File Gallery extends WordPress media (attachments) capabilities 
 by adding a new gallery shortcode handler with templating support 
@@ -40,13 +40,14 @@ more... Here's the full list of features:
     which attachments you want to display in your gallery or to filter 
 	your media library items.
 10. custom fields for attachments
-11. different background colors for items in media library depending 
+11. gallery pagination
+12. different background colors for items in media library depending 
     on their status = completely unattached (white), attached to other 
     posts (red), or attached to current post (yellow)
-12. compatible with "WordPress Mobile Edition", "Media Tags" and 
+13. compatible with "WordPress Mobile Edition", "Media Tags" and 
     "WPML Multilingual CMS" plugins	
-13. basic caching of gallery output and frequent queries (transients)
-14. please see the help file for complete list of features :)
+14. basic caching of gallery output and frequent queries (transients)
+15. please see the help file for complete list of features :)
 
 
 
@@ -77,6 +78,21 @@ more... Here's the full list of features:
 
 
 == Changelog ==
+
+= 1.6.5.1 =
+* December 6th, 2010
+* new function file_gallery_overrides() which you can use in 
+  your template files before the_content() to modify [gallery] 
+  arguments for that post, like this:
+  file_gallery_overrides( array('size' => 'medium') )
+  //will add it to the help file soon
+* gallery pagination: must use with 'limit' argument
+  will NOT work with paginated posts or pages
+  example: [gallery limit="6" paginate="true"]
+  //will add it to the help file soon
+* a few small bugfixes: urlencoded caption for single images; 
+  'simple' template no link variant; if link_size is set and 
+  link="none", images are still linked
 
 = 1.6.5 =
 * November 7th, 2010

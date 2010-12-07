@@ -95,6 +95,8 @@ add_action("delete_attachment", "file_gallery_clear_cache_mediatags_all");
  */
 function file_gallery_clear_cache_gallery()
 {
+	global $post_id;
+	
 	return file_gallery_clear_cache("gallery", $post_id);
 }
 add_action("save_post",   "file_gallery_clear_cache_gallery");

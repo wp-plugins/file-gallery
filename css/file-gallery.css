@@ -336,18 +336,19 @@
 #file_gallery_response
 {
 	background: #EDEDED none repeat scroll 0 0;
-	color:#DD6611;
-	display:none;
-	height:23px;
-	line-height:23px;
-	margin:1px 0 0 0;
-	padding:0 8px;
-	position:absolute;
-	right:25px;
-	top:0px;
-	font-weight:bold;
-	-moz-border-radius:4px;
-	-webkit-border-radius:4px;
+	color: #DD6611;
+	display: none;
+	height: 23px;
+	line-height: 23px;
+	margin: 1px 0 0 0;
+	padding: 0 8px;
+	position: absolute;
+	right: 25px;
+	top: 0px;
+	font-weight: bold;
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+	border-radius: 4px;
 }
 
 #fg_info
@@ -376,7 +377,7 @@
 	width: 32px;
 	height: 24px;
 	text-indent: -9999px;
-	background-color: #EDEDED;
+	background-color: #DFDFDF;
 	background-position: center center;
 	background-repeat: no-repeat;
 	margin: 0;
@@ -612,13 +613,19 @@ textarea, input, select
 
 #file_gallery_imageclass,
 #file_gallery_mimetype,
-#file_gallery_limit,
 #file_gallery_linkclass,
 #file_gallery_single_imageclass,
 #file_gallery_single_linkclass
 {
 	width: 95px;
 }
+
+#file_gallery_limit,
+#file_gallery_offset
+{
+	width: 45px;
+}
+
 
 #library-form .media-item
 {

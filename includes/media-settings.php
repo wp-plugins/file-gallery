@@ -200,8 +200,20 @@ function file_gallery_options_fields( $args )
 {
 	global $_wp_additional_image_sizes;
 	
-	$file_gallery_sizes = file_gallery_get_intermediate_image_sizes();
+	$templates_dropdown = '';
+	$linkto_dropdown = '';
+	$linkto_single_dropdown = '';
+	$orderby_dropdown = '';
+	$order_dropdown = '';
+	$sizes_dropdown = '';
+	$sizes_single_dropdown = '';
+	$sizes_linked_dropdown = '';
+	$metabox_sizes_dropdown = '';
+	$align_single_dropdown = '';
+	$columns_dropdown = '';
+	$post_types = '';
 	
+	$file_gallery_sizes = file_gallery_get_intermediate_image_sizes();
 	$file_gallery_options = get_option("file_gallery");
 	
 	/* SELECT DROPDOWNS */
@@ -476,7 +488,7 @@ function file_gallery_options_fields( $args )
 	{
 		$size = $args["size"];
 		
-		if( "1" == get_option($size . "_crop") || 1 == $_wp_additional_image_sizes[$size]['crop'] )
+		if( "1" == get_option($size . "_crop") || (isset($_wp_additional_image_sizes[$size]['crop']) && 1 == $_wp_additional_image_sizes[$size]['crop']) )
 			$checked = ' checked="checked" ';
 		
 		if( "medium" == $size )

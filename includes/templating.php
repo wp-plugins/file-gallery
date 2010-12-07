@@ -89,15 +89,15 @@ function file_gallery_mobile_css( $stylesheet_url )
  */
 function file_gallery_css_front( $mobile = false )
 {
+	global $wp_query;
+	
 	$options = get_option("file_gallery");
 	
 	if( true == $options['disable_shortcode_handler'] )
 		return;
 
-	global $wp_query;
-
 	// if option to show galleries in excerpts is set to false
-	if( !is_single() && "1" != $options["in_excerpt"] && false == $mobile )
+	if( ! is_single() && "1" != $options["in_excerpt"] && false == $mobile )
 		return;
 	
 	$gallery_matches = 0;
@@ -301,21 +301,69 @@ echo "\n" .
 add_action('wp_print_scripts', 'file_gallery_print_scripts');
 
 
+/**
+ * Built-in pagination for galleries
+ *
+ * @since 1.6.5.1
+ */
+function file_gallery_do_pagination( $max_num_pages = 0, $page = 0 )
+{	
+	if( 0 < $max_num_pages && 0 < $page )
+	{
+		$out = array();
+		
+		remove_query_arg('page');
+		
+		while( 0 < $max_num_pages )
+		{
+			if( (int) $page === (int) $max_num_pages )
+				$out[] = '<span class="current">' . $max_num_pages . '</span>';
+			else
+				$out[] = str_replace('<a ', '<a class="page"', _wp_link_page($max_num_pages)) . $max_num_pages . '</a>';
+			
+			$max_num_pages--;
+		}
+		
+		return '<div class="wp-pagenavi">' . "\n" . implode("\n", array_reverse($out)) . "\n" . '</div>';
+	}
+	
+	return '';
+}
+
+
+/**
+ * For easy inline overriding of shortcode-set options
+ *
+ * @since 1.6.5.1
+ */
+function file_gallery_overrides( $args )
+{
+	global $file_gallery;
+	
+	if( is_string($args) )
+		$args = wp_parse_args($args);
+	
+	$file_gallery->overrides = $args;
+}
+
 
 /**
  * Main shortcode function
+ *
+ * @since 0.1
  */
 function file_gallery_shortcode( $content = false, $attr = false )
 {
-	global $wp, $wpdb, $post;
-	
+	global $file_gallery, $wpdb, $post;
+
+	// if the function is called directly, not via shortcode
 	if( false !== $content && false === $attr )
 		$attr = $content;
 		
-	if( ! isset($wp->file_gallery_gallery_id) )
-		$wp->file_gallery_gallery_id = 1;
+	if( ! isset($file_gallery->gallery_id) )
+		$file_gallery->gallery_id = 1;
 	else
-		$wp->file_gallery_gallery_id++;
+		$file_gallery->gallery_id++;
 	
 	$options = get_option("file_gallery");
 
@@ -355,7 +403,7 @@ function file_gallery_shortcode( $content = false, $attr = false )
 			//  'itemtag'    => 'dl',
 			//  'icontag'    => 'dt',
 			//  'captiontag' => 'dd',
-
+	
 				'order'				=> 'ASC',
 				'orderby'			=> '',
 				'id'				=> $post->ID,
@@ -364,7 +412,7 @@ function file_gallery_shortcode( $content = false, $attr = false )
 				'link'				=> 'attachment',
 				'include'			=> '',
 				'exclude'			=> '',
-
+	
 				/* added by file gallery: */
 				'template'			=> 'default',
 				'linkclass'			=> '',
@@ -377,10 +425,13 @@ function file_gallery_shortcode( $content = false, $attr = false )
 				'attachment_ids'	=> '',				// alias of 'include'
 				'mimetype'			=> '',
 				'limit' 			=> -1,
+				'offset'			=> -1,
+				'paginate'			=> 0,
 				'link_size'			=> 'full'
 			)
-	, $attr));
-	
+		, $attr)
+	);
+
 	if( ! in_array($template, $default_templates) )
 	{
 		$template_file = FILE_GALLERY_THEME_TEMPLATES_ABSPATH . '/' . $template . '/gallery.php';
@@ -405,9 +456,20 @@ function file_gallery_shortcode( $content = false, $attr = false )
 		$template      = "default";
 	}
 	
+	// get overriding variables from the template file
 	ob_start();
 	include($template_file);
 	ob_end_clean();
+
+	if( is_array($file_gallery->overrides) && ! empty($file_gallery->overrides) )
+	{
+		extract($file_gallery->overrides);
+		$file_gallery->overrides = NULL;
+	}
+
+	$limit  = (int) $limit;
+	$offset = (int) $offset;
+	$page   = (int) get_query_var("page");
 
 	if( 'false' == $rel || '0' == $rel )
 		$rel = false;
@@ -418,16 +480,31 @@ function file_gallery_shortcode( $content = false, $attr = false )
 		$output_params = false;
 	else
 		$output_params = true;
+	
+	if( 'false' == $paginate || '0' == $paginate || 0 > $limit )
+	{
+		$paginate   = false;
+		$found_rows = '';
+	}
+	else
+	{
+		$paginate   = true;
+		$found_rows = 'SQL_CALC_FOUND_ROWS';
+		
+		if( 0 === $page )
+			$page = 1;
 
-	if( "" != $include && "" == $attachment_ids )
+		if( is_singular() && 1 < $page )
+			$offset = $limit * ($page - 1);
+	}
+
+	if( '' != $include && '' == $attachment_ids )
 		$attachment_ids = $include;
 	
 	if( ! isset( $linkto ) )
 		$linkto = $link;
 	
-	$limit = intval($limit);
-	
-	$sql_mimetype = "";
+	$sql_mimetype = '';
 	
 	if( '' != $mimetype )
 	{
@@ -437,6 +514,8 @@ function file_gallery_shortcode( $content = false, $attr = false )
 
 	$approved_attachment_post_statuses = apply_filters("file_gallery_approved_attachment_post_statuses", array('inherit'));
 	$ignored_attachment_post_statuses  = apply_filters("file_gallery_ignored_attachment_post_statuses", array('trash', 'private', 'pending'));
+	
+	$file_gallery_query = new stdClass();
 
 	// start with tags because they negate everything else
 	if( "" != $tags )
@@ -444,7 +523,7 @@ function file_gallery_shortcode( $content = false, $attr = false )
 		$tags = str_replace(",", "','", $tags);
 		
 		$query = 
-		"SELECT * FROM $wpdb->posts 
+		"SELECT " . $found_rows . " * FROM $wpdb->posts 
 		 LEFT JOIN $wpdb->term_relationships ON($wpdb->posts.ID = $wpdb->term_relationships.object_id)
 		 LEFT JOIN $wpdb->term_taxonomy ON($wpdb->term_relationships.term_taxonomy_id = $wpdb->term_taxonomy.term_taxonomy_id)
 		 LEFT JOIN $wpdb->terms ON($wpdb->term_taxonomy.term_id = $wpdb->terms.term_id)
@@ -469,11 +548,6 @@ function file_gallery_shortcode( $content = false, $attr = false )
 			
 			$query .= sprintf(" ORDER BY %s %s", $orderby, $order); // beats array shuffle only if LIMIT isn't set
 		}
-		
-		if( 0 < $limit )
-			$query .= " LIMIT " . $limit;
-		
-		$attachments = $wpdb->get_results( $query );
 	}
 	elseif( "" != $attachment_ids )
 	{
@@ -497,7 +571,7 @@ function file_gallery_shortcode( $content = false, $attr = false )
 		}
 		
 		$query = sprintf(
-			"SELECT * FROM $wpdb->posts 
+			"SELECT " . $found_rows . " * FROM $wpdb->posts 
 			 WHERE $wpdb->posts.ID IN (%s) 
 			 AND $wpdb->posts.post_type = 'attachment' 
 			 AND $wpdb->posts.post_status IN ('" . implode("', '", $approved_attachment_post_statuses) . "') 
@@ -505,29 +579,53 @@ function file_gallery_shortcode( $content = false, $attr = false )
 		$attachment_ids);
 		
 		$query .= $sql_mimetype;
-		$query .= sprintf(" ORDER BY %s %s LIMIT %d", $orderby, $order, $sql_limit);
+		$query .= sprintf(" ORDER BY %s %s ", $orderby, $order);
 		
-		$attachments = $wpdb->get_results( $query );
+		if( true !== $paginate )
+			$limit = $sql_limit;
 	}
 	else
 	{
 		if( "" == $orderby )
 			$orderby = "menu_order ID";
-		
-		$attachment_args = array(
+
+		$query = array(
 			'post_parent'		=> $id,
 			'post_status'		=> "'" . implode("', '", $approved_attachment_post_statuses) . "'" , 
 			'post_type'			=> 'attachment', 
 			'order'				=> $order, 
 			'orderby'			=> $orderby,
-			'numberposts'		=> $limit,
+			//'numberposts'		=> $limit,
+			'posts_per_page'	=> $limit,
 			'post_mime_type'	=> $mimetype
 		);
 
 		if ( ! empty($exclude) )
-			$attachment_args['exclude'] = preg_replace( '/[^0-9,]+/', '', $exclude );
+			$query['exclude'] = preg_replace( '/[^0-9,]+/', '', $exclude );
+		
+		if( 0 < $offset )
+			$query['offset'] = $offset;
 
-		$attachments = get_posts( $attachment_args );
+		$file_gallery_query = new WP_Query( $query );
+		$attachments = $file_gallery_query->posts;
+		unset($query);
+	}
+	
+	if( isset($query) )
+	{
+		if( 0 < $limit )
+			$query .= " LIMIT " . $limit;
+		
+		if( 0 < $offset )
+			$query .= " OFFSET " . $offset;
+
+		$attachments = $wpdb->get_results( $query );
+
+		if( '' != $found_rows )
+		{
+			$file_gallery_query->found_posts = $wpdb->get_var("SELECT FOUND_ROWS()");
+			$file_gallery_query->max_num_pages = ceil($file_gallery_query->found_posts / $limit);
+		}
 	}
 
 	if( empty($attachments) )
@@ -587,10 +685,10 @@ function file_gallery_shortcode( $content = false, $attr = false )
 				if( $attachment_is_image )
 				{
 					if( false !== $param['rel'] )
-						$param['rel'] = $plcai[0] . "[" .  $wp->file_gallery_gallery_id . "]";
+						$param['rel'] = $plcai[0] . "[" .  $file_gallery->gallery_id . "]";
 					
 					$filter_args = array(
-						'gallery_id' => $wp->file_gallery_gallery_id, 
+						'gallery_id' => $file_gallery->gallery_id, 
 						'linkrel'    => $param['rel'],
 						'linkclass'  => $param['link_class'],
 						'imageclass' => $param['image_class']
@@ -608,6 +706,7 @@ function file_gallery_shortcode( $content = false, $attr = false )
 				}
 			}
 			
+			// if rel is still true or false
 			if( is_bool($param['rel']) )
 				$param['rel'] = "";
 
@@ -641,7 +740,7 @@ function file_gallery_shortcode( $content = false, $attr = false )
 				$param['thumb_width']  = 0 == $thumb_src[1] ? file_gallery_get_image_size($param['thumb_link'])       : $thumb_src[1];
 				$param['thumb_height'] = 0 == $thumb_src[2] ? file_gallery_get_image_size($param['thumb_link'], true) : $thumb_src[2];	
 				
-				if( 'full' != $link_size && in_array($link_size, file_gallery_get_intermediate_image_sizes()) )
+				if( "" != $param['link'] && 'full' != $link_size && in_array($link_size, file_gallery_get_intermediate_image_sizes()) )
 				{
 					$full_src = wp_get_attachment_image_src($attachment->ID, $link_size);
 					$param['link'] = $full_src[0];
@@ -710,9 +809,10 @@ function file_gallery_shortcode( $content = false, $attr = false )
 	}
 	else
 	{
+		$stc = "";
 		$cols = "";
-		$stc  = "";
-		
+		$pagination_html = "";
+
 		if( 0 < intval($columns) )
 			$cols = " columns_" . $columns;
 		
@@ -721,7 +821,10 @@ function file_gallery_shortcode( $content = false, $attr = false )
 		
 		$trans_append = "\n<!-- file gallery output cached on " . date("Y.m.d @ H:i:s", time()) . "-->\n";
 		
-		$output = "<" . $starttag . " id=\"gallery-" . $wp->file_gallery_gallery_id . "\" class=\"gallery " . str_replace(" ", "-", $template) . $cols . $stc . "\">\n" . $gallery_items . "\n</" . $starttag . ">";
+		if( is_single() && 1 < $file_gallery_query->max_num_pages )
+			$pagination_html = file_gallery_do_pagination( $file_gallery_query->max_num_pages, $page );
+		
+		$output = "<" . $starttag . " id=\"gallery-" . $file_gallery->gallery_id . "\" class=\"gallery " . str_replace(" ", "-", $template) . $cols . $stc . "\">\n" . $gallery_items . "\n" . $pagination_html . "\n</" . $starttag . ">";
 	}
 	
 	if( isset($options["cache"]) && true == $options["cache"] )
@@ -732,7 +835,7 @@ function file_gallery_shortcode( $content = false, $attr = false )
 			set_transient($transient, $output, $options["cache_time"]);
 	}
 	
-	return apply_filters("file_gallery_output", $output, $post->ID, $wp->file_gallery_gallery_id);
+	return apply_filters("file_gallery_output", $output, $post->ID, $file_gallery->gallery_id);
 }
 
 function file_gallery_register_shortcode_handler()

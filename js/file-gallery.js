@@ -103,6 +103,8 @@ jQuery(document).ready(function()
 				imageclass = opt.match(/imageclass=['"]([^'"]+)['"]/i),
 				mimetype = opt.match(/mimetype=['"]([^'"]+)['"]/i),
 				limit = opt.match(/limit=['"](\d+)['"]/),
+				offset = opt.match(/offset=['"](\d+)['"]/),
+				paginate = opt.match(/paginate=['"]([^'"]+)['"]/i),
 				columns = opt.match(/columns=['"](\d+)['"]/),
 				tags = opt.match(/tags=['"]([^'"]+)['"]/i),
 				tags_from = opt.match(/tags_from=['"]([^'"]+)['"]/i);
@@ -126,6 +128,8 @@ jQuery(document).ready(function()
 			jQuery("#file_gallery_imageclass").val(imageclass ? imageclass[1] : '' );
 			jQuery("#file_gallery_mimetype").val(mimetype ? mimetype[1] : '' );
 			jQuery("#file_gallery_limit").val(limit ? limit[1] : '' );
+			jQuery("#file_gallery_offset").val(offset ? offset[1] : '' );
+			jQuery("#file_gallery_paginate").val(paginate ? paginate[1] : 'false' );
 			jQuery("#file_gallery_columns").val(columns ? columns[1] : '3' );
 						
 			if( tags )
@@ -360,6 +364,8 @@ jQuery(document).ready(function()
 				imageclass = "",
 				mimetype = "",
 				limit = "",
+				offset = "",
+				paginate = "",
 				columns = "",
 				tags = "",
 				tags_from = "",
@@ -377,9 +383,7 @@ jQuery(document).ready(function()
 			
 			if( 'false' == jQuery("#file_gallery_linkrel").val() )
 				linkrel = ' rel=false';
-			
-			
-			
+
 			if( "external_url" == linkto_val )
 				linkto_val = encodeURIComponent(external_url);
 
@@ -486,7 +490,12 @@ jQuery(document).ready(function()
 			else
 				jQuery("#file_gallery_single_linkclass_label").show();
 			
-						if( "file" == jQuery("#file_gallery_linkto").val() || "external_url" == jQuery("#file_gallery_linkto").val())
+			if( 0 < Number(jQuery("#file_gallery_limit").val()) )
+				jQuery("#file_gallery_paginate_label").show();
+			else
+				jQuery("#file_gallery_paginate_label").hide();
+			
+			if( "file" == jQuery("#file_gallery_linkto").val() || "external_url" == jQuery("#file_gallery_linkto").val())
 			{
 				jQuery("#file_gallery_linkrel_label").show();
 				jQuery("#file_gallery_linksize_label").show();
@@ -532,11 +541,19 @@ jQuery(document).ready(function()
 			if( "" != jQuery("#file_gallery_mimetype").val() )
 				mimetype = ' mimetype="' + jQuery("#file_gallery_mimetype").val() + '"';
 				
-			if( "" != jQuery("#file_gallery_limit").val() )
+			if( 0 < Number(jQuery("#file_gallery_limit").val()) )
+			{
 				limit = ' limit="' + jQuery("#file_gallery_limit").val() + '"';
+				
+				if( "true" == jQuery("#file_gallery_paginate").val() )
+					limit += ' paginate="true"';
+			}
+			
+			if( 0 < Number(jQuery("#file_gallery_offset").val()) )
+				limit += ' offset="' + jQuery("#file_gallery_offset").val() + '"';
 			
 			if( "" != jQuery("#file_gallery_postid").val() )
-				limit = ' id="' + jQuery("#file_gallery_postid").val() + '"';
+				id = ' id="' + jQuery("#file_gallery_postid").val() + '"';
 			
 			if( "" != jQuery("#file_gallery_columns").val() && "3" != jQuery("#file_gallery_columns").val() )
 				columns = ' columns="' + jQuery("#file_gallery_columns").val() + '"';
@@ -1484,12 +1501,22 @@ jQuery(document).ready(function()
 	/* === BINDINGS === */
 
 
-	jQuery("#file_gallery_linkclass, #file_gallery_imageclass, #file_gallery_mimetype, #file_gallery_limit, #file_gallery_external_url, #file_gallery_single_linkclass, #file_gallery_single_imageclass, #file_gallery_single_external_url, #fg_gallery_tags, #file_gallery_postid").live('keypress keyup', function(e)
+	jQuery("#file_gallery_linkclass, #file_gallery_imageclass, #file_gallery_mimetype, #file_gallery_limit, #file_gallery_offset, #file_gallery_external_url, #file_gallery_single_linkclass, #file_gallery_single_imageclass, #file_gallery_single_external_url, #fg_gallery_tags, #file_gallery_postid, #file_gallery_mimetype").live('keypress keyup', function(e)
 	{
 		// on enter
 		if ( 13 === e.which || 13 === e.keyCode )
 		{
 			file_gallery.serialize();
+			
+			if( "file_gallery_limit" == jQuery(this).attr("id") )
+			{
+				if( 0 < Number(jQuery(this).val()) )
+					jQuery("#file_gallery_paginate_label").show();
+				else
+					jQuery("#file_gallery_paginate_label").hide();
+			}
+			
+			
 			return false;
 		}
 	});
@@ -1775,7 +1802,7 @@ jQuery(document).ready(function()
 	/* other bindings */
 	
 	// bind dropdown select boxes change to serialize attachments list
-	jQuery("#file_gallery_size, #file_gallery_linkto, #file_gallery_orderby, #file_gallery_order, #file_gallery_template, #file_gallery_single_linkto, #fg_container .sortableitem .checker, #file_gallery_columns, #file_gallery_linkrel, #file_gallery_linksize").live("change", function()
+	jQuery("#file_gallery_size, #file_gallery_linkto, #file_gallery_orderby, #file_gallery_order, #file_gallery_template, #file_gallery_single_linkto, #fg_container .sortableitem .checker, #file_gallery_columns, #file_gallery_linkrel,  #file_gallery_paginate, #file_gallery_linksize").live("change", function()
 	{
 		file_gallery.serialize();
 	});
