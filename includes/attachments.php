@@ -267,7 +267,10 @@ function file_gallery_edit_attachment()
 		<input type="text" name="menu_order" id="fgae_menu_order" value="<?php echo $attachment->menu_order; ?>" class="roundborder"<?php if (!current_user_can('edit_post', $attachment->ID)){ echo ' readonly="readonly"';} ?> /><br />
 		
 		<label for="attachment_uri"><?php _e("Attachment file URL:", "file-gallery"); ?></label>
-		<input type="text" name="attachment_uri" id="fgae_attachment_uri" readonly="readonly" value="<?php echo $fullsize_src; ?>" class="roundborder" /><br /><br />
+		<input type="text" name="attachment_uri" id="fgae_attachment_uri" readonly="readonly" value="<?php echo $fullsize_src; ?>" class="roundborder" />
+        <br />
+        <br />
+        
 		<?php file_gallery_attachment_custom_fields_table($attachment->ID); ?>
 		
 		<input type="button" id="file_gallery_edit_attachment_save" value="<?php _e("save and return", "file-gallery"); ?>" class="button-primary" />

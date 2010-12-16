@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: File Gallery 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-12-08 00:04+0100\n"
+"POT-Creation-Date: 2010-12-16 23:35+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Bruno Babic <aesqe@skyphe.org>\n"
 "Language-Team: \n"
@@ -279,44 +279,44 @@ msgstr "סדר מותאם אישית"
 msgid "Attachment file URL:"
 msgstr "URL של הקובץ המצורף:"
 
-#: ../includes/attachments.php:273
+#: ../includes/attachments.php:276
 msgid "save and return"
 msgstr "שמירה וחזרה"
 
-#: ../includes/attachments.php:275
+#: ../includes/attachments.php:278
 msgid "cancel and return"
 msgstr "ביטול וחזרה"
 
-#: ../includes/attachments.php:340
+#: ../includes/attachments.php:343
 msgid "Some of the checked attachments were successfully attached to current post."
 msgstr "חלק מהקבצים המצורפים נוספו בהצלחה לפוסט הנוכחי"
 
-#: ../includes/attachments.php:341
+#: ../includes/attachments.php:344
 msgid "Additionally, here are ID's of attachments you had selected, but were already attached to current post, according to their URIs.<br />You will be presented with an option to copy those attachments as well in the next version of this plugin. If that makes any sense, that is."
 msgstr "בנוסף, להלן מספרי הקבצם המצורפים שבחרת, שכבר מצורפים לפוסט הנוכחי, לפי הכתובת שלהם. <br /> תוצג לפניך אפשרות להעתיק גם את הקבצים המצורפים הללו בגרסה הבאה של תוסף זה.  "
 
-#: ../includes/attachments.php:345
+#: ../includes/attachments.php:348
 msgid "Checked attachments were successfully attached to current post."
 msgstr "קבצים מצורפים שסומנו נוספו בהצלחה לפוסט הנוכחי"
 
-#: ../includes/attachments.php:351
+#: ../includes/attachments.php:354
 msgid "All of the checked attachments are already attached to current post, according to their URIs.<br />You will be presented with an option to copy those attachments as well in the next version of this plugin. If that makes any sense, that is."
 msgstr "כל הקבצים המצורפים שסומנו כבר צורפו לפוסט הנוכחי, לפי הכתובת שלהם.<br /> תוצג לפניך אפשרות להעתיק גם את הקבצים המצורפים הללו בגרסה הבאה של תוסף זה.  "
 
-#: ../includes/attachments.php:353
+#: ../includes/attachments.php:356
 msgid "You must check the checkboxes next to attachments you want to copy to current post."
 msgstr "חובה לסמן את תיבות הבחירה שליד קבצים המצורפים שברצונך להעתיק לפוסט הנוכחי"
 
-#: ../includes/attachments.php:430
+#: ../includes/attachments.php:433
 msgid "Database error! (file_gallery_copy_all_attachments)"
 msgstr "שגיאה בבסיס הנתונים!: (file_gallery_copy_all_attachments)"
 
-#: ../includes/attachments.php:436
+#: ../includes/attachments.php:439
 #, php-format
 msgid "Uh-oh. No attachments were found for post ID %d."
 msgstr "לא נמצאו קבצים מצורפים עבור פוסט מספר %d."
 
-#: ../includes/attachments.php:457
+#: ../includes/attachments.php:460
 #, php-format
 msgid "All attachments were successfully copied from post %d."
 msgstr "כל הקבצים המצורפים הועתקו בהצלחה מפוסט %d."
@@ -836,19 +836,19 @@ msgstr "גובה"
 msgid "Crop %s size to exact dimensions"
 msgstr "האם לחתוך את הגודל %s למידות מדויקות?"
 
-#: ../includes/miscellaneous.php:120
+#: ../includes/miscellaneous.php:174
 msgid "Attachment order saved successfully."
 msgstr "סדר קבצים המצורפים נשמר בהצלחה"
 
-#: ../includes/miscellaneous.php:124
+#: ../includes/miscellaneous.php:178
 msgid "Database error! Function: file_gallery_save_menu"
 msgstr "שגיאה בבסיס הנתונים! פונקציה: file_gallery_save_menu"
 
-#: ../includes/templating.php:240
+#: ../includes/templating.php:246
 msgid "file does not exist:"
 msgstr "קובץ לא קיים"
 
-#: ../includes/templating.php:240
+#: ../includes/templating.php:246
 msgid "using default style"
 msgstr "משתמש בעיצוב ברירת מחדל"
 

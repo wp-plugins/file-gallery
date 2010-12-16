@@ -4,7 +4,7 @@ Donate link: http://skyphe.org/donate/
 Tags: attachment, attachments, gallery, galleries, template, templates, shortcode, file, files, attach, detach, unattach, copy, media, tags, library, custom, custom fields, custom fields for attachments, attachment custom fields
 Requires at least: 2.9.2
 Tested up to: 3.1-beta1
-Stable tag: 1.6.5.1
+Stable tag: 1.6.5.2
 
 File Gallery extends WordPress media (attachments) capabilities 
 by adding a new gallery shortcode handler with templating support 
@@ -79,17 +79,25 @@ more... Here's the full list of features:
 
 == Changelog ==
 
+= 1.6.5.2 =
+* December 16th, 2010
+* fixed a JS bug where attachment reordering would not work if
+  gallery/single image insert options are hidden
+* set the option to display single image captions to true by default
+* thanks to jardokraka for noticing both issues :)
+* a few small bugfixes in javascript and template js dependencies
+
 = 1.6.5.1 =
 * December 6th, 2010
 * new function file_gallery_overrides() which you can use in 
   your template files before the_content() to modify [gallery] 
   arguments for that post, like this:
   file_gallery_overrides( array('size' => 'medium') )
-  //will add it to the help file soon
-* gallery pagination: must use with 'limit' argument
-  will NOT work with paginated posts or pages
+  (will add it to the help file soon)
+* gallery pagination: must use with 'limit' argument;
+  will NOT work with paginated posts or pages;
   example: [gallery limit="6" paginate="true"]
-  //will add it to the help file soon
+  (will add it to the help file soon)
 * a few small bugfixes: urlencoded caption for single images; 
   'simple' template no link variant; if link_size is set and 
   link="none", images are still linked

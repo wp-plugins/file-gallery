@@ -1,10 +1,12 @@
 <?php
 	$starttag = "div";
 	$cleartag = "\n<br class='clear' />\n";
-	$js_dependencies = array("jquery");
 	$intermediate_size = wp_get_attachment_image_src($attachment->ID, "medium");
 	$name = urlencode($intermediate_size[0]);
 	$mimetype = 'image';
+	
+	if( isset($js_dependencies) )
+		array_unshift($js_dependencies, "jquery");
 	
 	if( 1 === $file_gallery_this_template_counter )
 	{

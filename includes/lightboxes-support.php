@@ -4,7 +4,12 @@ function file_gallery_lightboxes_support( $value = '', $type = '', $args = array
 {
 	$lightboxes_options = array
 	(
-		'colorbox' => array( 'linkrel' => false, 'linkclass' => false, 'imageclass' => '{script_name}-{gallery_id}', 'disable_imageclass_if_rel_false' => true )
+		'colorbox' => array( 
+			'linkrel' => false, 
+			'linkclass' => false, 
+			'imageclass' => '{script_name}-{gallery_id}', 
+			'disable_imageclass_if_rel_false' => true
+		)
 	);
 
 	$lightboxes_options = apply_filters('file_gallery_lightboxes_options', $lightboxes_options);
@@ -18,7 +23,7 @@ function file_gallery_lightboxes_support( $value = '', $type = '', $args = array
 	{
 		foreach( $enqueued as $script_name )
 		{
-			if( false !== $lightboxes_options[$script_name][$type] )
+			if( isset($lightboxes_options[$script_name][$type]) && false !== $lightboxes_options[$script_name][$type] )
 			{
 				$new_value = str_replace(array('{script_name}', '{gallery_id}'), array($script_name, $args['gallery_id']), $lightboxes_options[$script_name][$type]);
 				

@@ -39,9 +39,22 @@ jQuery(document).ready(function()
 					if( "" != file_gallery_simple_link )
 					{
 						jQuery(".gallery_simple_current_image").wrap('<a href="' + current_image_href + '" title="' + strip_tags(current_caption) + '"></a>');
+
+						// check for lightbox scripts
+						lightbox = 
+							"thickbox" == file_gallery_simple_linkclass ? 
+								jQuery.isFunction(tb_init) : eval("jQuery.fn." + file_gallery_simple_linkclass);
 						
-						if( jQuery.fn.thickbox )
-							jQuery(id + " .gallery_simple_current a").addClass("thickbox");
+						if( lightbox )
+						{
+							jQuery(id + " .gallery_simple_current a")
+								.addClass(
+									"colorbox" != file_gallery_simple_linkclass ? file_gallery_simple_linkclass : "cboxElement"
+							);
+
+							if( "thickbox" != file_gallery_simple_linkclass )
+								eval("jQuery('" + id + " .gallery_simple_current a')." + file_gallery_simple_linkclass + "()");
+						}
 					}
 					
 					// and fade in the image and its caption
@@ -58,15 +71,8 @@ jQuery(document).ready(function()
 			// advance gallery counter
 			file_gallery_simple_gallery_counter++;
 		});
-		
-/**/
-		jQuery(".gallery_simple_thumbnails a").removeClass("thickbox");
-		
-		// bind thickbox to the bigger image
-		if( jQuery.fn.thickbox )
-			jQuery("a.thickbox").thickbox();
 
-/**/
+		jQuery(".gallery_simple_thumbnails a").removeClass(file_gallery_simple_linkclass);
 
 		// bind a function to each thumbnail link to replace the bigger image on the left
 		jQuery(".gallery.simple .gallery-item a").live("click", function()

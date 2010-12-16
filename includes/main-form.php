@@ -15,7 +15,7 @@
 	<input type="hidden" name="file_gallery_copies"      id="file_gallery_copies"      value="" style="width: 90%" />
 	<input type="hidden" name="file_gallery_originals"   id="file_gallery_originals"   value="" style="width: 90%" />
 	
-	<div id="fg_buttons"<?php if( 0 == intval($file_gallery_options["display_insert_fieldsets"]) ){ echo ' class="alt"'; }?>>
+	<div id="fg_buttons"<?php if( ! isset($file_gallery_options["display_insert_fieldsets"]) || true != $file_gallery_options["display_insert_fieldsets"] ){ echo ' class="alt"'; }?>>
 		<input type="button" value="<?php _e("Refresh attachments", "file-gallery"); ?>" title="<?php _e("Refresh attachments", "file-gallery"); ?>" class="button" id="file_gallery_refresh" />
 		<input type="button" value="<?php _e("Check all", "file-gallery"); ?>" title="<?php _e("Check all", "file-gallery"); ?>" class="button" id="file_gallery_check_all" />
 		<input type="button" value="<?php _e("Uncheck all", "file-gallery"); ?>" title="<?php _e("Uncheck all", "file-gallery"); ?>" class="button" id="file_gallery_uncheck_all" />
@@ -29,12 +29,12 @@
 	</div>
 
 	<p id="fg_info">
-		<?php if( "1" == strval($file_gallery_options["display_insert_fieldsets"]) ) : ?>
+		<?php if( isset($file_gallery_options["display_insert_fieldsets"]) && true == $file_gallery_options["display_insert_fieldsets"] ) : ?>
 		<?php _e("Insert checked attachments into post as", "file-gallery"); ?>:
 		<?php endif; ?>
 	</p>
 	
-	<?php if( 1 == intval($file_gallery_options["display_insert_fieldsets"]) ) : ?>
+	<?php if( isset($file_gallery_options["display_insert_fieldsets"]) && true == $file_gallery_options["display_insert_fieldsets"] ) : ?>
 	
 	<fieldset id="file_gallery_gallery_options">
 	
@@ -263,7 +263,7 @@
 			
 			<p>
 				<label for="file_gallery_single_caption"><?php _e("display caption?", "file-gallery"); ?></label>
-				<input type="checkbox" id="file_gallery_single_caption" name="file_gallery_single_caption" />
+				<input type="checkbox" id="file_gallery_single_caption" name="file_gallery_single_caption" checked="checked" />
 			</p>
 			
 			<br />

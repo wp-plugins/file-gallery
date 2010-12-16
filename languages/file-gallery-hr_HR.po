@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: File Gallery 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-12-08 00:04+0100\n"
+"POT-Creation-Date: 2010-12-16 23:36+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Bruno Babic <aesqe@skyphe.org>\n"
 "Language-Team: \n"
@@ -163,12 +163,10 @@ msgid "Attach all checked items to current post"
 msgstr "Pridruži sve označene priloge trenutnom postu"
 
 #: ../file-gallery.php:461
-#, fuzzy
 msgid "Exclude current post's attachments"
 msgstr "Izuzmi priloge vezane uz trenutni post"
 
 #: ../file-gallery.php:462
-#, fuzzy
 msgid "Include current post's attachments"
 msgstr "Uvrsti priloge vezane uz trenutni post"
 
@@ -279,44 +277,44 @@ msgstr "Redoslijed u izborniku (menu order)"
 msgid "Attachment file URL:"
 msgstr "URL dokumenta:"
 
-#: ../includes/attachments.php:273
+#: ../includes/attachments.php:276
 msgid "save and return"
 msgstr "Spremi izmjene"
 
-#: ../includes/attachments.php:275
+#: ../includes/attachments.php:278
 msgid "cancel and return"
 msgstr "Odustani"
 
-#: ../includes/attachments.php:340
+#: ../includes/attachments.php:343
 msgid "Some of the checked attachments were successfully attached to current post."
 msgstr "Neki od označenih priloga su uspješno pridodani trenutnom post-u."
 
-#: ../includes/attachments.php:341
+#: ../includes/attachments.php:344
 msgid "Additionally, here are ID's of attachments you had selected, but were already attached to current post, according to their URIs.<br />You will be presented with an option to copy those attachments as well in the next version of this plugin. If that makes any sense, that is."
 msgstr "Dodatno, ovo su ID-evi priloga koji su bili označeni, a već su priloženi uz ovaj post, sudeći prema lokaciji i nazivu datoteka."
 
-#: ../includes/attachments.php:345
+#: ../includes/attachments.php:348
 msgid "Checked attachments were successfully attached to current post."
 msgstr "Označeni prilozi su uspješno pridodani trenutnom post-u."
 
-#: ../includes/attachments.php:351
+#: ../includes/attachments.php:354
 msgid "All of the checked attachments are already attached to current post, according to their URIs.<br />You will be presented with an option to copy those attachments as well in the next version of this plugin. If that makes any sense, that is."
 msgstr "Svi označeni prilozi već su otprije pridodani ovom postu, sudeći prema lokaciji i nazivu datoteka."
 
-#: ../includes/attachments.php:353
+#: ../includes/attachments.php:356
 msgid "You must check the checkboxes next to attachments you want to copy to current post."
 msgstr "Potrebno je označiti kvadratiće kraj opisa onih priloga koje želite pridodati trenutnom postu."
 
-#: ../includes/attachments.php:430
+#: ../includes/attachments.php:433
 msgid "Database error! (file_gallery_copy_all_attachments)"
 msgstr "Greška baze podataka! (file_gallery_copy_all_attachments)"
 
-#: ../includes/attachments.php:436
+#: ../includes/attachments.php:439
 #, php-format
 msgid "Uh-oh. No attachments were found for post ID %d."
 msgstr "Post sa ID-em %d nema vezanih priloga."
 
-#: ../includes/attachments.php:457
+#: ../includes/attachments.php:460
 #, php-format
 msgid "All attachments were successfully copied from post %d."
 msgstr "Svi prilozi su uspješno kopirani iz posta sa ID-em %d i pridodani trenutnom post-u."
@@ -532,11 +530,11 @@ msgstr "limit"
 
 #: ../includes/main-form.php:156
 msgid "offset"
-msgstr ""
+msgstr "ofset"
 
 #: ../includes/main-form.php:161
 msgid "paginate"
-msgstr ""
+msgstr "paginacija"
 
 #: ../includes/main-form.php:169
 #: ../includes/media-settings.php:105
@@ -836,19 +834,19 @@ msgstr "Visina"
 msgid "Crop %s size to exact dimensions"
 msgstr "Obrezati veličinu slike '%s' tako da bude točno upisanih dimenzija"
 
-#: ../includes/miscellaneous.php:120
+#: ../includes/miscellaneous.php:174
 msgid "Attachment order saved successfully."
 msgstr "Redoslijed priloga je uspješno spremljen."
 
-#: ../includes/miscellaneous.php:124
+#: ../includes/miscellaneous.php:178
 msgid "Database error! Function: file_gallery_save_menu"
 msgstr "Greška!"
 
-#: ../includes/templating.php:240
+#: ../includes/templating.php:246
 msgid "file does not exist:"
 msgstr "datoteka ne postoji:"
 
-#: ../includes/templating.php:240
+#: ../includes/templating.php:246
 msgid "using default style"
 msgstr "koristim osnovni stil"
 

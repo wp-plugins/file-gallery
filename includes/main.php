@@ -348,7 +348,7 @@ function file_gallery_main( $ajax = true )
 	$fieldsets			  = isset($_POST['fieldsets']) ? $_POST['fieldsets'] : "";
 	
 	$file_gallery_options = get_option('file_gallery');
-	$states				  = explode(",", $file_gallery_options["insert_options_states"]);
+	$states				  = explode(",", isset($file_gallery_options["insert_options_states"]) ? $file_gallery_options["insert_options_states"] : '1,1');
 	$output               = "&nbsp;";
 	$count_attachments    = 0;
 	$hide_form            = "";

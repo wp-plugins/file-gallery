@@ -479,7 +479,7 @@ function file_gallery_options_fields( $args )
 			$type->labels->name = $type->label;
 
 		if( ! in_array( $type->name, array("nav_menu_item", "revision", "attachment") ) )
-			$post_types .= '<input type="checkbox" name="file_gallery[show_on_post_type_' . $type->name . ']" id="file_gallery_show_on_post_type_' . $type->name . '" value="1" ' . checked('1', $file_gallery_options["show_on_post_type_" . $type->name], false) . ' /><label for="file_gallery_show_on_post_type_' . $type->name . '">' . $type->labels->name . '</label>&nbsp;&nbsp;';
+			$post_types .= '<input type="checkbox" name="file_gallery[show_on_post_type_' . $type->name . ']" id="file_gallery_show_on_post_type_' . $type->name . '" value="1" ' . checked('1', isset($file_gallery_options["show_on_post_type_" . $type->name]) && true == $file_gallery_options["show_on_post_type_" . $type->name] ? true : false, false) . ' /><label for="file_gallery_show_on_post_type_' . $type->name . '">' . $type->labels->name . '</label>&nbsp;&nbsp;';
 	}
 	
 	$checked = "";
@@ -583,7 +583,7 @@ function file_gallery_options_fields( $args )
 					</select>';
 				break;
 			case "file_gallery_in_excerpt" :
-					$output = '<input type="checkbox" name="file_gallery[in_excerpt]" id="file_gallery_in_excerpt" value="1" ' . checked('1', $file_gallery_options["in_excerpt"], false) . ' />';
+					$output = '<input type="checkbox" name="file_gallery[in_excerpt]" id="file_gallery_in_excerpt" value="1" ' . checked('1', isset($file_gallery_options["in_excerpt"]) && true == $file_gallery_options["in_excerpt"] ? true : false, false) . ' />';
 				break;
 			case "file_gallery_in_excerpt_replace_content" :
 					$output = '<textarea name="file_gallery[in_excerpt_replace_content]" id="file_gallery_in_excerpt_replace_content" cols="51" rows="5">' . htmlspecialchars($file_gallery_options["in_excerpt_replace_content"]) . '</textarea>';
@@ -613,43 +613,43 @@ function file_gallery_options_fields( $args )
 					$output = '<input type="text" name="file_gallery[default_mimetype]" id="file_gallery_default_mimetype" value="' . $file_gallery_options["default_mimetype"] . '" size="63" />';
 				break;
 			case "file_gallery_display_insert_fieldsets" :
-					$output = '<input type="checkbox" name="file_gallery[display_insert_fieldsets]" id="file_gallery_display_insert_fieldsets" value="1" ' . checked('1', $file_gallery_options["display_insert_fieldsets"], false) . ' />';
+					$output = '<input type="checkbox" name="file_gallery[display_insert_fieldsets]" id="file_gallery_display_insert_fieldsets" value="1" ' . checked('1', isset($file_gallery_options["display_insert_fieldsets"]) && true == $file_gallery_options["display_insert_fieldsets"] ? true : false, false) . ' />';
 				break;
 			case "file_gallery_cache" :
-					$output = '<input type="checkbox" name="file_gallery[cache]" id="file_gallery_cache" value="1" ' . checked('1', $file_gallery_options["cache"], false) . ' />
+					$output = '<input type="checkbox" name="file_gallery[cache]" id="file_gallery_cache" value="1" ' . checked('1', isset($file_gallery_options["cache"]) && true == $file_gallery_options["cache"] ? true : false, false) . ' />
 					<input type="button" style="margin-left: 30px;" class="button-primary" name="file_gallery_clear_cache_manual" id="file_gallery_clear_cache_manual" value="' . __("Clear File Gallery cache", "file-gallery") . '" />
 					<div id="file_gallery_response"></div>
 					';
 				break;
 			case "file_gallery_cache_non_html_output" :
-					$output = '<input type="checkbox" name="file_gallery[cache_non_html_output]" id="file_gallery_cache_non_html_output" value="1" ' . checked('1', $file_gallery_options["cache_non_html_output"], false) . ' />';
+					$output = '<input type="checkbox" name="file_gallery[cache_non_html_output]" id="file_gallery_cache_non_html_output" value="1" ' . checked('1', isset($file_gallery_options["cache_non_html_output"]) && true == $file_gallery_options["cache_non_html_output"] ? true : false, false) . ' />';
 				break;
 			case "file_gallery_cache_time" :
 					$output = '<input type="text" name="file_gallery[cache_time]" id="file_gallery_cache_time" value="' . $file_gallery_options["cache_time"] . '" size="63" />';
 				break;
 			case "file_gallery_e_display_media_tags" :
-					$output = '<input type="checkbox" name="file_gallery[e_display_media_tags]" id="file_gallery_e_display_media_tags" value="1" ' . checked('1', $file_gallery_options["e_display_media_tags"], false) . ' />';
+					$output = '<input type="checkbox" name="file_gallery[e_display_media_tags]" id="file_gallery_e_display_media_tags" value="1" ' . checked('1', isset($file_gallery_options["e_display_media_tags"]) && true == $file_gallery_options["e_display_media_tags"] ? true : false, false) . ' />';
 				break;
 			case "file_gallery_e_display_attachment_count" :
-					$output = '<input type="checkbox" name="file_gallery[e_display_attachment_count]" id="file_gallery_e_display_attachment_count" value="1" ' . checked('1', $file_gallery_options["e_display_attachment_count"], false) . ' />';
+					$output = '<input type="checkbox" name="file_gallery[e_display_attachment_count]" id="file_gallery_e_display_attachment_count" value="1" ' . checked('1', isset($file_gallery_options["e_display_attachment_count"]) && true == $file_gallery_options["e_display_attachment_count"] ? true : false, false) . ' />';
 				break;
 			case "file_gallery_e_display_post_thumb" :
-					$output = '<input type="checkbox" name="file_gallery[e_display_post_thumb]" id="file_gallery_e_display_post_thumb" value="1" ' . checked('1', $file_gallery_options["e_display_post_thumb"], false) . ' />';
+					$output = '<input type="checkbox" name="file_gallery[e_display_post_thumb]" id="file_gallery_e_display_post_thumb" value="1" ' . checked('1', isset($file_gallery_options["e_display_post_thumb"]) && true == $file_gallery_options["e_display_post_thumb"] ? true : false, false) . ' />';
 				break;
 			case "file_gallery_del_options_on_deactivate" :
-					$output = '<input type="checkbox" name="file_gallery[del_options_on_deactivate]" id="file_gallery_del_options_on_deactivate" value="1" ' . checked('1', $file_gallery_options["del_options_on_deactivate"], false) . ' />';
+					$output = '<input type="checkbox" name="file_gallery[del_options_on_deactivate]" id="file_gallery_del_options_on_deactivate" value="1" ' . checked('1', isset($file_gallery_options["del_options_on_deactivate"]) && true == $file_gallery_options["del_options_on_deactivate"] ? true : false, false) . ' />';
 				break;
 			case "file_gallery_show_on_post_type" :
 					$output = $post_types;
 				break;
 			case "file_gallery_library_filter_duplicates" :
-					$output = '<input type="checkbox" name="file_gallery[library_filter_duplicates]" id="file_gallery_library_filter_duplicates" value="1" ' . checked('1', $file_gallery_options["library_filter_duplicates"], false) . ' />';
+					$output = '<input type="checkbox" name="file_gallery[library_filter_duplicates]" id="file_gallery_library_filter_duplicates" value="1" ' . checked('1', isset($file_gallery_options["library_filter_duplicates"]) && true == $file_gallery_options["library_filter_duplicates"] ? true : false, false) . ' />';
 				break;
 			case "file_gallery_auto_enqueued_scripts" :
 					$output = '<input type="text" name="file_gallery[auto_enqueued_scripts]" id="file_gallery_auto_enqueued_scripts" value="' . $file_gallery_options["auto_enqueued_scripts"] . '" size="63" />';
 				break;
 			case "file_gallery_disable_shortcode_handler" :
-					$output = '<input type="checkbox" name="file_gallery[disable_shortcode_handler]" id="file_gallery_disable_shortcode_handler" value="1" ' . checked('1', $file_gallery_options["disable_shortcode_handler"], false) . ' />';
+					$output = '<input type="checkbox" name="file_gallery[disable_shortcode_handler]" id="file_gallery_disable_shortcode_handler" value="1" ' . checked('1', isset($file_gallery_options["disable_shortcode_handler"]) && true == $file_gallery_options["disable_shortcode_handler"] ? true : false, false) . ' />';
 				break;
 				
 			/* non editable variables */

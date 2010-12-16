@@ -290,9 +290,9 @@ jQuery(document).ready(function()
 			var container = jQuery("#fg_container"),
 				files_or_tags = jQuery("#files_or_tags");
 			
-			if( 0 === container.length || 0 === files_or_tags.length  )
+			if( 0 === container.length || (0 === files_or_tags.length && 0 < jQuery("file_gallery_gallery_options").length) )
 				return;
-			
+
 			file_gallery.options.num_attachments = jQuery("#fg_container #file_gallery_list li").length;
 			
 			container.css({"height" : "auto"});
@@ -334,7 +334,7 @@ jQuery(document).ready(function()
 			// display tags or attachments
 			if( "undefined" == typeof( files_or_tags.val() ) || "undefined" == files_or_tags.val() )
 				files_or_tags.val("tags");
-			
+
 			// load files / tags respectively
 			file_gallery.files_or_tags( true );
 			file_gallery.do_plugins();

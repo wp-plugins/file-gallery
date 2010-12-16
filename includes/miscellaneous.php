@@ -1,7 +1,61 @@
 <?php
 
 /**
- * Modified WP function to support !%mimetype% syntax
+ * Parses plugin options
+ *
+ * @since 1.6.5.2
+ */
+function file_gallery_parse_args( $args, $defaults )
+{
+	foreach( $defaults as $key => $val )
+	{
+		// if key isn't set, it's a new option - add
+		if( ! isset($args[$key]) )
+			$args[$key] = $val;
+		// if a key's value is empty, but should be a false - make it rather a zero
+		elseif( '' == $args[$key] && (0 === $val || 1 === $val) )
+			$args[$key] = 0;
+	}
+	
+	return $args;
+}
+
+
+/**
+ * Taken from WordPress 3.1-beta1
+ */
+if( ! function_exists('_wp_link_page') )
+{
+	/**
+	 * Helper function for wp_link_pages().
+	 *
+	 * @since 3.1.0
+	 * @access private
+	 *
+	 * @param int $i Page number.
+	 * @return string Link.
+	 */
+	function _wp_link_page( $i ) {
+		global $post, $wp_rewrite;
+	
+		if ( 1 == $i ) {
+			$url = get_permalink();
+		} else {
+			if ( '' == get_option('permalink_structure') || in_array($post->post_status, array('draft', 'pending')) )
+				$url = add_query_arg( 'page', $i, get_permalink() );
+			elseif ( 'page' == get_option('show_on_front') && get_option('page_on_front') == $post->ID )
+				$url = trailingslashit(get_permalink()) . user_trailingslashit("$wp_rewrite->pagination_base/" . $i, 'single_paged');
+			else
+				$url = trailingslashit(get_permalink()) . user_trailingslashit($i, 'single_paged');
+		}
+	
+		return '<a href="' . esc_url( $url ) . '">';
+	}
+}
+
+
+/**
+ * Modified WP function to support !%mimetype% syntax // not yet, actually
  *
  * Convert MIME types into SQL.
  *

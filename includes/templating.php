@@ -65,7 +65,7 @@ function file_gallery_mobile_css( $stylesheet_url )
 {
 	$options = get_option("file_gallery");
 	
-	if( true == $options['disable_shortcode_handler'] )
+	if( isset($options['disable_shortcode_handler']) && true == $options['disable_shortcode_handler'] )
 		return $stylesheet_url;
 
 	file_gallery_css_front( true );
@@ -93,11 +93,11 @@ function file_gallery_css_front( $mobile = false )
 	
 	$options = get_option("file_gallery");
 	
-	if( true == $options['disable_shortcode_handler'] )
+	if( isset($options['disable_shortcode_handler']) && true == $options['disable_shortcode_handler'] )
 		return;
 
 	// if option to show galleries in excerpts is set to false
-	if( ! is_single() && "1" != $options["in_excerpt"] && false == $mobile )
+	if( ! is_single() && ( ! isset($options["in_excerpt"]) || true != $options["in_excerpt"]) && false == $mobile )
 		return;
 	
 	$gallery_matches = 0;
@@ -167,11 +167,12 @@ function file_gallery_css_front( $mobile = false )
 	}
 
 	$aq_linkclasses = apply_filters("file_gallery_lightbox_classes", array_unique($aq_linkclasses));
-	
+
 	// auto enqueue scripts
 	if( ! empty($aq_linkclasses) )
 	{
-		define("FILE_GALLERY_LIGHTBOX_CLASSES", serialize($aq_linkclasses));
+		if( ! defined("FILE_GALLERY_LIGHTBOX_CLASSES") )
+			define("FILE_GALLERY_LIGHTBOX_CLASSES", serialize($aq_linkclasses));
 
 		file_gallery_print_scripts( true );
 	}
@@ -196,10 +197,13 @@ function file_gallery_css_front( $mobile = false )
 		if( array() == array_intersect($templates, $default_templates) )
 			$columns_required = false;
 
+
+
+		// walk through template names
 		foreach($templates as $template)
 		{
-			$js_dependencies = array();
-			
+			$js_dependencies = isset($aq_linkclasses) ? $aq_linkclasses : array();
+
 			// check if file exists and enqueue it if it does
 			if( is_readable(FILE_GALLERY_THEME_TEMPLATES_ABSPATH . "/" . $template . "/gallery.css") )
 			{
@@ -213,10 +217,11 @@ function file_gallery_css_front( $mobile = false )
 					ob_start();
 						include(FILE_GALLERY_THEME_TEMPLATES_ABSPATH . "/" . $template . "/gallery.php");					
 					ob_end_clean();
-					
+
 					wp_enqueue_script( "file_gallery_" . str_replace(" ", "-", $template), FILE_GALLERY_THEME_TEMPLATES_URL . "/" . str_replace(" ", "%20", $template) . "/gallery.js", $js_dependencies, '', true );	
 				}
 			}
+			// if it does not exist in theme folder, check default plugin templates
 			elseif( is_readable(FILE_GALLERY_ABSPATH . "/templates/" . $template . "/gallery.css") )
 			{
 				if( ! $mobile )
@@ -225,7 +230,7 @@ function file_gallery_css_front( $mobile = false )
 					$mobiles[] = FILE_GALLERY_URL . "/templates/" . $template . "/gallery.css";
 				
 				if( is_readable(FILE_GALLERY_ABSPATH . "/templates/" . "/" . $template . "/gallery.js") )
-				{
+				{					
 					ob_start();
 						include(FILE_GALLERY_ABSPATH . "/templates/" . $template . "/gallery.php");
 					ob_end_clean();
@@ -233,6 +238,7 @@ function file_gallery_css_front( $mobile = false )
 					wp_enqueue_script( "file_gallery_" . str_replace(" ", "-", $template), FILE_GALLERY_URL . "/templates/" . str_replace(" ", "%20", $template) . "/gallery.js", $js_dependencies, '', true );
 				}
 			}
+			// template sdoes not exist, enqueue default one
 			else
 			{
 				$missing[] = $template;
@@ -265,7 +271,7 @@ function file_gallery_print_scripts( $styles = false )
 {
 	$options = get_option("file_gallery");
 	
-	if( true == $options['disable_shortcode_handler'] )
+	if( isset($options['disable_shortcode_handler']) && true == $options['disable_shortcode_handler'] )
 		return;
 
 	if( defined("FILE_GALLERY_LIGHTBOX_CLASSES") )
@@ -381,7 +387,7 @@ function file_gallery_shortcode( $content = false, $attr = false )
 
 	// if option to show galleries in excerpts is set to false...
 	// ...replace [gallery] with user selected text
-	if( !is_single() && "1" != $options["in_excerpt"] )
+	if( !is_single() && ( ! isset($options["in_excerpt"]) || true != $options["in_excerpt"]) )
 		return $options["in_excerpt_replace_content"];
 	
 	$default_templates = unserialize(FILE_GALLERY_DEFAULT_TEMPLATES);
@@ -841,10 +847,10 @@ function file_gallery_shortcode( $content = false, $attr = false )
 function file_gallery_register_shortcode_handler()
 {
 	$options = get_option("file_gallery");
-	
-	if( true == $options['disable_shortcode_handler'] )
+
+	if( isset($options['disable_shortcode_handler']) && true == $options['disable_shortcode_handler'] )
 		return;
-		
+
 	add_filter('post_gallery', 'file_gallery_shortcode', 10, 2);
 }
 add_action('init', 'file_gallery_register_shortcode_handler');

@@ -2,7 +2,7 @@
 /*
 Plugin Name: File Gallery
 Plugin URI: http://skyphe.org/code/wordpress/file-gallery/
-Version: 1.6.5.1
+Version: 1.6.5.2
 Description: "File Gallery" extends WordPress' media (attachments) capabilities by adding a new gallery shortcode handler with templating support, a new interface for attachment handling when editing posts, and much more.
 Author: Bruno "Aesqe" Babic
 Author URI: http://skyphe.org
@@ -72,7 +72,7 @@ function file_gallery_plugins_support()
 	{
 		$mobile = true;
 	
-		if( '' != $options && isset($options['disable_shortcode_handler']) && true != $options['disable_shortcode_handler'] )
+		if( ! isset($options['disable_shortcode_handler']) || true != $options['disable_shortcode_handler'] )
 			add_filter('stylesheet_uri', 'file_gallery_mobile_css');
 	}
 	
@@ -123,7 +123,7 @@ function file_gallery_activate()
 		'abspath' 					  => FILE_GALLERY_ABSPATH, 
 		'media_tag_name'			  => FILE_GALLERY_MEDIA_TAG_NAME,
 		
-		'in_excerpt' 				  => true, 
+		'in_excerpt' 				  => 1, 
 		'in_excerpt_replace_content'  => '<p><strong>(' . __('galleries are shown on full posts only', 'file-gallery') . ')</strong></p>', 
 		
 		'default_image_size' 		  => 'thumbnail', 
@@ -146,26 +146,26 @@ function file_gallery_activate()
 		'single_default_align'        => 'none',
 		
 		'insert_options_states'		  => '1,1',
-		'display_insert_fieldsets'	  => true,
+		'display_insert_fieldsets'	  => 1,
 		
-		'e_display_attachment_count'  => true,
-		'e_display_media_tags'		  => true,
-		'e_display_post_thumb'		  => true,
+		'e_display_attachment_count'  => 1,
+		'e_display_media_tags'		  => 1,
+		'e_display_post_thumb'		  => 1,
 		
-		'cache'						  => false,
+		'cache'						  => 0,
 		'cache_time'				  => 3600, // == 1 hour
-		'cache_non_html_output'		  => false,
+		'cache_non_html_output'		  => 0,
 		
-		'del_options_on_deactivate'   => false,
+		'del_options_on_deactivate'   => 0,
 
-		'show_on_post_type_post'	  => true,
-		'show_on_post_type_page'	  => true,
+		'show_on_post_type_post'	  => 1,
+		'show_on_post_type_page'	  => 1,
 		
-		'library_filter_duplicates'   => true,
+		'library_filter_duplicates'   => 1,
 		
 		'auto_enqueued_scripts'		  => 'thickbox',
 		
-		'disable_shortcode_handler'	  => false,
+		'disable_shortcode_handler'	  => 0,
 		
 		'default_metabox_image_size'  => 'thumbnail',
 		'default_metabox_image_width' => 75
@@ -174,7 +174,7 @@ function file_gallery_activate()
 	// if options already exist, upgrade
 	if( $options = get_option('file_gallery') )
 	{
-		$defaults = wp_parse_args( $options, $defaults); // $defaults = shortcode_atts( $defaults, $options );
+		$defaults = file_gallery_parse_args( $options, $defaults); // $defaults = shortcode_atts( $defaults, $options );
 		$defaults['folder']  = FILE_GALLERY_URL;
 		$defaults['abspath'] = FILE_GALLERY_ABSPATH;
 	}
@@ -319,7 +319,7 @@ function file_gallery_add_library_query_vars( $input )
 		if( isset($options["library_filter_duplicates"]) && true == $options["library_filter_duplicates"] )
 			$input .= " AND $wpdb->posts.ID NOT IN ( SELECT ID FROM $wpdb->posts AS ps INNER JOIN $wpdb->postmeta AS pm ON pm.post_id = ps.ID WHERE pm.meta_key = '_is_copy_of' ) ";
 	}
-	elseif( "upload.php" == $pagenow && true == $options["library_filter_duplicates"] )
+	elseif( "upload.php" == $pagenow && isset($options["library_filter_duplicates"]) && true == $options["library_filter_duplicates"] )
 	{
 		$input .= " AND $wpdb->posts.ID NOT IN ( SELECT ID FROM $wpdb->posts AS ps INNER JOIN $wpdb->postmeta AS pm ON pm.post_id = ps.ID WHERE pm.meta_key = '_is_copy_of' ) ";
 	}
