@@ -15,7 +15,7 @@
 	<input type="hidden" name="file_gallery_copies"      id="file_gallery_copies"      value="" style="width: 90%" />
 	<input type="hidden" name="file_gallery_originals"   id="file_gallery_originals"   value="" style="width: 90%" />
 	
-	<div id="fg_buttons"<?php if( ! isset($file_gallery_options["display_insert_fieldsets"]) || true != $file_gallery_options["display_insert_fieldsets"] ){ echo ' class="alt"'; }?>>
+	<div id="fg_buttons"<?php if( ( ! isset($file_gallery_options["display_gallery_fieldset"]) && ! isset($file_gallery_options["display_single_fieldset"]) ) || ( isset($file_gallery_options["display_gallery_fieldset"]) && isset($file_gallery_options["display_single_fieldset"]) && true != $file_gallery_options["display_gallery_fieldset"] && true != $file_gallery_options["display_single_fieldset"] ) ){ echo ' class="alt"'; }?>>
 		<input type="button" value="<?php _e("Refresh attachments", "file-gallery"); ?>" title="<?php _e("Refresh attachments", "file-gallery"); ?>" class="button" id="file_gallery_refresh" />
 		<input type="button" value="<?php _e("Check all", "file-gallery"); ?>" title="<?php _e("Check all", "file-gallery"); ?>" class="button" id="file_gallery_check_all" />
 		<input type="button" value="<?php _e("Uncheck all", "file-gallery"); ?>" title="<?php _e("Uncheck all", "file-gallery"); ?>" class="button" id="file_gallery_uncheck_all" />
@@ -29,19 +29,19 @@
 	</div>
 
 	<p id="fg_info">
-		<?php if( isset($file_gallery_options["display_insert_fieldsets"]) && true == $file_gallery_options["display_insert_fieldsets"] ) : ?>
+		<?php if( (isset($file_gallery_options["display_gallery_fieldset"]) && true == $file_gallery_options["display_gallery_fieldset"]) || (isset($file_gallery_options["display_single_fieldset"]) && true == $file_gallery_options["display_single_fieldset"]) ) : ?>
 		<?php _e("Insert checked attachments into post as", "file-gallery"); ?>:
 		<?php endif; ?>
 	</p>
 	
-	<?php if( isset($file_gallery_options["display_insert_fieldsets"]) && true == $file_gallery_options["display_insert_fieldsets"] ) : ?>
+	<?php if( isset($file_gallery_options["display_gallery_fieldset"]) && true == $file_gallery_options["display_gallery_fieldset"] ) : ?>
 	
 	<fieldset id="file_gallery_gallery_options">
 	
 		<legend class="button-primary" id="file_gallery_send_gallery_legend"><?php _e("a gallery", "file-gallery"); ?>:</legend>
-		<input type="button" id="file_gallery_hide_gallery_options" class="<?php if( "0" == strval($states[0]) ){ echo 'closed'; }else{ echo 'open'; } ?>" title="<?php _e("show/hide this fieldset", "file-gallery"); ?>" />
+		<input type="button" id="file_gallery_hide_gallery_options" class="<?php if( false == $gallery_state ){ echo 'closed'; }else{ echo 'open'; } ?>" title="<?php _e("show/hide this fieldset", "file-gallery"); ?>" />
 
-		<div id="file_gallery_toggler"<?php if( "0" == strval($states[0]) ){ echo ' style="display: none;"'; } ?>>
+		<div id="file_gallery_toggler"<?php if( false == $gallery_state ){ echo ' style="display: none;"'; } ?>>
 		
 			<p>
 				<label for="file_gallery_size"><?php _e("size", "file-gallery"); ?>:</label>
@@ -198,7 +198,7 @@
 			
 			<p id="fg_gallery_tags_container">
 				<label for="fg_gallery_tags"><?php _e("Media tags", "file-gallery");?>:</label>
-				<input type="text" id="fg_gallery_tags" name="fg_gallery_tags" value="<?php echo $_POST["tag_list"]; ?>" />
+				<input type="text" id="fg_gallery_tags" name="fg_gallery_tags" value="<?php if( isset($_POST["tag_list"]) ){ echo $_POST["tag_list"];} ?>" />
 	
 				<label for="fg_gallery_tags_from"><?php _e("current post's attachments only?", "file-gallery"); ?></label>
 				<input type="checkbox" id="fg_gallery_tags_from" name="fg_gallery_tags_from" checked="checked" />
@@ -209,13 +209,19 @@
 		</div>
 		
 	</fieldset>
+	
+	<?php endif; ?>
+	
+	<?php if( isset($file_gallery_options["display_single_fieldset"]) && true == $file_gallery_options["display_single_fieldset"] ) : ?>
+    
+    <!-- SINGLE IMAGE OPTIONS -->
 
 	<fieldset id="file_gallery_single_options">
 	
 		<legend class="button-primary" id="file_gallery_send_single_legend"><?php _e("single files", "file-gallery"); ?>:</legend>
-		<input type="button" id="file_gallery_hide_single_options" class="<?php if( "0" == strval($states[1]) ){ echo 'closed'; }else{ echo 'open'; } ?>" title="<?php _e("show/hide this fieldset", "file-gallery"); ?>" />
+		<input type="button" id="file_gallery_hide_single_options" class="<?php if( false == $single_state ){ echo 'closed'; }else{ echo 'open'; } ?>" title="<?php _e("show/hide this fieldset", "file-gallery"); ?>" />
 
-		<div id="file_gallery_single_toggler"<?php if( "0" == strval($states[1]) ){ echo ' style="display: none;"'; } ?>>
+		<div id="file_gallery_single_toggler"<?php if( false == $single_state ){ echo ' style="display: none;"'; } ?>>
 			<p>
 				<label for="file_gallery_single_size"><?php _e("size", "file-gallery"); ?>:</label>
 				<select name="file_gallery_single_size" id="file_gallery_single_size">

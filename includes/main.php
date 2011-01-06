@@ -7,19 +7,19 @@ function file_gallery_list_attachments(&$count_attachments, $post_id, $attachmen
 {
 	global $wpdb, $_wp_additional_image_sizes;
 	
-	$options = get_option("file_gallery");
+	$options = get_option('file_gallery');
 	$thumb_id = false;
-	$attached_files = "";
+	$attached_files = '';
 	
-	if( "" != $attachment_order && false !== strpos($attachment_order, ",") )
+	if( '' != $attachment_order && false !== strpos($attachment_order, ',') )
 	{
-		$attachment_ids = str_replace(",", "','", trim($attachment_order, ",") );
+		$attachment_ids = str_replace(',', "','", trim($attachment_order, ',') );
 		
 		$attachments = $wpdb->get_results(
 			"SELECT * FROM $wpdb->posts 
 			 WHERE $wpdb->posts.post_parent = " . $post_id . "
 			 AND $wpdb->posts.post_type = 'attachment' 
-			 ORDER BY FIELD(ID,'" . $attachment_ids . "') "
+			 ORDER BY FIELD(ID, '" . $attachment_ids . "') "
 		);
 	}
 	else
@@ -333,31 +333,33 @@ function file_gallery_main( $ajax = true )
 	
 	check_ajax_referer('file-gallery');
 	
-	$post_id			  = isset($_POST['post_id']) ? $_POST['post_id'] : "";
-	$attachment_order	  = isset($_POST['attachment_order']) ? $_POST['attachment_order'] : "";
-	$files_or_tags		  = isset($_POST['files_or_tags']) ? $_POST["files_or_tags"] : "";
-	$tags_from			  = isset($_POST['tags_from']) ? $_POST["tags_from"] : "";
-	$action				  = isset($_POST['action']) ? $_POST['action'] : "";
-	$attachment_ids		  = isset($_POST['attachment_ids']) ? $_POST['attachment_ids'] : "";
-	$attachment_data	  = isset($_POST['attachment_data']) ? $_POST['attachment_data'] : "";
-	$delete_what          = isset($_POST['delete_what']) ? $_POST['delete_what'] : "";
-	$checked_attachments  = isset($_POST['checked_attachments']) ? explode(",", $_POST['checked_attachments']) : array();
-	$normals			  = isset($_POST['normals']) ? $_POST['normals'] : "";
-	$copies				  = isset($_POST['copies']) ? $_POST['copies'] : "";
-	$originals			  = isset($_POST['originals']) ? $_POST['originals'] : "";
-	$fieldsets			  = isset($_POST['fieldsets']) ? $_POST['fieldsets'] : "";
+	$post_id			  = isset($_POST['post_id']) ? $_POST['post_id'] : '';
+	$attachment_order	  = isset($_POST['attachment_order']) ? $_POST['attachment_order'] : '';
+	$files_or_tags		  = isset($_POST['files_or_tags']) ? $_POST["files_or_tags"] : '';
+	$tags_from			  = isset($_POST['tags_from']) ? $_POST["tags_from"] : '';
+	$action				  = isset($_POST['action']) ? $_POST['action'] : '';
+	$attachment_ids		  = isset($_POST['attachment_ids']) ? $_POST['attachment_ids'] : '';
+	$attachment_data	  = isset($_POST['attachment_data']) ? $_POST['attachment_data'] : '';
+	$delete_what          = isset($_POST['delete_what']) ? $_POST['delete_what'] : '';
+	$checked_attachments  = isset($_POST['checked_attachments']) ? explode(',', $_POST['checked_attachments']) : array();
+	$normals			  = isset($_POST['normals']) ? $_POST['normals'] : '';
+	$copies				  = isset($_POST['copies']) ? $_POST['copies'] : '';
+	$originals			  = isset($_POST['originals']) ? $_POST['originals'] : '';
+	$fieldsets			  = isset($_POST['fieldsets']) ? $_POST['fieldsets'] : '';
 	
 	$file_gallery_options = get_option('file_gallery');
-	$states				  = explode(",", isset($file_gallery_options["insert_options_states"]) ? $file_gallery_options["insert_options_states"] : '1,1');
+	
+	$gallery_state		  = isset($file_gallery_options['insert_options_state']) && true == $file_gallery_options['insert_options_state'] ? true : false;
+	$single_state		  = isset($file_gallery_options['insert_single_options_state']) && true == $file_gallery_options['insert_single_options_state'] ? true : false;
 	$output               = "&nbsp;";
 	$count_attachments    = 0;
-	$hide_form            = "";
+	$hide_form            = '';
 	$sizes                = file_gallery_get_intermediate_image_sizes();
 	
-	$normals   		= explode(",", $normals);
-	$copies    		= explode(",", $copies);
-	$originals 		= explode(",", $originals);
-	$attachment_ids = explode(",", $attachment_ids);
+	$normals   		= explode(',', $normals);
+	$copies    		= explode(',', $copies);
+	$originals 		= explode(',', $originals);
+	$attachment_ids = explode(',', $attachment_ids);
 	
 	if( empty_array($normals) )
 		$normals = array();
@@ -371,7 +373,7 @@ function file_gallery_main( $ajax = true )
 	if( empty_array($attachment_ids) )
 		$attachment_ids = array();
 	
-	if( "file_gallery_main_delete" == $action )
+	if( 'file_gallery_main_delete' == $action )
 	{
 		if( !empty($copies) && !empty($originals) )
 		{

@@ -158,7 +158,11 @@ function file_gallery_options_init()
 	add_settings_field("file_gallery_in_excerpt_replace_content", __("Replacement text for galleries within post excerpts (if you haven't checked the above option)", 'file-gallery'), create_function("", 'return file_gallery_options_fields( array("name" => "file_gallery_in_excerpt_replace_content") );'), 'media', 'file_gallery_options');
 	
 	// display insert options
-	add_settings_field("file_gallery_display_insert_fieldsets", __("Display options for inserting galleries / single images into a post?", 'file-gallery'), create_function("", 'return file_gallery_options_fields( array("name" => "file_gallery_display_insert_fieldsets") );'), 'media', 'file_gallery_options');
+	add_settings_field("file_gallery_display_gallery_fieldset", __("Display options for inserting galleries into a post?", 'file-gallery'), create_function("", 'return file_gallery_options_fields( array("name" => "file_gallery_display_gallery_fieldset") );'), 'media', 'file_gallery_options');
+	
+	add_settings_field("file_gallery_display_single_fieldset", __("Display options for inserting single images into a post?", 'file-gallery'), create_function("", 'return file_gallery_options_fields( array("name" => "file_gallery_display_single_fieldset") );'), 'media', 'file_gallery_options');
+	
+	add_settings_field("file_gallery_display_acf", __("Display attachment custom fields?", 'file-gallery'), create_function("", 'return file_gallery_options_fields( array("name" => "file_gallery_display_acf") );'), 'media', 'file_gallery_options');
 	
 	// delete options on deactivation
 	add_settings_field("file_gallery_del_options_on_deactivate", __("Delete all options on deactivation?", 'file-gallery'), create_function("", 'return file_gallery_options_fields( array("name" => "file_gallery_del_options_on_deactivate") );'), 'media', 'file_gallery_options');
@@ -612,8 +616,14 @@ function file_gallery_options_fields( $args )
 			case "file_gallery_default_mimetype" :
 					$output = '<input type="text" name="file_gallery[default_mimetype]" id="file_gallery_default_mimetype" value="' . $file_gallery_options["default_mimetype"] . '" size="63" />';
 				break;
-			case "file_gallery_display_insert_fieldsets" :
-					$output = '<input type="checkbox" name="file_gallery[display_insert_fieldsets]" id="file_gallery_display_insert_fieldsets" value="1" ' . checked('1', isset($file_gallery_options["display_insert_fieldsets"]) && true == $file_gallery_options["display_insert_fieldsets"] ? true : false, false) . ' />';
+			case "file_gallery_display_gallery_fieldset" :
+					$output = '<input type="checkbox" name="file_gallery[display_gallery_fieldset]" id="file_gallery_display_gallery_fieldset" value="1" ' . checked('1', isset($file_gallery_options["display_gallery_fieldset"]) && true == $file_gallery_options["display_gallery_fieldset"] ? true : false, false) . ' />';
+				break;
+			case "file_gallery_display_single_fieldset" :
+					$output = '<input type="checkbox" name="file_gallery[display_single_fieldset]" id="file_gallery_display_single_fieldset" value="1" ' . checked('1', isset($file_gallery_options["display_single_fieldset"]) && true == $file_gallery_options["display_single_fieldset"] ? true : false, false) . ' />';
+				break;
+			case "file_gallery_display_acf" :
+					$output = '<input type="checkbox" name="file_gallery[display_acf]" id="file_gallery_display_acf" value="1" ' . checked('1', isset($file_gallery_options["display_acf"]) && true == $file_gallery_options["display_acf"] ? true : false, false) . ' />';
 				break;
 			case "file_gallery_cache" :
 					$output = '<input type="checkbox" name="file_gallery[cache]" id="file_gallery_cache" value="1" ' . checked('1', isset($file_gallery_options["cache"]) && true == $file_gallery_options["cache"] ? true : false, false) . ' />

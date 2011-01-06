@@ -160,22 +160,24 @@ function file_gallery_save_menu()
 {
 	global $wpdb;
 	
+	$updates = '';
+	
 	check_ajax_referer('file-gallery');
 
-	$order = explode(",", $_POST["attachment_order"]);
+	$order = explode(',', $_POST['attachment_order']);
 
 	foreach($order as $mo => $ID)
 	{
 		$updates .= sprintf(" WHEN '%d' THEN '%d' ", $ID, $mo);
 	}
 	
-	if( false !== $wpdb->query( "UPDATE $wpdb->posts SET `menu_order` = CASE `ID` " . $updates . " ELSE `menu_order` END" ) )
+	if( false !== $wpdb->query("UPDATE $wpdb->posts SET `menu_order` = CASE `ID` " . $updates . " ELSE `menu_order` END") )
 	{
-		echo __("Attachment order saved successfully.", "file-gallery");
+		echo __('Attachment order saved successfully.', 'file-gallery');
 	}
 	else
 	{
-		$error = __("Database error! Function: file_gallery_save_menu", "file-gallery");
+		$error = __('Database error! Function: file_gallery_save_menu', 'file-gallery');
 		file_gallery_write_log( $error );
 		echo $error;
 	}
@@ -194,14 +196,30 @@ function file_gallery_save_toggle_state()
 {
 	check_ajax_referer('file-gallery');
 	
-	$options = get_option("file_gallery");
-	$options["insert_options_states"] = $_POST["states"];
+	$options = get_option('file_gallery');
+	$opt = 'insert_options_state';
 	
-	update_option("file_gallery", $options);
+	switch( $_POST['action'] )
+	{
+		case 'file_gallery_save_single_toggle_state' :
+			$opt = 'insert_single_options_state';
+			break;
+		case 'file_gallery_save_acf_toggle_state' :
+			$opt = 'acf_state';
+			break;
+		default : 
+			break;
+	}
+	
+	$options[$opt] = (int) $_POST['state'];
+	
+	update_option('file_gallery', $options);
 	
 	exit();
 }
 add_action('wp_ajax_file_gallery_save_toggle_state', 'file_gallery_save_toggle_state');
+add_action('wp_ajax_file_gallery_save_single_toggle_state', 'file_gallery_save_toggle_state');
+add_action('wp_ajax_file_gallery_save_acf_toggle_state', 'file_gallery_save_toggle_state');
 
 
 /**

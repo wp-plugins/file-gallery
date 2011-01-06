@@ -86,7 +86,7 @@ jQuery(document).ready(function()
 		 */
 		tinymce_gallery : function( title )
 		{
-			var opt = title.replace("gallery ", "").replace(/"/g, "'"), // gets gallery options from image title
+			var opt = title.replace("gallery", ""), // gets gallery options from image title
 				attachment_ids = opt.match(/attachment_ids=['"]([0-9,]+)['"]/),
 				attachment_includes = opt.match(/include=['"]([0-9,]+)['"]/),
 				post_id = opt.match(/id=['"](\d+)['"]/),
@@ -108,7 +108,7 @@ jQuery(document).ready(function()
 				columns = opt.match(/columns=['"](\d+)['"]/),
 				tags = opt.match(/tags=['"]([^'"]+)['"]/i),
 				tags_from = opt.match(/tags_from=['"]([^'"]+)['"]/i);
-
+alert(opt);
 			if( linkto && 'none' != thelink && 'file' != thelink && 'parent_post' != thelink )
 			{
 				external_url = decodeURIComponent(thelink);
@@ -382,7 +382,7 @@ jQuery(document).ready(function()
 				internal_event = 'normal';
 			
 			if( 'false' == jQuery("#file_gallery_linkrel").val() )
-				linkrel = ' rel=false';
+				linkrel = ' rel="false"';
 
 			if( "external_url" == linkto_val )
 				linkto_val = encodeURIComponent(external_url);
@@ -1229,29 +1229,46 @@ jQuery(document).ready(function()
 			return false;
 		},
 		
-		
-		fieldset_toggle : function( fieldset )
+
+		fieldset_toggle : function( toggler )
 		{
-			var	states;
+			var	state = 0,
+				togglee = "file_gallery_toggler",
+				action = "file_gallery_save_toggle_state";
 			
-			if( "undefined" == typeof( fieldset ) )
+			if( "undefined" == typeof( toggler ) )
 				return;
 			
-			jQuery("#" + fieldset).toggle();
+			switch( toggler )
+			{
+				case "file_gallery_hide_single_options" : 
+					togglee = "file_gallery_single_toggler";
+					action = "file_gallery_save_single_toggle_state";
+					break;
+				case "file_gallery_hide_acf" : 
+					togglee = "fieldset_attachment_custom_fields #media-single-form";
+					action = "file_gallery_save_acf_toggle_state";
+					break;
+				default : 
+					break;
+			}
 
-			if( jQuery("#file_gallery_single_toggler").is(":visible") && jQuery("#file_gallery_toggler").is(":visible") )
-				states = "1,1";
-			else if( jQuery("#file_gallery_toggler").is(":visible") )
-				states = "1,0";
-			else if( jQuery("#file_gallery_single_toggler").is(":visible") )
-				states = "0,1";
+			if( jQuery("#" + toggler).hasClass("open") )
+			{
+				jQuery("#" + toggler).removeClass("open").addClass("closed");
+			}
 			else
-				states = "0,0";
+			{
+				jQuery("#" + toggler).removeClass("closed").addClass("open");
+				state = 1;
+			}
+
+			jQuery("#" + togglee).toggle();
 			
 			var data = {
-				action		: "file_gallery_save_toggle_state",
-				states		: states,
-				_ajax_nonce	: file_gallery.options.file_gallery_nonce
+				'action'		: action,
+				'state'			: state,
+				'_ajax_nonce'	: file_gallery.options.file_gallery_nonce
 			};
 			
 			jQuery.post
@@ -1520,6 +1537,7 @@ jQuery(document).ready(function()
 			return false;
 		}
 	});
+
 	
 	jQuery("#fgae_post_alt, #fgae_post_title, #fgae_post_excerpt, #fgae_tax_input, #fgae_menu_order").live('keypress keyup', function(e)
 	{
@@ -1563,26 +1581,12 @@ jQuery(document).ready(function()
 	{
 		jQuery("#file_gallery_copy_all_dialog").dialog("open");
 	});
-
-
+	
+	
 	// toggle fieldsets
-	jQuery("#file_gallery_hide_gallery_options").live("click", function()
+	jQuery("#file_gallery_hide_gallery_options, #file_gallery_hide_single_options, #file_gallery_hide_acf").live("click", function()
 	{
-		file_gallery.fieldset_toggle("file_gallery_toggler");
-		
-		if( jQuery("#file_gallery_hide_gallery_options").hasClass("open") )
-			jQuery("#file_gallery_hide_gallery_options").removeClass("open").addClass("closed");
-		else
-			jQuery("#file_gallery_hide_gallery_options").removeClass("closed").addClass("open");
-	});
-	jQuery("#file_gallery_hide_single_options").live("click", function()
-	{
-		file_gallery.fieldset_toggle("file_gallery_single_toggler");
-		
-		if( jQuery("#file_gallery_hide_single_options").hasClass("open") )
-			jQuery("#file_gallery_hide_single_options").removeClass("open").addClass("closed");
-		else
-			jQuery("#file_gallery_hide_single_options").removeClass("closed").addClass("open");
+		file_gallery.fieldset_toggle( jQuery(this).attr("id") );
 	});
 
 
@@ -1814,7 +1818,7 @@ jQuery(document).ready(function()
 	});
 	
 	// blur binding for text inputs and dropdown selects
-	jQuery("#fg_gallery_tags, #file_gallery_linkclass, #file_gallery_imageclass, #file_gallery_single_linkclass, #file_gallery_single_imageclass, #file_gallery_single_external_url, #file_gallery_external_url, #file_gallery_postid").live("blur", function()
+	jQuery("#fg_gallery_tags, #file_gallery_linkclass, #file_gallery_imageclass, #file_gallery_single_linkclass, #file_gallery_single_imageclass, #file_gallery_single_external_url, #file_gallery_external_url, #file_gallery_postid, #file_gallery_limit").live("blur", function()
 	{
 		file_gallery.serialize();
 	});

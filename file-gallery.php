@@ -2,7 +2,7 @@
 /*
 Plugin Name: File Gallery
 Plugin URI: http://skyphe.org/code/wordpress/file-gallery/
-Version: 1.6.5.2
+Version: 1.6.5.3
 Description: "File Gallery" extends WordPress' media (attachments) capabilities by adding a new gallery shortcode handler with templating support, a new interface for attachment handling when editing posts, and much more.
 Author: Bruno "Aesqe" Babic
 Author URI: http://skyphe.org
@@ -25,6 +25,8 @@ Author URI: http://skyphe.org
 ////////////////////////////////////////////////////////////////////////////
 
 */
+
+global $wp_version;
 
 
 /**
@@ -145,8 +147,12 @@ function file_gallery_activate()
 		'single_default_imageclass'   => '',
 		'single_default_align'        => 'none',
 		
-		'insert_options_states'		  => '1,1',
-		'display_insert_fieldsets'	  => 1,
+		'insert_options_state'		  => 1,
+		'insert_single_options_state' => 1,
+		'acf_state'					  => 1,
+		'display_gallery_fieldset'	  => 1,
+		'display_single_fieldset'	  => 1,
+		'display_acf'				  => 1,
 		
 		'e_display_attachment_count'  => 1,
 		'e_display_media_tags'		  => 1,
@@ -174,6 +180,28 @@ function file_gallery_activate()
 	// if options already exist, upgrade
 	if( $options = get_option('file_gallery') )
 	{
+		// preserve display options when upgrading from below 1.6.5.3
+		if( ! isset($options['display_acf']) )
+		{
+			if( isset($options['insert_options_states']) )
+				$states = explode(',', $options['insert_options_states']);
+			else
+				$states = array('1', '1');
+			
+			if( isset($options['display_insert_fieldsets']) )
+				$display = $options['display_insert_fieldsets'];
+			else
+				$display = 1;
+	
+			$defaults['insert_options_state'] = (int) $states[0];
+			$defaults['insert_single_options_state'] = (int) $states[1];
+			$defaults['acf_state'] = 1;
+		
+			$defaults['display_gallery_fieldset'] = $display;
+			$defaults['display_single_fieldset'] = $display;
+			$defaults['display_acf'] = 1;
+		}
+
 		$defaults = file_gallery_parse_args( $options, $defaults); // $defaults = shortcode_atts( $defaults, $options );
 		$defaults['folder']  = FILE_GALLERY_URL;
 		$defaults['abspath'] = FILE_GALLERY_ABSPATH;
@@ -483,14 +511,14 @@ function file_gallery_js_admin()
 		<script type="text/javascript">
 			var file_gallery_options =
 			{
-				clear_cache_nonce : "' . wp_create_nonce( 'file-gallery-clear_cache' ) . '"
+				clear_cache_nonce : "' . wp_create_nonce('file-gallery-clear_cache') . '"
 			};
 		</script>
 		';
 
-		wp_enqueue_script("file-gallery-clear_cache", FILE_GALLERY_URL . "/js/file-gallery-clear_cache.js");
+		wp_enqueue_script('file-gallery-clear_cache', FILE_GALLERY_URL . '/js/file-gallery-clear_cache.js');
 	}
-	elseif( "edit-tags.php" == $pagenow && FILE_GALLERY_MEDIA_TAG_NAME == $_GET["taxonomy"] && 3 > floatval($wp_version) )
+	elseif( 'edit-tags.php' == $pagenow && FILE_GALLERY_MEDIA_TAG_NAME == $_GET['taxonomy'] && 3 > floatval($wp_version) )
 	{
 		echo '
 		<script type="text/javascript">
@@ -513,20 +541,20 @@ function file_gallery_css_admin()
 	global $pagenow, $current_screen;
 	
 	if(
-		   "post.php" 			== $pagenow
-		|| "post-new.php" 		== $pagenow 
-		|| "page.php" 			== $pagenow 
-		|| "page-new.php" 		== $pagenow 
-		|| "media.php" 			== $pagenow 
-		|| "media-upload.php"	== $pagenow 
-		|| "edit.php"			== $pagenow 
-		|| (isset($current_screen->post_type) && "post" == $current_screen->base)
+		   'post.php' 			== $pagenow
+		|| 'post-new.php' 		== $pagenow 
+		|| 'page.php' 			== $pagenow 
+		|| 'page-new.php' 		== $pagenow 
+		|| 'media.php' 			== $pagenow 
+		|| 'media-upload.php'	== $pagenow 
+		|| 'edit.php'			== $pagenow 
+		|| (isset($current_screen->post_type) && 'post' == $current_screen->base)
 	  )
 	{
-		wp_enqueue_style( "file_gallery_admin", apply_filters("file_gallery_admin_css_location", FILE_GALLERY_URL . "/css/file-gallery.css") );
+		wp_enqueue_style('file_gallery_admin', apply_filters('file_gallery_admin_css_location', FILE_GALLERY_URL . '/css/file-gallery.css') );
 		
-		if( "rtl" == get_bloginfo("text_direction") )
-			wp_enqueue_style( "file_gallery_admin_rtl", apply_filters("file_gallery_admin_rtl_css_location", FILE_GALLERY_URL . "/css/file-gallery-rtl.css") );
+		if( 'rtl' == get_bloginfo('text_direction') )
+			wp_enqueue_style('file_gallery_admin_rtl', apply_filters('file_gallery_admin_rtl_css_location', FILE_GALLERY_URL . '/css/file-gallery-rtl.css') );
 	}
 }
 add_action('admin_print_styles', 'file_gallery_css_admin');
@@ -538,27 +566,27 @@ add_action('admin_print_styles', 'file_gallery_css_admin');
 function file_gallery_content()
 {	
 	echo 
-'<div id="fg_container">
-	&nbsp;
-	<noscript>' . __("File Gallery requires Javascript to function. Please enable it in your browser.", "file-gallery") . '</noscript>
-</div>
-			
-<div id="image_dialog"></div>
-
-<div id="delete_dialog" title="' . __("Delete attachment dialog", "file-gallery") . '">
-	<p><strong>' . __("Warning: one of the attachments you've chosen to delete has copies.", "file-gallery") . '</strong></p>
-	<p>' . __("How do you wish to proceed?", "file-gallery") . '</p>
-	<p><a href="' . FILE_GALLERY_URL . '/help/index.html#deleting_originals" target="_blank">' . __("Click here if you have no idea what this dialog means", "file-gallery") . '</a> (opens File Gallery help in new browser window)</p>
-</div>
-
-<div id="file_gallery_copy_all_dialog" title="' . __("Copy all attachments from another post", "file-gallery") . '">
-	<form action="" id="file_gallery_copy_all_form">
-		<div id="file_gallery_copy_all_wrap">
-			<label for="file_gallery_copy_all_from">' . __("Post ID:", "file-gallery") . '</label>
-			<input type="text" id="file_gallery_copy_all_from" value="" />
-		</div>
-	</form>
-</div>';
+	'<div id="fg_container">
+		&nbsp;
+		<noscript>' . __('File Gallery requires Javascript to function. Please enable it in your browser.', 'file-gallery') . '</noscript>
+	</div>
+				
+	<div id="image_dialog"></div>
+	
+	<div id="delete_dialog" title="' . __('Delete attachment dialog', 'file-gallery') . '">
+		<p><strong>' . __("Warning: one of the attachments you've chosen to delete has copies.", 'file-gallery') . '</strong></p>
+		<p>' . __('How do you wish to proceed?', 'file-gallery') . '</p>
+		<p><a href="' . FILE_GALLERY_URL . '/help/index.html#deleting_originals" target="_blank">' . __('Click here if you have no idea what this dialog means', 'file-gallery') . '</a> ' . __('(opens File Gallery help in new browser window)', 'file-gallery') . '</p>
+	</div>
+	
+	<div id="file_gallery_copy_all_dialog" title="' . __('Copy all attachments from another post', 'file-gallery') . '">
+		<form action="" id="file_gallery_copy_all_form">
+			<div id="file_gallery_copy_all_wrap">
+				<label for="file_gallery_copy_all_from">' . __('Post ID:', 'file-gallery') . '</label>
+				<input type="text" id="file_gallery_copy_all_from" value="" />
+			</div>
+		</form>
+	</div>';
 }
 
 
@@ -567,24 +595,24 @@ function file_gallery_content()
  */
 function file_gallery()
 {
-	$options = get_option("file_gallery");
+	$options = get_option('file_gallery');
 	
-	if( function_exists("get_post_types") )
+	if( function_exists('get_post_types') )
 	{
 		$types = get_post_types();
 		
 		foreach( $types as $type )
 		{
-			if( ! in_array( $type, array("nav_menu_item", "revision", "attachment") ) && 
-				isset($options["show_on_post_type_" . $type]) && true == $options["show_on_post_type_" . $type]
+			if( ! in_array( $type, array('nav_menu_item', 'revision', 'attachment') ) && 
+				isset($options['show_on_post_type_' . $type]) && true == $options['show_on_post_type_' . $type]
 			)
-				add_meta_box( 'file_gallery', __( 'File gallery', 'file-gallery' ), 'file_gallery_content', $type );
+				add_meta_box('file_gallery', __( 'File gallery', 'file-gallery' ), 'file_gallery_content', $type);
 		}
 	}
 	else // pre 2.9
 	{
-		add_meta_box( 'file_gallery', __( 'File gallery', 'file-gallery' ), 'file_gallery_content', 'post' );
-		add_meta_box( 'file_gallery', __( 'File gallery', 'file-gallery' ), 'file_gallery_content', 'page' );
+		add_meta_box('file_gallery', __( 'File gallery', 'file-gallery' ), 'file_gallery_content', 'post');
+		add_meta_box('file_gallery', __( 'File gallery', 'file-gallery' ), 'file_gallery_content', 'page');
 	}
 }
 add_action('admin_menu', 'file_gallery');
@@ -597,19 +625,19 @@ function file_gallery_posts_custom_column($column_name, $post_id)
 {
 	global $wpdb;
 	
-	$options = get_option("file_gallery");
+	$options = get_option('file_gallery');
 
-	if( "attachment_count" == $column_name && isset($options["e_display_attachment_count"]) && true == $options["e_display_attachment_count"] )
+	if( 'attachment_count' == $column_name && isset($options['e_display_attachment_count']) && true == $options['e_display_attachment_count'] )
 	{
 		$count = $wpdb->get_var( $wpdb->prepare("SELECT COUNT(ID) FROM $wpdb->posts WHERE post_type='attachment' AND post_parent=%d", $post_id) );
 		
 		echo apply_filters('file_gallery_post_attachment_count', $count, $post_id);
 	}
-	elseif( "post_thumb" == $column_name && isset($options["e_display_post_thumb"]) && true == $options["e_display_post_thumb"] )
+	elseif( 'post_thumb' == $column_name && isset($options['e_display_post_thumb']) && true == $options['e_display_post_thumb'] )
 	{
 		if( $thumb_id = get_post_meta( $post_id, '_thumbnail_id', true ) )
 		{
-			$thumb_src = wp_get_attachment_image_src( $thumb_id, "thumbnail", false );
+			$thumb_src = wp_get_attachment_image_src( $thumb_id, 'thumbnail', false );
 			$content   = '<img src="' . $thumb_src[0] .'" alt="Post thumb" />';
 			
 			echo apply_filters('file_gallery_post_thumb_content', $content, $post_id, $thumb_id);
@@ -620,8 +648,8 @@ function file_gallery_posts_custom_column($column_name, $post_id)
 		}
 	}
 }
-add_action( 'manage_posts_custom_column', 'file_gallery_posts_custom_column', 100, 2 );
-add_action( 'manage_pages_custom_column', 'file_gallery_posts_custom_column', 100, 2 );
+add_action('manage_posts_custom_column', 'file_gallery_posts_custom_column', 100, 2);
+add_action('manage_pages_custom_column', 'file_gallery_posts_custom_column', 100, 2);
 
 
 /**
@@ -629,18 +657,18 @@ add_action( 'manage_pages_custom_column', 'file_gallery_posts_custom_column', 10
  */
 function file_gallery_posts_columns( $columns )
 {
-	$options = get_option("file_gallery");
+	$options = get_option('file_gallery');
 	
-	if( isset($options["e_display_attachment_count"]) && true == $options["e_display_attachment_count"] )
+	if( isset($options['e_display_attachment_count']) && true == $options['e_display_attachment_count'] )
 		$columns['attachment_count'] = __('No. of attachments', 'file-gallery');
 		
-	if( isset($options["e_display_post_thumb"]) && true == $options["e_display_post_thumb"] )
+	if( isset($options['e_display_post_thumb']) && true == $options['e_display_post_thumb'] )
 		$columns = array('post_thumb' => __('Post thumb', 'file-gallery')) + $columns; // $columns['post_thumb'] = 'Post thumb';
 	
 	return $columns;
 }
-add_filter( 'manage_posts_columns', 'file_gallery_posts_columns' );
-add_filter( 'manage_pages_columns', 'file_gallery_posts_columns' );
+add_filter('manage_posts_columns', 'file_gallery_posts_columns');
+add_filter('manage_pages_columns', 'file_gallery_posts_columns');
 
 
 /**
@@ -650,13 +678,13 @@ function file_gallery_media_custom_column($column_name, $post_id)
 {
 	global $wpdb;
 	
-	$options = get_option("file_gallery");
+	$options = get_option('file_gallery');
 	
-	if( "media_tags" == $column_name && isset($options["e_display_media_tags"]) && true == $options["e_display_media_tags"])
+	if( 'media_tags' == $column_name && isset($options['e_display_media_tags']) && true == $options['e_display_media_tags'])
 	{
-		if( isset($options["cache"]) && true == $options["cache"] )
+		if( isset($options['cache']) && true == $options['cache'] )
 		{
-			$transient = "fileglry_mt_" . md5($post_id);
+			$transient = 'fileglry_mt_' . md5($post_id);
 			$cache     = get_transient($transient);
 			
 			if( $cache )
@@ -667,8 +695,8 @@ function file_gallery_media_custom_column($column_name, $post_id)
 			}
 		}
 		
-		$l = "?taxonomy=" . FILE_GALLERY_MEDIA_TAG_NAME . "&amp;term=";
-		$out = "No Media Tags";
+		$l = '?taxonomy=' . FILE_GALLERY_MEDIA_TAG_NAME . '&amp;term=';
+		$out = __('No Media Tags', 'file-gallery');
 		
 		$q = "SELECT `name`, `slug` 
 			  FROM $wpdb->terms
@@ -677,10 +705,8 @@ function file_gallery_media_custom_column($column_name, $post_id)
 			  WHERE `taxonomy` = '" . FILE_GALLERY_MEDIA_TAG_NAME . "'
 			  AND `object_id` = %d
 			  ORDER BY `name` ASC";
-
-		$r = $wpdb->get_results( $wpdb->prepare($q, $post_id) );
 		
-		if( $r )
+		if( $r = $wpdb->get_results($wpdb->prepare($q, $post_id)) )
 		{
 			$out = array();
 			
@@ -689,16 +715,16 @@ function file_gallery_media_custom_column($column_name, $post_id)
 				$out[] = '<a href="' . $l . $tag->slug . '">' . $tag->name . '</a>';
 			}
 			
-			$out = implode(", ", $out);
+			$out = implode(', ', $out);
 		}
 		
-		if( isset($options["cache"]) && true == $options["cache"] )
-			set_transient($transient, $out, $options["cache_time"]);
+		if( isset($options['cache']) && true == $options['cache'] )
+			set_transient($transient, $out, $options['cache_time']);
 		
 		echo $out;
 	}
 }
-add_action( 'manage_media_custom_column', 'file_gallery_media_custom_column', 100, 2 );
+add_action('manage_media_custom_column', 'file_gallery_media_custom_column', 100, 2);
 
 
 /**
@@ -706,12 +732,11 @@ add_action( 'manage_media_custom_column', 'file_gallery_media_custom_column', 10
  */
 function file_gallery_media_columns( $columns )
 {
-	$columns['media_tags'] = __('Media tags', "file-gallery");
+	$columns['media_tags'] = __('Media tags', 'file-gallery');
 	
 	return $columns;
 }
-add_filter( 'manage_media_columns', 'file_gallery_media_columns' );
-
+add_filter('manage_media_columns', 'file_gallery_media_columns');
 
 
 /**
@@ -723,6 +748,21 @@ class File_Gallery
 {
 	var $gallery_id;
 	var $overrides;
+	var $acf = false;
+	var $version = '1.6.5.3';
+
+
+	function __construct()
+	{
+		$this->File_Gallery();
+	}
+	
+	
+	function File_Gallery()
+	{
+		if( false !== strpos(serialize(get_option('active_plugins')), 'acf.php') )
+			$this->acf = true;
+	}
 };
 
 $file_gallery = new File_Gallery();
@@ -731,15 +771,18 @@ $file_gallery = new File_Gallery();
 /**
  * Includes
  */
-include_once("includes/attachments.php");
-include_once("includes/attachments-custom-fields.php");
-include_once("includes/media-settings.php");
-include_once("includes/miscellaneous.php");
-include_once("includes/mime-types.php");
-include_once("includes/lightboxes-support.php");
-include_once("includes/templating.php");
-include_once("includes/main.php");
-include_once("includes/functions.php");
-include_once("includes/cache.php");
-/**/
+require_once('includes/attachments.php');
+require_once('includes/attachments-custom-fields.php');
+require_once('includes/media-settings.php');
+require_once('includes/miscellaneous.php');
+require_once('includes/mime-types.php');
+require_once('includes/lightboxes-support.php');
+require_once('includes/templating.php');
+require_once('includes/main.php');
+require_once('includes/functions.php');
+require_once('includes/cache.php');
+
+if( 3.1 <= floatval($wp_version) )
+	require_once('includes/media-tags-list-table.class.php');
+
 ?>
