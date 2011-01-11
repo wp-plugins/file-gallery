@@ -2,6 +2,8 @@
 
 function file_gallery_lightboxes_support( $value = '', $type = '', $args = array() )
 {
+	$options = get_option('file_gallery');
+
 	$lightboxes_options = array
 	(
 		'colorbox' => array( 
@@ -17,7 +19,9 @@ function file_gallery_lightboxes_support( $value = '', $type = '', $args = array
 	$enqueued = array();
 	
 	if( defined("FILE_GALLERY_LIGHTBOX_CLASSES") )
-		$enqueued = unserialize(FILE_GALLERY_LIGHTBOX_CLASSES);
+		$enqueued = maybe_unserialize(FILE_GALLERY_LIGHTBOX_CLASSES);
+	else
+		$enqueued = explode(',', $options['auto_enqueued_scripts']);
 	
 	if( ! empty($enqueued) )
 	{
@@ -26,6 +30,9 @@ function file_gallery_lightboxes_support( $value = '', $type = '', $args = array
 			if( isset($lightboxes_options[$script_name][$type]) && false !== $lightboxes_options[$script_name][$type] )
 			{
 				$new_value = str_replace(array('{script_name}', '{gallery_id}'), array($script_name, $args['gallery_id']), $lightboxes_options[$script_name][$type]);
+				
+				if( false !== strpos($value, '[' . $args['gallery_id'] . ']') && false !== strpos($lightboxes_options[$script_name][$type], '[{gallery_id}]')  )
+					$value = str_replace('[' . $args['gallery_id'] . ']', '', $value);
 				
 				if( false !== $args['linkrel'] || (true !== $args['linkrel'] && true !== $lightboxes_options[$script_name]['disable_imageclass_if_rel_false']) )
 				{

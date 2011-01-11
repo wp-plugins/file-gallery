@@ -50,12 +50,24 @@ function file_gallery_get_attachment_data()
 
 		$rel = ' rel="' . $linkclass . '[' . $file_gallery->gallery_id . ']"';
 	}
-		
-	$imageclass .= ' align' . $align . ' size-' . $size;
-	
+
 	foreach( $attachments as $attachment_id )
 	{
-		echo file_gallery_parse_attachment_data( $attachment_id, $size, $linkto, $linkclass, $imageclass, $rel, $caption, $align );
+		$attachment = get_post($attachment_id);
+		$excerpt = trim($attachment->post_excerpt);
+
+		if( true === $caption  )
+			$caption = '' != $excerpt ? $excerpt : false;
+
+		if( 1 === count($attachments) )
+			$rel = ' rel="attachment wp-att-' . $attachment->ID . '"';
+		
+		if( false === $caption )
+			$imageclass .= ' align' . $align;
+
+		$imageclass .= ' size-' . $size;
+
+		echo file_gallery_parse_attachment_data( $attachment, $size, $linkto, $linkclass, $imageclass, $rel, $caption, $align );
 	}
 	
 	exit();
@@ -70,28 +82,27 @@ add_action('wp_ajax_file_gallery_send_single', 'file_gallery_get_attachment_data
  * @param int $attachment_id ID of the attachment
  * @return mixed Returns a HTML string, or FALSE if $attachment_id is not a number
  */
-function file_gallery_parse_attachment_data( $attachment_id, $size, $linkto, $linkclass, $imageclass, $rel, $caption, $align )
+function file_gallery_parse_attachment_data( $attachment, $size, $linkto, $linkclass, $imageclass, $rel, $caption, $align )
 {
 	global $wpdb;
 	
-	if( ! is_numeric($attachment_id) )
+	if( ! is_numeric($attachment->ID) )
 		return false; // not a number, exiting
 	
 	$link = '';
-	$attachment = get_post($attachment_id);
 	
-	if( ! $thumb_alt = get_post_meta($attachment_id, '_wp_attachment_image_alt', true) )
+	if( ! $thumb_alt = get_post_meta($attachment->ID, '_wp_attachment_image_alt', true) )
 		$thumb_alt = $attachment->post_title;
 
 	$title = $attachment->post_title;
 	
-	if( file_gallery_file_is_displayable_image( get_attached_file($attachment_id) ) )
+	if( file_gallery_file_is_displayable_image( get_attached_file($attachment->ID) ) )
 	{
-		$size_src    = wp_get_attachment_image_src($attachment_id, $size, false);
+		$size_src    = wp_get_attachment_image_src($attachment->ID, $size, false);
 		$width       = $size_src[1];
 		$height      = $size_src[2];
 		$size_src    = $size_src[0];
-		$imageclass .= ' wp-image-' . $attachment_id;
+		$imageclass .= ' wp-image-' . $attachment->ID;
 	}
 	else
 	{
@@ -106,13 +117,13 @@ function file_gallery_parse_attachment_data( $attachment_id, $size, $linkto, $li
 	switch( $linkto )
 	{
 		case 'parent_post' :
-			$link = get_permalink( $wpdb->get_var("SELECT `post_parent` FROM $wpdb->posts WHERE ID = '" . $attachment_id . "'") );
+			$link = get_permalink( $wpdb->get_var("SELECT `post_parent` FROM $wpdb->posts WHERE ID = '" . $attachment->ID . "'") );
 			break;
 		case 'file' :
-			$link = wp_get_attachment_url( $attachment_id );
+			$link = wp_get_attachment_url( $attachment->ID );
 			break;
 		case 'attachment' :
-			$link = get_attachment_link( $attachment_id );
+			$link = get_attachment_link( $attachment->ID );
 			break;
 		case 'none' :
 			$link = '';
@@ -125,17 +136,17 @@ function file_gallery_parse_attachment_data( $attachment_id, $size, $linkto, $li
 	if( '' != $link )
 	{
 		if( '' != trim($linkclass) )
-			$linkclass = 'class="' . trim($linkclass) . '"';
+			$linkclass = ' class="' . trim($linkclass) . '"';
 
-		$output = '<a href="' . $link . '"' . $linkclass . $rel . '>' . $output . '</a>';
+		$output = '<a href="' . $link . '"' . $linkclass . $rel . '>' . $output . '</a>' . "\n\n";
 	}
 	
-	if( false !== $caption && '' != trim($attachment->post_excerpt) )
+	if( false !== $caption )
 	{
-		$output = '[caption id="attachment_' . $attachment_id . '" align="align' . $align . '" width="' . $width . '" caption="' . $attachment->post_excerpt .'"]' . $output . '[/caption] ';
+		$output = '[caption id="attachment_' . $attachment->ID . '" align="align' . $align . '" width="' . $width . '" caption="' . $caption .'"]' . trim($output) . '[/caption]' . "\n\n";
 	}
 
-	return apply_filters('file_gallery_parse_attachment_data', $output, $attachment_id);
+	return apply_filters('file_gallery_parse_attachment_data', $output, $attachment->ID);
 }
 
 
@@ -188,17 +199,17 @@ function file_gallery_edit_attachment()
 		exit();
 	}
 	
-	if( file_gallery_file_is_displayable_image( get_attached_file($attachment_id) ) )
+	if( file_gallery_file_is_displayable_image( get_attached_file($attachment->ID) ) )
 	{
-		$fullsize_src = wp_get_attachment_image_src( $attachment_id, 'large', false );
+		$fullsize_src = wp_get_attachment_image_src( $attachment->ID, 'large', false );
 		$fullsize_src = $fullsize_src[0];
 		
-		$size_src = wp_get_attachment_image_src( $attachment_id, 'medium', false );
+		$size_src = wp_get_attachment_image_src( $attachment->ID, 'medium', false );
 		$size_src = $size_src[0];
 	}
 	else
 	{
-		$fullsize_src = wp_get_attachment_url( $attachment_id );
+		$fullsize_src = wp_get_attachment_url( $attachment->ID );
 		$size_src     = FILE_GALLERY_CRYSTAL_URL . '/' . file_gallery_get_file_type($attachment->post_mime_type) . '.png';
 		
 		$type = 'document';
@@ -207,7 +218,7 @@ function file_gallery_edit_attachment()
 	$post_author = get_userdata($attachment->post_author);
 	$post_author = $post_author->user_nicename;
 	
-	$tags = wp_get_object_terms( $attachment_id, FILE_GALLERY_MEDIA_TAG_NAME );
+	$tags = wp_get_object_terms( $attachment->ID, FILE_GALLERY_MEDIA_TAG_NAME );
 	
 	foreach( $tags as $tag )
 	{
@@ -216,15 +227,18 @@ function file_gallery_edit_attachment()
 	
 	$media_tags = implode(', ', $media_tags);
 	
-	$has_copies = get_post_meta($attachment_id, '_has_copies', true);
-	$is_copy    = get_post_meta($attachment_id, '_is_copy_of', true);
+	$has_copies = get_post_meta($attachment->ID, '_has_copies', true);
+	$is_copy    = get_post_meta($attachment->ID, '_is_copy_of', true);
 	
-	do_action('file_gallery_edit_attachment', $attachment_id);
+	do_action('file_gallery_edit_attachment', $attachment->ID);
 	
 ?>
 	<div id="file_gallery_attachment_edit_image">
 		<?php if( 'image' == $type ) : ?>
 		<a href="<?php echo $fullsize_src; ?>" title="" class="attachment_edit_thumb"><img src="<?php echo $size_src; ?>" alt="image" /></a>
+		<p>
+			<a href="#" id="regenerate[<?php echo $attachment->ID; ?>]" class="regenerate"><?php _e("Regenerate this image's thumbnails", "file-gallery"); ?></a>
+		</p>
 		<?php else : ?>
 		<img src="<?php echo $size_src; ?>" alt="image" />
 		<?php endif; ?>
@@ -239,10 +253,12 @@ function file_gallery_edit_attachment()
 			<?php if( $is_copy ) : ?>
 			<p class="attachment_info_is_a_copy"><?php _e('This attachment is a copy of attachment ID', 'file-gallery'); ?> <strong><?php echo '<a href="' . admin_url('media.php?attachment_id=' . $is_copy . '&action=edit') . '" target="_blank">' . $is_copy . '</a>'; ?></strong></p>
 			<?php endif; ?>
+
+			
 		</div>
 	</div>
 	
-<?php do_action('file_gallery_pre_edit_attachment_post_form', $attachment_id); ?>
+<?php do_action('file_gallery_pre_edit_attachment_post_form', $attachment->ID); ?>
 	
 	<div id="attachment_data_edit_form">
 	
@@ -290,7 +306,7 @@ function file_gallery_edit_attachment()
 	</div>	
 <?php
 
-	do_action('file_gallery_edit_attachment_post_form', $attachment_id);
+	do_action('file_gallery_edit_attachment_post_form', $attachment->ID);
 
 	exit();
 }
@@ -387,8 +403,9 @@ function file_gallery_copy_attachment_to_post( $aid, $post_id )
 		return -1;
 	
 	$attachment = get_post($aid);
-			
-	if( 0 === $attachment->post_parent ) // don't duplicate - if it's unattached, just attach it without copying the data
+	
+	// don't duplicate - if it's unattached, just attach it without copying the data
+	if( 0 === $attachment->post_parent )
 		return $wpdb->update( $wpdb->posts, array('post_parent' => $post_id), array('ID' => $attachment->ID), array('%d'), array('%d') );
 
 	$attachment->metadata      = get_post_meta($attachment->ID, '_wp_attachment_metadata', true);
@@ -434,7 +451,7 @@ function file_gallery_copy_all_attachments()
 	$to_id    = $_POST['to_id'];
 	$thumb_id = false;
 	
-	if( ! is_numeric($from_id) || !is_numeric($to_id) || 0 === $from_id || 0 === $to_id )
+	if( ! is_numeric($from_id) || ! is_numeric($to_id) || 0 === $from_id || 0 === $to_id )
 		exit('ID not numeric or zero! (file_gallery_copy_all_attachments)');
 	
 	$attachments = $wpdb->get_results( sprintf("SELECT `ID` FROM $wpdb->posts WHERE `post_type`='attachment' AND `post_parent`=%d", $from_id) );

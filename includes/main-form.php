@@ -28,21 +28,19 @@
 		<input type="button" value="<?php _e("Open help file", "file-gallery"); ?>" title="<?php _e("Open help file", "file-gallery"); ?>" class="button thickbox" alt="<?php echo FILE_GALLERY_URL; ?>/help/index.html?TB_iframe=1" id="file_gallery_open_help"  />
 	</div>
 
+<?php if( (isset($file_gallery_options["display_gallery_fieldset"]) && true == $file_gallery_options["display_gallery_fieldset"]) || (isset($file_gallery_options["display_single_fieldset"]) && true == $file_gallery_options["display_single_fieldset"]) ) : ?>
 	<p id="fg_info">
-		<?php if( (isset($file_gallery_options["display_gallery_fieldset"]) && true == $file_gallery_options["display_gallery_fieldset"]) || (isset($file_gallery_options["display_single_fieldset"]) && true == $file_gallery_options["display_single_fieldset"]) ) : ?>
 		<?php _e("Insert checked attachments into post as", "file-gallery"); ?>:
-		<?php endif; ?>
 	</p>
-	
-	<?php if( isset($file_gallery_options["display_gallery_fieldset"]) && true == $file_gallery_options["display_gallery_fieldset"] ) : ?>
-	
-	<fieldset id="file_gallery_gallery_options">
+<?php endif; ?>
+
+	<fieldset id="file_gallery_gallery_options"<?php if( false == $file_gallery_options["display_gallery_fieldset"] ){ echo ' class="hidden"'; } ?>>
 	
 		<legend class="button-primary" id="file_gallery_send_gallery_legend"><?php _e("a gallery", "file-gallery"); ?>:</legend>
 		<input type="button" id="file_gallery_hide_gallery_options" class="<?php if( false == $gallery_state ){ echo 'closed'; }else{ echo 'open'; } ?>" title="<?php _e("show/hide this fieldset", "file-gallery"); ?>" />
 
 		<div id="file_gallery_toggler"<?php if( false == $gallery_state ){ echo ' style="display: none;"'; } ?>>
-		
+
 			<p>
 				<label for="file_gallery_size"><?php _e("size", "file-gallery"); ?>:</label>
 				<select name="file_gallery_size" id="file_gallery_size">
@@ -210,13 +208,15 @@
 		
 	</fieldset>
 	
-	<?php endif; ?>
+	<?php if( false == $file_gallery_options["display_gallery_fieldset"] && true == $file_gallery_options['insert_gallery_button'] ) : ?>
 	
-	<?php if( isset($file_gallery_options["display_single_fieldset"]) && true == $file_gallery_options["display_single_fieldset"] ) : ?>
+	<input type="button" class="button-primary" id="file_gallery_send_gallery_legend" value="<?php _e("Insert a gallery", "file-gallery"); ?>" />
+	
+	<?php endif; ?>
     
     <!-- SINGLE IMAGE OPTIONS -->
 
-	<fieldset id="file_gallery_single_options">
+	<fieldset id="file_gallery_single_options"<?php if( false == $file_gallery_options["display_single_fieldset"] ){ echo ' class="hidden"'; } ?>>
 	
 		<legend class="button-primary" id="file_gallery_send_single_legend"><?php _e("single files", "file-gallery"); ?>:</legend>
 		<input type="button" id="file_gallery_hide_single_options" class="<?php if( false == $single_state ){ echo 'closed'; }else{ echo 'open'; } ?>" title="<?php _e("show/hide this fieldset", "file-gallery"); ?>" />
@@ -279,12 +279,16 @@
 		
 	</fieldset>
 	
-	<fieldset id="file_gallery_tag_attachment_switcher">
+	<fieldset id="file_gallery_tag_attachment_switcher"<?php if( false == $file_gallery_options["display_gallery_fieldset"] ){ echo ' class="hidden"'; } ?>>
 	
 		<input type="button" id="file_gallery_switch_to_tags" value="<?php _e("Switch to tags", "file-gallery"); ?>" class="button" />
 		<input type="hidden" id="files_or_tags" value="<?php echo $files_or_tags; ?>" />
 	
 	</fieldset>
+	
+	<?php if( false == $file_gallery_options["display_single_fieldset"] && true == $file_gallery_options['insert_single_button'] ) : ?>
+	
+	<input type="button" class="button-primary" id="file_gallery_send_single_legend" value="<?php _e("Insert single image(s)", "file-gallery"); ?>" />
 	
 	<?php endif; ?>
 

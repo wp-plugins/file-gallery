@@ -1,6 +1,121 @@
 <?php
 
 /**
+ * @since 1.6.5.4
+ */
+function file_gallery_get_default_options( $invert = false )
+{
+	if( false === $invert )
+	{
+		return array(
+			'folder' 					  => FILE_GALLERY_URL, 
+			'abspath' 					  => FILE_GALLERY_ABSPATH, 
+			'media_tag_name'			  => FILE_GALLERY_MEDIA_TAG_NAME,
+			
+			'in_excerpt' 				  => 1, 
+			'in_excerpt_replace_content'  => '<p><strong>(' . __('galleries are shown on full posts only', 'file-gallery') . ')</strong></p>', 
+			
+			'default_image_size' 		  => 'thumbnail', 
+			'default_linkto' 			  => 'attachment', 
+			'default_linked_image_size'   => 'full',
+			'default_external_url'		  => '', 
+			'default_orderby' 			  => '', 
+			'default_order' 			  => 'ASC', 
+			'default_template' 			  => 'default', 
+			'default_linkclass' 		  => '', 
+			'default_imageclass' 		  => '', 
+			'default_columns' 			  => 3, 
+			'default_mimetype'			  => '',
+			
+			'single_default_image_size'   => 'thumbnail', 
+			'single_default_linkto'		  => 'attachment', 
+			'single_default_external_url' => '', 
+			'single_default_linkclass' 	  => '', 
+			'single_default_imageclass'   => '',
+			'single_default_align'        => 'none',
+			
+			'insert_options_state'		  => 1,
+			'insert_single_options_state' => 1,
+			'acf_state'					  => 1,
+			'display_gallery_fieldset'	  => 1,
+			'display_single_fieldset'	  => 1,
+			'display_acf'				  => 1,
+			'insert_gallery_button'		  => 1,
+			'insert_single_button'		  => 1,
+			
+			'e_display_attachment_count'  => 1,
+			'e_display_media_tags'		  => 1,
+			'e_display_post_thumb'		  => 1,
+			
+			'cache'						  => 0,
+			'cache_time'				  => 3600, // == 1 hour
+			'cache_non_html_output'		  => 0,
+			
+			'del_options_on_deactivate'   => 0,
+	
+			'show_on_post_type_post'	  => 1,
+			'show_on_post_type_page'	  => 1,
+			
+			'library_filter_duplicates'   => 1,
+			
+			'auto_enqueued_scripts'		  => 'thickbox',
+			
+			'disable_shortcode_handler'	  => 0,
+			
+			'default_metabox_image_size'  => 'thumbnail',
+			'default_metabox_image_width' => 75
+		);
+	}
+	
+	return array(		
+		'in_excerpt' 				  => 0, 
+
+		'insert_options_state'		  => 0,
+		'insert_single_options_state' => 0,
+		'acf_state'					  => 0,
+		'display_gallery_fieldset'	  => 0,
+		'display_single_fieldset'	  => 0,
+		'display_acf'				  => 0,
+		'insert_gallery_button'		  => 0,
+		'insert_single_button'		  => 0,
+		
+		'e_display_attachment_count'  => 0,
+		'e_display_media_tags'		  => 0,
+		'e_display_post_thumb'		  => 0,
+		
+		'cache'						  => 0,
+		'cache_non_html_output'		  => 0,
+		
+		'del_options_on_deactivate'   => 0,
+
+		'show_on_post_type_post'	  => 0,
+		'show_on_post_type_page'	  => 0,
+		
+		'library_filter_duplicates'   => 0,
+		
+		'disable_shortcode_handler'	  => 0
+	);
+}
+
+
+/**
+ * Makes sure that plugin options do not disappear just
+ * because we're lazy (using checkboxes instead of radio buttons) :D
+ *
+ * @since 1.6.5.4
+ */
+function file_gallery_save_media_settings( $options )
+{
+	$defaults = file_gallery_get_default_options( true );
+	$defaults = file_gallery_parse_args( $options, $defaults); // $defaults = shortcode_atts( $defaults, $options );
+	$defaults['folder']  = FILE_GALLERY_URL;
+	$defaults['abspath'] = FILE_GALLERY_ABSPATH;
+	
+	return $defaults;
+}
+
+
+/**
  * Parses plugin options
  *
  * @since 1.6.5.2

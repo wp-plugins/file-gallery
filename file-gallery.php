@@ -2,7 +2,7 @@
 /*
 Plugin Name: File Gallery
 Plugin URI: http://skyphe.org/code/wordpress/file-gallery/
-Version: 1.6.5.3
+Version: 1.6.6-beta
 Description: "File Gallery" extends WordPress' media (attachments) capabilities by adding a new gallery shortcode handler with templating support, a new interface for attachment handling when editing posts, and much more.
 Author: Bruno "Aesqe" Babic
 Author URI: http://skyphe.org
@@ -120,62 +120,7 @@ function file_gallery_activate()
 {
 	file_gallery_plugins_support();
 	
-	$defaults = array(
-		'folder' 					  => FILE_GALLERY_URL, 
-		'abspath' 					  => FILE_GALLERY_ABSPATH, 
-		'media_tag_name'			  => FILE_GALLERY_MEDIA_TAG_NAME,
-		
-		'in_excerpt' 				  => 1, 
-		'in_excerpt_replace_content'  => '<p><strong>(' . __('galleries are shown on full posts only', 'file-gallery') . ')</strong></p>', 
-		
-		'default_image_size' 		  => 'thumbnail', 
-		'default_linkto' 			  => 'attachment', 
-		'default_linked_image_size'   => 'full',
-		'default_external_url'		  => '', 
-		'default_orderby' 			  => '', 
-		'default_order' 			  => 'ASC', 
-		'default_template' 			  => 'default', 
-		'default_linkclass' 		  => '', 
-		'default_imageclass' 		  => '', 
-		'default_columns' 			  => 3, 
-		'default_mimetype'			  => '',
-		
-		'single_default_image_size'   => 'thumbnail', 
-		'single_default_linkto'		  => 'attachment', 
-		'single_default_external_url' => '', 
-		'single_default_linkclass' 	  => '', 
-		'single_default_imageclass'   => '',
-		'single_default_align'        => 'none',
-		
-		'insert_options_state'		  => 1,
-		'insert_single_options_state' => 1,
-		'acf_state'					  => 1,
-		'display_gallery_fieldset'	  => 1,
-		'display_single_fieldset'	  => 1,
-		'display_acf'				  => 1,
-		
-		'e_display_attachment_count'  => 1,
-		'e_display_media_tags'		  => 1,
-		'e_display_post_thumb'		  => 1,
-		
-		'cache'						  => 0,
-		'cache_time'				  => 3600, // == 1 hour
-		'cache_non_html_output'		  => 0,
-		
-		'del_options_on_deactivate'   => 0,
-
-		'show_on_post_type_post'	  => 1,
-		'show_on_post_type_page'	  => 1,
-		
-		'library_filter_duplicates'   => 1,
-		
-		'auto_enqueued_scripts'		  => 'thickbox',
-		
-		'disable_shortcode_handler'	  => 0,
-		
-		'default_metabox_image_size'  => 'thumbnail',
-		'default_metabox_image_width' => 75
-	);
+	$defaults = file_gallery_get_default_options();
 	
 	// if options already exist, upgrade
 	if( $options = get_option('file_gallery') )
@@ -781,6 +726,7 @@ require_once('includes/templating.php');
 require_once('includes/main.php');
 require_once('includes/functions.php');
 require_once('includes/cache.php');
+require_once('includes/regenerate-images.php');
 
 if( 3.1 <= floatval($wp_version) )
 	require_once('includes/media-tags-list-table.class.php');

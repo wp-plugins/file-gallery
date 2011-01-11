@@ -79,6 +79,15 @@ more... Here's the full list of features:
 
 == Changelog ==
 
+= 1.6.6 =
+* January 11th, 2011
+* added option to display just the insert buttons 
+  for gallery/single images
+* better handling of file gallery options
+* image thumbnails regeneration (works, but needs a non-mockupy ui :)
+* some css fixes for better ie6-7 compliance
+* various small fixes all over the place
+
 = 1.6.5.3 =
 * January 6th, 2011
 * options to hide and toggle display of attachment custom fields

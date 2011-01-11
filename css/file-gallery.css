@@ -129,6 +129,13 @@
 	float: none;
 }
 
+#file_gallery input#file_gallery_send_gallery_legend.button-primary,
+#file_gallery input#file_gallery_send_single_legend.button-primary
+{
+	float: left;
+	margin-top: 2px;
+}
+
 #file_gallery_list .sortableitem,
 #file_gallery_list .ui-selected
 {
@@ -180,11 +187,10 @@
 
 #file_gallery_list .sortableitem img.fgtt
 {
-	float: left;
-	clear: right;
 	border: 1px solid #FFFFFF;
-	margin-top: 1px;
-	position: relative;
+	position: absolute;
+	top: 4px;
+	right: 4px;
 	width: 100%;
 	height: auto;
 	cursor: pointer;
@@ -205,6 +211,7 @@
 	position: absolute;
 	bottom: 2px;
 	right: 2px;
+	z-index: 100;
 }
 
 #file_gallery_list .clearer
@@ -220,6 +227,7 @@
 	left: 2px;
 	position: absolute;
 	text-decoration: none;
+	z-index: 100;
 }
 
 #file_gallery_list .post_thumb_status
@@ -228,6 +236,7 @@
 	left: 45%;
 	position: absolute;
 	text-decoration: none;
+	z-index: 100;
 }
 
 #file_gallery_list .del_attachment,
@@ -247,6 +256,7 @@
 	margin: 0;
 	bottom: 1px;
 	right: 1px;
+	z-index: 100;
 }
 
 #file_gallery_list .sortableitem img.fgtt.non_image
@@ -263,16 +273,18 @@
 	left: 2px;
 	top: 35px;
 	width: 16px;
+	z-index: 100;
 }
 
 #file_gallery_list a.img_edit
 {
 	display:block;
 	height:16px;
-	position:absolute;
+	position: absolute;
 	left: 2px;
 	top: 5px;
 	width:16px;
+	z-index: 100;
 }
 
 #file_gallery_size,
@@ -370,7 +382,7 @@
 {
 	background: none;
 	width: auto;
-	float: none;
+	/*float: none;*/
 }
 
 #fg_buttons input
@@ -766,7 +778,8 @@ textarea, input, select
 	background: #D6F1B3;
 }
 
-.thumb_switch_load
+.thumb_switch_load,
+.regenerate_load
 {
 	position: absolute;
 	top: 5px;

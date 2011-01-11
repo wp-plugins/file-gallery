@@ -91,17 +91,19 @@ function file_gallery_list_attachments(&$count_attachments, $post_id, $attachmen
 				$attachment_height   = "";
 				$non_image           = " non_image";
 				$_attachment_thumb_width = 55;
+				$image_width_style = '';
 			}
 			else
 			{
 				$classes[] = "image";
 				$_attachment_thumb_width = $attachment_thumb_width;
+				$image_width_style = 'style="width: ' . $_attachment_thumb_width . 'px;"';
 			}
 			
 			$attached_files .= '
 			<li id="image-' . $attachment->ID . '" class="' . implode(" ", $classes) . '" style="width: ' . $_attachment_thumb_width . 'px; height: ' . $attachment_thumb_height . 'px">
 				
-				<img src="' . $attachment_thumb[0] . '" alt="' . $attachment->post_title . '" id="in-' . $attachment->ID . '" title="' . $attachment->post_title . '" class="fgtt' . $non_image . '"  style="width: ' . $_attachment_thumb_width . 'px;" />';
+				<img src="' . $attachment_thumb[0] . '" alt="' . $attachment->post_title . '" id="in-' . $attachment->ID . '" title="' . $attachment->post_title . '" class="fgtt' . $non_image . '" ' . $image_width_style . ' />';
 				
 				if( "" == $non_image ) :
 					$attached_files .= '<a href="' . $large[0] . '" id="in-' . $attachment->ID . '-zoom" class="img_zoom">
@@ -177,7 +179,7 @@ function file_gallery_list_attachments(&$count_attachments, $post_id, $attachmen
 					</div>';
 					
 				endif;
-			
+
 			endif;
 			
 			$attached_files .= '</li>

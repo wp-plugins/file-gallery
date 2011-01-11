@@ -46,7 +46,7 @@ function file_gallery_options_init()
 	
 	
 	
-	register_setting('media', "file_gallery");
+	register_setting('media', 'file_gallery', 'file_gallery_save_media_settings');
 	
 
 
@@ -163,6 +163,10 @@ function file_gallery_options_init()
 	add_settings_field("file_gallery_display_single_fieldset", __("Display options for inserting single images into a post?", 'file-gallery'), create_function("", 'return file_gallery_options_fields( array("name" => "file_gallery_display_single_fieldset") );'), 'media', 'file_gallery_options');
 	
 	add_settings_field("file_gallery_display_acf", __("Display attachment custom fields?", 'file-gallery'), create_function("", 'return file_gallery_options_fields( array("name" => "file_gallery_display_acf") );'), 'media', 'file_gallery_options');
+	
+	add_settings_field("file_gallery_insert_gallery_button", __("Display 'insert gallery' button even if gallery options are hidden?", 'file-gallery'), create_function("", 'return file_gallery_options_fields( array("name" => "file_gallery_insert_gallery_button") );'), 'media', 'file_gallery_options');
+	
+	add_settings_field("file_gallery_insert_single_button", __("Display 'insert single image(s)' button even if single image options are hidden?", 'file-gallery'), create_function("", 'return file_gallery_options_fields( array("name" => "file_gallery_insert_single_button") );'), 'media', 'file_gallery_options');
 	
 	// delete options on deactivation
 	add_settings_field("file_gallery_del_options_on_deactivate", __("Delete all options on deactivation?", 'file-gallery'), create_function("", 'return file_gallery_options_fields( array("name" => "file_gallery_del_options_on_deactivate") );'), 'media', 'file_gallery_options');
@@ -624,6 +628,12 @@ function file_gallery_options_fields( $args )
 				break;
 			case "file_gallery_display_acf" :
 					$output = '<input type="checkbox" name="file_gallery[display_acf]" id="file_gallery_display_acf" value="1" ' . checked('1', isset($file_gallery_options["display_acf"]) && true == $file_gallery_options["display_acf"] ? true : false, false) . ' />';
+				break;
+			case "file_gallery_insert_gallery_button" :
+					$output = '<input type="checkbox" name="file_gallery[insert_gallery_button]" id="file_gallery_insert_gallery_button" value="1" ' . checked('1', isset($file_gallery_options["insert_gallery_button"]) && true == $file_gallery_options["insert_gallery_button"] ? true : false, false) . ' />';
+				break;
+			case "file_gallery_insert_single_button" :
+					$output = '<input type="checkbox" name="file_gallery[insert_single_button]" id="file_gallery_insert_single_button" value="1" ' . checked('1', isset($file_gallery_options["insert_single_button"]) && true == $file_gallery_options["insert_single_button"] ? true : false, false) . ' />';
 				break;
 			case "file_gallery_cache" :
 					$output = '<input type="checkbox" name="file_gallery[cache]" id="file_gallery_cache" value="1" ' . checked('1', isset($file_gallery_options["cache"]) && true == $file_gallery_options["cache"] ? true : false, false) . ' />

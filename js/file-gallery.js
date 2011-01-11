@@ -108,7 +108,7 @@ jQuery(document).ready(function()
 				columns = opt.match(/columns=['"](\d+)['"]/),
 				tags = opt.match(/tags=['"]([^'"]+)['"]/i),
 				tags_from = opt.match(/tags_from=['"]([^'"]+)['"]/i);
-alert(opt);
+
 			if( linkto && 'none' != thelink && 'file' != thelink && 'parent_post' != thelink )
 			{
 				external_url = decodeURIComponent(thelink);
@@ -296,20 +296,23 @@ alert(opt);
 			file_gallery.options.num_attachments = jQuery("#fg_container #file_gallery_list li").length;
 			
 			container.css({"height" : "auto"});
-			jQuery("#file_gallery_switch_to_tags").show();
+			jQuery("#file_gallery_switch_to_tags").not(".hidden").show();
 			
 			// hide elements if post has no attachments
 			if( 0 === file_gallery.options.num_attachments )
 			{
 				jQuery("#file_gallery fieldset, #file_gallery_tag_attachment_switcher").hide();
+				
+				if( 0 === jQuery("#fg_info").length )
+					jQuery("#file_gallery_form").append('<div id="fg_info"></div>');
+				
 				jQuery("#fg_info").html(file_gallery.L10n.no_attachments_upload).show();
 				jQuery("#file_gallery_upload_files").show();
 				container.css({"overflow":"hidden", "paddingBottom":"0"});
 			}
 			else
 			{
-				jQuery("#file_gallery fieldset, #file_gallery_tag_attachment_switcher").show();
-				//jQuery("#fg_info").html(file_gallery.L10n.fg_info);
+				jQuery("#file_gallery fieldset, #file_gallery_tag_attachment_switcher").not(".hidden").show();
 				container.css({"overflow":"auto"});
 				jQuery("#file_gallery_upload_files").hide();
 			}
@@ -1459,11 +1462,49 @@ alert(opt);
 			});
 			
 			return output;
+		},
+		
+		regenerate_thumbnails : function( attachment_ids )
+		{
+			var el = "#file_gallery_attachment_edit_image a.regenerate",
+				text = jQuery(el).html();
+			
+			if( 0 == jQuery('#file_gallery_response').length )
+				jQuery('#fg_container').append('<div id="file_gallery_response"></div>');
+			
+			jQuery(el).html("working...");
+
+			jQuery.post
+			(
+				ajaxurl, 
+				{
+					'action' : 'file_gallery_regenerate_thumbnails',
+					'attachment_ids' : attachment_ids
+				},
+				function(response)
+				{
+					jQuery('#file_gallery_response').stop().show().css({'opacity' : 1}).html(response.message).fadeOut(7500);
+					jQuery("#fg_loading_on_thumb").fadeOut(250).remove();
+					jQuery(el).html(text);
+				},
+				"json"
+			);
 		}
 	});
 
 
 	/* end file_gallery object */
+
+	
+	// regenerate thumbnails
+	jQuery("#file_gallery_attachment_edit_image a.regenerate").live('click', function(e)
+	{
+		var id = jQuery(this).attr('id').replace(/\]/, '').replace(/regenerate\[/, '');
+		
+		e.preventDefault();
+		
+		file_gallery.regenerate_thumbnails( [id] );
+	});
 
 
 	// WPML
