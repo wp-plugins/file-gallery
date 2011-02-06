@@ -128,7 +128,7 @@ function file_gallery_css_front( $mobile = false )
 	
 	// automaticaly enqueue predefined scripts and styles
 	$aqs = explode(',', $options['auto_enqueued_scripts']);
-	$aqs = array_filter($aqs, 'trim');
+	$aqs = array_map('trim', $aqs);
 	$aq_linkclasses = array();
 
 	// collect template names
@@ -158,8 +158,8 @@ function file_gallery_css_front( $mobile = false )
 			foreach( $glc as $glcs )
 			{
 				$glcs = trim($glcs);
-				
-				if( false !== strpos( implode(" ", $aqs), $glcs) )
+
+				if( in_array($glcs, $aqs) )//if( false !== strpos( implode(' ', $aqs), $glcs) )
 					$aq_linkclasses[] = $glcs;
 			}
 		}
@@ -213,9 +213,11 @@ function file_gallery_css_front( $mobile = false )
 				
 				if( is_readable(FILE_GALLERY_THEME_TEMPLATES_ABSPATH . '/' . $template . '/gallery.js') )
 				{
+					$overriding = true;
 					ob_start();
 						include(FILE_GALLERY_THEME_TEMPLATES_ABSPATH . '/' . $template . '/gallery.php');					
 					ob_end_clean();
+					$overriding = false;
 
 					wp_enqueue_script('file_gallery_' . str_replace(' ', '-', $template), FILE_GALLERY_THEME_TEMPLATES_URL . '/' . str_replace(' ', '%20', $template) . '/gallery.js', $js_dependencies, '', true);	
 				}
@@ -229,10 +231,12 @@ function file_gallery_css_front( $mobile = false )
 					$mobiles[] = FILE_GALLERY_URL . '/templates/' . $template . '/gallery.css';
 				
 				if( is_readable(FILE_GALLERY_ABSPATH . '/templates/' . $template . '/gallery.js') )
-				{					
+				{
+					$overriding = true;
 					ob_start();
 						include(FILE_GALLERY_ABSPATH . '/templates/' . $template . '/gallery.php');
 					ob_end_clean();
+					$overriding = false;
 
 					wp_enqueue_script('file_gallery_' . str_replace(' ', '-', $template), FILE_GALLERY_URL . '/templates/' . str_replace(' ', '%20', $template) . '/gallery.js', $js_dependencies, '', true );
 				}
@@ -423,6 +427,7 @@ function file_gallery_shortcode( $content = false, $attr = false )
 				'template'			=> 'default',
 				'linkclass'			=> '',
 				'imageclass'		=> '',
+				'galleryclass'		=> '',
 				'rel'				=> 1,
 				'tags'				=> '',
 				'tags_from'			=> 'current',
@@ -463,9 +468,11 @@ function file_gallery_shortcode( $content = false, $attr = false )
 	}
 	
 	// get overriding variables from the template file
+	$overriding = true;
 	ob_start();
-	include($template_file);
+		include($template_file);
 	ob_end_clean();
+	$overriding = false;
 
 	if( is_array($file_gallery->overrides) && ! empty($file_gallery->overrides) )
 	{
@@ -794,11 +801,9 @@ function file_gallery_shortcode( $content = false, $attr = false )
 			
 			// parse template
 			ob_start();
-			
 				extract( $param );
 				include($template_file);
 				$x = ob_get_contents();
-				
 			ob_end_clean();
 			
 			$file_gallery_this_template_counter++;
@@ -836,7 +841,9 @@ function file_gallery_shortcode( $content = false, $attr = false )
 		if( is_single() && isset($file_gallery_query->max_num_pages) && 1 < $file_gallery_query->max_num_pages )
 			$pagination_html = file_gallery_do_pagination( $file_gallery_query->max_num_pages, $page );
 		
-		$output = '<' . $starttag . ' id="gallery-' . $file_gallery->gallery_id . '" class="gallery ' . str_replace(' ', '-', $template) . $cols . $stc . '">' . "\n" . $gallery_items . "\n" . $pagination_html . "\n</" . $starttag . '>';
+		$gallery_class = apply_filters('file_gallery_galleryclass', 'gallery ' . str_replace(' ', '-', $template) . $cols . $stc . ' ' . $galleryclass);
+		
+		$output = '<' . $starttag . ' id="gallery-' . $file_gallery->gallery_id . '" class="' . $gallery_class . '">' . "\n" . $gallery_items . "\n" . $pagination_html . "\n</" . $starttag . '>';
 	}
 	
 	if( isset($options['cache']) && true == $options['cache'] )

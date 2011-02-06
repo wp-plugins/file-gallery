@@ -134,6 +134,11 @@
 					?>
 				</select>
 			</p>
+			
+			<p>
+				<label for="file_gallery_galleryclass"><?php _e("gallery class", "file-gallery"); ?>:</label>
+				<input type="text" name="file_gallery_galleryclass" id="file_gallery_galleryclass" value="<?php echo $file_gallery_options["default_galleryclass"]; ?>" />
+			</p>
 	
 			<p>
 				<label for="file_gallery_imageclass"><?php _e("image class", "file-gallery"); ?>:</label>

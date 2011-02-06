@@ -2,7 +2,7 @@ jQuery(document).ready(function()
 {
 	var file_gallery_simple_gallery_counter = 1;
 	
-	if( 0 < jQuery(".gallery.simple").length )
+	if( 0 < jQuery(".gallery.simple").length && "" != file_gallery_simple_linkclass )
 	{
 		var file_gallery_doing_ajax = false;
 		
@@ -42,7 +42,7 @@ jQuery(document).ready(function()
 
 						// check for lightbox scripts
 						lightbox = 
-							"thickbox" == file_gallery_simple_linkclass ? 
+							("thickbox" == file_gallery_simple_linkclass) ? 
 								jQuery.isFunction(tb_init) : eval("jQuery.fn." + file_gallery_simple_linkclass);
 						
 						if( lightbox )

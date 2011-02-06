@@ -44,14 +44,25 @@ function file_gallery_list_attachments(&$count_attachments, $post_id, $attachmen
 		$count_attachments = count($attachments);
 		
 		$attachment_thumb_size  = isset($options["default_metabox_image_size"]) ? $options["default_metabox_image_size"] : 'thumbnail';
-		$attachment_thumb_width = isset($options["default_metabox_image_width"]) ? $options["default_metabox_image_width"] : 75;	
+		$attachment_thumb_width = isset($options["default_metabox_image_width"]) && 0 < $options["default_metabox_image_width"] ? $options["default_metabox_image_width"] : 75;	
 		
 		if( isset($_wp_additional_image_sizes[$attachment_thumb_size]) )
-			$attachment_thumb_ratio = $_wp_additional_image_sizes[$attachment_thumb_size]['width'] / $_wp_additional_image_sizes[$attachment_thumb_size]['height'];
+		{
+			$ats_width  = $_wp_additional_image_sizes[$attachment_thumb_size]['width'];
+			$ats_height = $_wp_additional_image_sizes[$attachment_thumb_size]['height'];
+		}
 		else
-			$attachment_thumb_ratio = get_option($attachment_thumb_size . '_size_w') / get_option($attachment_thumb_size . '_size_h');
+		{
+			$ats_width  = get_option($attachment_thumb_size . '_size_w');
+			$ats_height = get_option($attachment_thumb_size . '_size_h');
+		}
 		
-		if( "" == strval($attachment_thumb_ratio) )
+		if( 0 < (int) $ats_width && 0 < (int) $ats_height )
+			$attachment_thumb_ratio = $ats_width / $ats_height;
+		else
+			$attachment_thumb_ratio = 1;
+			
+		if( '' == strval($attachment_thumb_ratio) )
 			$attachment_thumb_ratio = 1;
 
 		$attachment_thumb_height = $attachment_thumb_width / $attachment_thumb_ratio;
@@ -79,7 +90,7 @@ function file_gallery_list_attachments(&$count_attachments, $post_id, $attachmen
 			
 			$attachment_thumb = wp_get_attachment_image_src($attachment->ID, $attachment_thumb_size);
 			$large            = wp_get_attachment_image_src($attachment->ID, "large");
-			
+
 			if( in_array($attachment->ID, $checked_attachments) )
 				$checked = ' checked="checked"';
 			
@@ -97,7 +108,13 @@ function file_gallery_list_attachments(&$count_attachments, $post_id, $attachmen
 			{
 				$classes[] = "image";
 				$_attachment_thumb_width = $attachment_thumb_width;
-				$image_width_style = 'style="width: ' . $_attachment_thumb_width . 'px;"';
+				
+				if( 1 === $attachment_thumb_ratio && $attachment_thumb[2] > $attachment_thumb_width )
+					$forced_height = 'height: ' . $attachment_thumb_height . 'px';
+				else
+					$forced_height = '';
+				
+				$image_width_style = 'style="width: ' . $_attachment_thumb_width . 'px; ' . $forced_height . '"';
 			}
 			
 			$attached_files .= '
@@ -470,10 +487,12 @@ function file_gallery_main( $ajax = true )
 		$custom_fields = $_POST['custom_fields'];
 		
 		if( ! empty($custom) && ! empty($custom_fields) )
-		foreach( $custom_fields as $key => $val )
 		{
-			if( $custom[$key][0] != $val )
-				update_post_meta($attachment_id, $key, $val);
+			foreach( $custom_fields as $key => $val )
+			{
+				if( isset($custom[$key]) && $custom[$key][0] != $val )
+					update_post_meta($attachment_id, $key, $val);
+			}
 		}
 		
 		// media_tag taxonomy - attachment tags

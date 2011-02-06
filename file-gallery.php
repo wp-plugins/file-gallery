@@ -2,7 +2,7 @@
 /*
 Plugin Name: File Gallery
 Plugin URI: http://skyphe.org/code/wordpress/file-gallery/
-Version: 1.6.6-beta
+Version: 1.6.7
 Description: "File Gallery" extends WordPress' media (attachments) capabilities by adding a new gallery shortcode handler with templating support, a new interface for attachment handling when editing posts, and much more.
 Author: Bruno "Aesqe" Babic
 Author URI: http://skyphe.org
@@ -26,7 +26,67 @@ Author URI: http://skyphe.org
 
 */
 
-global $wp_version;
+
+/**
+ * Just a variables placeholder for now
+ *
+ * @since 1.6.5.1
+ */
+class File_Gallery
+{
+	/**
+	 * settings, 
+	 * their default values, 
+	 * and false default values
+	 *
+	 * @since 1.6.7
+	 */
+	var $settings = array();
+	var $defaults = array();
+	var $false_defaults = array();
+	
+	/**
+	 * Holds the ID number of current post's gallery
+	 */
+	var $gallery_id;
+
+	/**
+	 * Holds gallery options overriden 
+	 * via 'file_gallery_overrides' template function
+	 */
+	var $overrides;
+	
+	/**
+	 * Whether Attachment custom fields plugin is 
+	 * installed or not
+	 */
+	var $acf = false;
+
+	/**
+	 * Current version of this plugin
+	 */
+	var $version = '1.6.7';
+
+	/***/
+	function __construct()
+	{
+		$this->File_Gallery();
+	}
+
+	/**
+	 * Checks if Attachment custom fields plugin is installed
+	 * (not released yet)
+	 */
+	function File_Gallery()
+	{
+		if( false !== strpos(serialize(get_option('active_plugins')), 'attachment-custom-fields.php') )
+			$this->acf = true;
+	}
+};
+
+
+// Begin
+$file_gallery = new File_Gallery();
 
 
 /**
@@ -49,68 +109,403 @@ $file_gallery_abspath = WP_PLUGIN_DIR . '/' . basename(dirname(__FILE__));
 $file_gallery_abspath = str_replace('\\', '/', $file_gallery_abspath);
 $file_gallery_abspath = preg_replace('#/+#', '/', $file_gallery_abspath);
 
+// file gallery directories and template names
 define('FILE_GALLERY_URL', WP_PLUGIN_URL . '/' . basename(dirname(__FILE__)));
 define('FILE_GALLERY_ABSPATH', $file_gallery_abspath);
 define('FILE_GALLERY_DEFAULT_TEMPLATES', serialize( array('default', 'file-gallery', 'list', 'simple') ) );
 
 
 /**
- * Support for other plugins
- *
- * Supported so far:
- * - WordPress Mobile Edition
- * - Media Tags
+ * 
+ * @since 1.6.7
  */
-function file_gallery_plugins_support()
+function file_gallery_do_settings()
 {
-	global $sitepress, $wp_taxonomies, $file_gallery;
+	global $file_gallery;
 	
-	$mobile = false;
-	$file_gallery_media_tag_name = 'media_tag';
-	$options = get_option('file_gallery');
-	
-	// WordPress Mobile Edition
-	if( function_exists('cfmobi_check_mobile') && cfmobi_check_mobile() )
-	{
-		$mobile = true;
-	
-		if( ! isset($options['disable_shortcode_handler']) || true != $options['disable_shortcode_handler'] )
-			add_filter('stylesheet_uri', 'file_gallery_mobile_css');
-	}
-	
-	// Media Tags
-	if( defined('MEDIA_TAGS_TAXONOMY') )
-		$file_gallery_media_tag_name = MEDIA_TAGS_TAXONOMY;
+	$file_gallery->settings = array(
+			'disable_shortcode_handler' => array(
+				'default' => 0, 
+				'display' => true,
+				'title' => __("Disable 'File Gallery' handling of [gallery] shortcode?", 'file-gallery'),
+				'type' => 'checkbox',
+				'section' => 0,
+				'position' => 0
+			),
+			'show_on_post_type' => array(
+				'default' => 1, 
+				'display' => true,
+				'title' => __('Display File Gallery on which post types?', 'file-gallery'),
+				'type' => 'checkbox',
+				'values' => file_gallery_post_type_checkboxes(),
+				'section' => 0,
+				'position' => 0
+			),
+			'auto_enqueued_scripts' => array(
+				'default' => 'thickbox', 
+				'display' => true,
+				'title' => __('Auto enqueue lightbox scripts for which link classes (separate with commas)?', 'file-gallery'),
+				'type' => 'text',
+				'section' => 0,
+				'position' => 0
+			),
+			'default_metabox_image_size' => array(
+				'default' => 'thumbnail', 
+				'display' => true,
+				'title' => __('Default WordPress image size for thumbnails in File Gallery metabox on post editing screens?', 'file-gallery'),
+				'type' => 'select',
+				'values' => file_gallery_dropdown( 'default_metabox_image_size', 'image_size' ),
+				'section' => 0,
+				'position' => 0
+			),
+			'default_metabox_image_width' => array(
+				'default' => 75, 
+				'display' => true,
+				'title' => __('Default width (in pixels) for thumbnails in File Gallery metabox on post editing screens?', 'file-gallery'),
+				'type' => 'text',
+				'section' => 0,
+				'position' => 0
+			),
+			
+			
+			'default_image_size' => array(
+				'default' => 'thumbnail',
+				'display' => true,
+				'title' => '</th></tr><tr><td colspan="2"><strong style="display: block; margin-top: -15px; font-size: 115%; color: #21759B;">' . __('Some default values for when inserting a gallery into a post', 'file-gallery') . '...</strong></td></tr><tr valign="top"><th scope="row">' . __('size', 'file-gallery'),
+				'type' => 'select',
+				'values' => file_gallery_dropdown( 'default_image_size', 'image_size' ),
+				'section' => 0,
+				'position' => 0
+			), 
+			'default_linkto' => array(
+				'default' => 'attachment', 
+				'display' => true,
+				'title' => __('link', 'file-gallery'),
+				'type' => 'select',
+				'values' => file_gallery_dropdown( 'default_linkto', 'linkto' ),
+				'section' => 0,
+				'position' => 0
+			),
+			'default_linked_image_size' => array(
+				'default' => 'full', 
+				'display' => true,
+				'title' => __('linked image size', 'file-gallery'),
+				'type' => 'select',
+				'values' => file_gallery_dropdown( 'default_linked_image_size', 'image_size' ),
+				'section' => 0,
+				'position' => 0
+			),
+			'default_external_url' => array(
+				'default' => '',  
+				'display' => true,
+				'title' => __('external url', 'file-gallery'),
+				'type' => 'text',
+				'section' => 0,
+				'position' => 0
+			),
+			'default_orderby' => array(
+				'default' => '',  
+				'display' => true,
+				'title' => __('order by', 'file-gallery'),
+				'type' => 'select',
+				'values' => file_gallery_dropdown( 'default_orderby', 'orderby' ),
+				'section' => 0,
+				'position' => 0
+			),
+			'default_order' => array(
+				'default' => 'ASC',  
+				'display' => true,
+				'title' => __('order', 'file-gallery'),
+				'type' => 'select',
+				'values' => file_gallery_dropdown( 'default_order', 'order' ),
+				'section' => 0,
+				'position' => 0
+			),
+			'default_template' => array(
+				'default' => 'default',  
+				'display' => true,
+				'title' => __('template', 'file-gallery'),
+				'type' => 'select',
+				'values' => file_gallery_dropdown( 'default_template', 'template' ),
+				'section' => 0,
+				'position' => 0
+			),
+			'default_linkclass' => array(
+				'default' => '',  
+				'display' => true,
+				'title' => __('link class', 'file-gallery'),
+				'type' => 'text',
+				'section' => 0,
+				'position' => 0
+			),
+			'default_imageclass' => array(
+				'default' => '',  
+				'display' => true,
+				'title' => __('image class', 'file-gallery'),
+				'type' => 'text',
+				'section' => 0,
+				'position' => 0
+			),
+			'default_columns' => array(
+				'default' => 3,  
+				'display' => true,
+				'title' => __('columns', 'file-gallery'),
+				'type' => 'select',
+				'values' => file_gallery_dropdown( 'default_columns', 'columns' ),
+				'section' => 0,
+				'position' => 0
+			),
+			'default_mimetype' => array(
+				'default' => '', 
+				'display' => true,
+				'title' => __('mime type', 'file-gallery'),
+				'type' => 'text',
+				'section' => 0,
+				'position' => 0
+			),
+			'default_galleryclass' => array(
+				'default' => '', 
+				'display' => true,
+				'title' => __('gallery class', 'file-gallery'),
+				'type' => 'text',
+				'section' => 0,
+				'position' => 0
+			),
+			
+			
+			'single_default_image_size' => array(
+				'default' => 'thumbnail',  
+				'display' => true,
+				'title' => '</th></tr><tr><td colspan="2"><strong style="display: block; margin-top: -15px; font-size: 115%; color: #21759B;">' . __('...and for when inserting (a) single image(s) into a post', 'file-gallery') . '</strong></td></tr><tr valign="top"><th scope="row">' . __('size', 'file-gallery'),
+				'type' => 'select',
+				'values' => file_gallery_dropdown( 'single_default_image_size', 'image_size' ),
+				'section' => 0,
+				'position' => 0
+			),
+			'single_default_linkto' => array(
+				'default' => 'attachment',  
+				'display' => true,
+				'title' => __('link', 'file-gallery'),
+				'type' => 'select',
+				'values' => file_gallery_dropdown( 'single_default_linkto', 'linkto' ),
+				'section' => 0,
+				'position' => 0
+			),
+			'single_default_external_url' => array(
+				'default' => '',  
+				'display' => true,
+				'title' => __('external url', 'file-gallery'),
+				'type' => 'text',
+				'section' => 0,
+				'position' => 0
+			),
+			'single_default_linkclass' => array(
+				'default' => '',  
+				'display' => true,
+				'title' => __('link class', 'file-gallery'),
+				'type' => 'text',
+				'section' => 0,
+				'position' => 0
+			),
+			'single_default_imageclass' => array(
+				'default' => '', 
+				'display' => true,
+				'title' => __('image class', 'file-gallery'),
+				'type' => 'text',
+				'section' => 0,
+				'position' => 0
+			),
+			'single_default_align' => array(
+				'default' => 'none', 
+				'display' => true,
+				'title' => __('alignment', 'file-gallery'),
+				'type' => 'select',
+				'values' => file_gallery_dropdown( 'single_default_align', 'align' ),
+				'section' => 0,
+				'position' => 0
+			),
+			
+			
+			'cache' => array(
+				'default' => 0, 
+				'display' => true,
+				'title' => '</th></tr><tr><td colspan="2"><strong style="display: block; margin-top: -15px; font-size: 115%; color: #21759B;">' . __('Cache', 'file-gallery') . '</strong></td></tr><tr valign="top"><th scope="row">' . __('Enable caching?', 'file-gallery'),
+				'type' => 'checkbox',
+				'section' => 0,
+				'position' => 0
+			),
+			'cache_time' => array(
+				'default' => 3600, // == 1 hour 
+				'display' => true,
+				'title' => __("Cache expires after how many seconds? (leave as is if you don't know what it means)", 'file-gallery'),
+				'type' => 'text',
+				'section' => 0,
+				'position' => 0
+			),
+			'cache_non_html_output' => array(
+				'default' => 0, 
+				'display' => true,
+				'title' => __('Cache non-HTML gallery output (<em>array, object, json</em>)', 'file-gallery'),
+				'type' => 'checkbox',
+				'section' => 0,
+				'position' => 0
+			),
+			
+			
+			'e_display_attachment_count' => array(
+				'default' => 1, 
+				'display' => true,
+				'title' => '</th></tr><tr><td colspan="2"><strong style="display: block; margin-top: -15px; font-size: 115%; color: #21759B;">' . __('Edit screens options', 'file-gallery') . '</strong></td></tr><tr valign="top"><th scope="row">' . __('Display attachment count?', 'file-gallery'),
+				'type' => 'checkbox',
+				'section' => 0,
+				'position' => 0
+			),
+			'library_filter_duplicates' => array(
+				'default' => 1, 
+				'display' => true,
+				'title' => __('Filter out duplicate attachments (copies) when browsing media library?', 'file-gallery'),
+				'type' => 'checkbox',
+				'section' => 0,
+				'position' => 0
+			),
+			'e_display_media_tags' => array(
+				'default' => 1, 
+				'display' => true,
+				'title' => __('Display media tags for attachments in media library?', 'file-gallery'),
+				'type' => 'checkbox',
+				'section' => 0,
+				'position' => 0
+			),
+			'e_display_post_thumb' => array(
+				'default' => 1, 
+				'display' => true,
+				'title' => __('Display post thumb (if set)?', 'file-gallery'),
+				'type' => 'checkbox',
+				'section' => 0,
+				'position' => 0
+			),
+
 		
-	define('FILE_GALLERY_MOBILE', $mobile);
-	define('FILE_GALLERY_MEDIA_TAG_NAME', $file_gallery_media_tag_name);
-}
-add_action('plugins_loaded', 'file_gallery_plugins_support', 100);
+			'in_excerpt' => array(
+				'default' => 1,
+				'display' => true,
+				'title' => '</th></tr><tr><td colspan="2"><strong style="display: block; margin-top: -15px; font-size: 115%; color: #21759B;">' . __('Other options', 'file-gallery') . '</strong></td></tr><tr valign="top"><th scope="row">' . __('Display galleries within post excerpts?', 'file-gallery'),
+				'type' => 'checkbox',
+				'section' => 0,
+				'position' => 0
+			), 
+			'in_excerpt_replace_content' => array(
+				'default' => '<p><strong>(' . __('galleries are shown on full posts only', 'file-gallery') . ')</strong></p>',
+				'display' => true,
+				'title' => __("Replacement text for galleries within post excerpts (if you haven't checked the above option)", 'file-gallery'),
+				'type' => 'textarea',
+				'section' => 0,
+				'position' => 0
+			), 
+			'display_gallery_fieldset' => array(
+				'default' => 1, 
+				'display' => true,
+				'title' => __('Display options for inserting galleries into a post?', 'file-gallery'),
+				'type' => 'checkbox',
+				'section' => 0,
+				'position' => 0
+			),
+			'display_single_fieldset' => array(
+				'default' => 1, 
+				'display' => true,
+				'title' => __('Display options for inserting single images into a post?', 'file-gallery'),
+				'type' => 'checkbox',
+				'section' => 0,
+				'position' => 0
+			),
+			'display_acf' => array(
+				'default' => 1, 
+				'display' => true,
+				'title' => __('Display attachment custom fields?', 'file-gallery'),
+				'type' => 'checkbox',
+				'section' => 0,
+				'position' => 0
+			),
+			'insert_gallery_button' => array(
+				'default' => 1, 
+				'display' => true,
+				'title' => __("Display 'insert gallery' button even if gallery options are hidden?", 'file-gallery'),
+				'type' => 'checkbox',
+				'section' => 0,
+				'position' => 0
+			),
+			'insert_single_button' => array(
+				'default' => 1, 
+				'display' => true,
+				'title' => __("Display 'insert single image(s)' button even if single image options are hidden?", 'file-gallery'),
+				'type' => 'checkbox',
+				'section' => 0,
+				'position' => 0
+			),	
+			'del_options_on_deactivate' => array(
+				'default' => 0, 
+				'display' => true,
+				'title' => __('Delete all options on deactivation?', 'file-gallery'),
+				'type' => 'checkbox',
+				'section' => 0,
+				'position' => 0
+			),
+			
+			
+			/**
+			 * Dsiabled options
+			 */
+			'folder' => array(
+				'default' => FILE_GALLERY_URL,
+				'display' => 'disabled',
+				'title' => __('File gallery folder', 'file-gallery'),
+				'type' => 'text',
+				'section' => 0,
+				'position' => 0
+			), 
+			'abspath' => array(
+				'default' => FILE_GALLERY_ABSPATH,
+				'display' => 'disabled',
+				'title' => __('File gallery path', 'file-gallery'),
+				'type' => 'text',
+				'section' => 0,
+				'position' => 100
+			),
+			'media_tag_name' => array(
+				'default' => defined('FILE_GALLERY_MEDIA_TAG_NAME') ? FILE_GALLERY_MEDIA_TAG_NAME : 'media_tag',
+				'display' => 'disabled',
+				'title' => __('Media tag taxonomy name', 'file-gallery'),
+				'type' => 'text',
+				'section' => 0,
+				'position' => 0
+			),
 
-
-/*
- * Some constants you can filter even with your theme's functions.php file
- *
- * @since 1.6.3
- */
-function file_gallery_filtered_constants()
-{
-	$stylesheet_directory = get_stylesheet_directory();
-	$file_gallery_crystal_url = get_bloginfo('wpurl') . '/' . WPINC . '/images/crystal';
-	$file_gallery_theme_abspath = str_replace('\\', '/', $stylesheet_directory);
-	$file_gallery_theme_abspath = preg_replace('#/+#', '/', $file_gallery_theme_abspath);
+			
+			/**
+			 * Hidden options
+			 */
+			'insert_options_state' => array(
+				'default' => 1, 
+				'display' => false
+			),
+			'insert_single_options_state' => array(
+				'default' => 1, 
+				'display' => false
+			),
+			'acf_state' => array(
+				'default' => 1, 
+				'display' => false
+			)
+		);
 	
-	define('FILE_GALLERY_THEME_ABSPATH', $file_gallery_theme_abspath);
-	define('FILE_GALLERY_THEME_TEMPLATES_ABSPATH', apply_filters('file_gallery_templates_folder_abspath', $file_gallery_theme_abspath . '/file-gallery-templates'));
-	define('FILE_GALLERY_THEME_TEMPLATES_URL', apply_filters('file_gallery_templates_folder_url', get_bloginfo('stylesheet_directory') . '/file-gallery-templates'));
-	
-	define('FILE_GALLERY_CRYSTAL_URL', apply_filters('file_gallery_crystal_url', $file_gallery_crystal_url));
-	
-	define('FILE_GALLERY_DEFAULT_TEMPLATE_NAME', apply_filters('file_gallery_default_template_name', 'default'));
-	define('FILE_GALLERY_DEFAULT_TEMPLATE_URL', apply_filters('file_gallery_default_template_url', FILE_GALLERY_URL . '/templates/default'));
-	define('FILE_GALLERY_DEFAULT_TEMPLATE_ABSPATH', apply_filters('file_gallery_default_template_abspath', FILE_GALLERY_ABSPATH . '/templates/default'));
+	foreach( $file_gallery->settings as $key => $val )
+	{
+		$file_gallery->defaults[$key] = $val['default'];
+		
+		if( is_bool($val['default']) || 1 === $val['default'] || 0 === $val['default'] )
+			$file_gallery->false_defaults[$key] = 0;
+	}
 }
-add_action('after_setup_theme', 'file_gallery_filtered_constants');
 
 
 /**
@@ -118,10 +513,14 @@ add_action('after_setup_theme', 'file_gallery_filtered_constants');
  */
 function file_gallery_activate()
 {
+	global $file_gallery;
+
 	file_gallery_plugins_support();
+	file_gallery_filtered_constants();
+	file_gallery_do_settings();
 	
-	$defaults = file_gallery_get_default_options();
-	
+	$defaults = $file_gallery->defaults;
+
 	// if options already exist, upgrade
 	if( $options = get_option('file_gallery') )
 	{
@@ -147,7 +546,7 @@ function file_gallery_activate()
 			$defaults['display_acf'] = 1;
 		}
 
-		$defaults = file_gallery_parse_args( $options, $defaults); // $defaults = shortcode_atts( $defaults, $options );
+		$defaults = file_gallery_parse_args( $options, $defaults);
 		$defaults['folder']  = FILE_GALLERY_URL;
 		$defaults['abspath'] = FILE_GALLERY_ABSPATH;
 	}
@@ -173,6 +572,79 @@ function file_gallery_deactivate()
 		delete_option('file_gallery');
 }
 register_deactivation_hook( __FILE__, 'file_gallery_deactivate' );
+
+
+/**
+ * Support for other plugins
+ *
+ * Supported so far:
+ * - WordPress Mobile Edition
+ * - Media Tags
+ */
+function file_gallery_plugins_support()
+{
+	$mobile = false;
+	$options = get_option('file_gallery');
+	
+	// WordPress Mobile Edition
+	if( function_exists('cfmobi_check_mobile') && cfmobi_check_mobile() )
+	{
+		$mobile = true;
+	
+		if( ! isset($options['disable_shortcode_handler']) || true != $options['disable_shortcode_handler'] )
+			add_filter('stylesheet_uri', 'file_gallery_mobile_css');
+	}
+
+	define('FILE_GALLERY_MOBILE', $mobile);
+	
+	// Media Tags	
+	if( defined('MEDIA_TAGS_TAXONOMY') )
+		$file_gallery_media_tag_name = MEDIA_TAGS_TAXONOMY;
+	else
+		$file_gallery_media_tag_name = 'media_tag';
+
+	define('FILE_GALLERY_MEDIA_TAG_NAME', $file_gallery_media_tag_name);
+}
+add_action('plugins_loaded', 'file_gallery_plugins_support', 100);
+
+
+/*
+ * Some constants you can filter even with your theme's functions.php file
+ *
+ * @since 1.6.3
+ */
+function file_gallery_filtered_constants()
+{
+	$stylesheet_directory = get_stylesheet_directory();
+	$file_gallery_crystal_url = get_bloginfo('wpurl') . '/' . WPINC . '/images/crystal';
+	$file_gallery_theme_abspath = str_replace('\\', '/', $stylesheet_directory);
+	$file_gallery_theme_abspath = preg_replace('#/+#', '/', $file_gallery_theme_abspath);
+	
+	// theme directories...
+	if( ! defined('FILE_GALLERY_THEME_ABSPATH') )
+		define('FILE_GALLERY_THEME_ABSPATH', $file_gallery_theme_abspath);
+	
+	if( ! defined('FILE_GALLERY_THEME_TEMPLATES_ABSPATH') )
+		define('FILE_GALLERY_THEME_TEMPLATES_ABSPATH', apply_filters('file_gallery_templates_folder_abspath', $file_gallery_theme_abspath . '/file-gallery-templates'));
+	
+	if( ! defined('FILE_GALLERY_THEME_TEMPLATES_URL') )
+		define('FILE_GALLERY_THEME_TEMPLATES_URL', apply_filters('file_gallery_templates_folder_url', get_bloginfo('stylesheet_directory') . '/file-gallery-templates'));
+	
+	// file icons directory
+	if( ! defined('FILE_GALLERY_CRYSTAL_URL') )
+		define('FILE_GALLERY_CRYSTAL_URL', apply_filters('file_gallery_crystal_url', $file_gallery_crystal_url));
+	
+	// default template name and directories...
+	if( ! defined('FILE_GALLERY_DEFAULT_TEMPLATE_NAME') )
+		define('FILE_GALLERY_DEFAULT_TEMPLATE_NAME', apply_filters('file_gallery_default_template_name', 'default'));
+
+	if( ! defined('FILE_GALLERY_DEFAULT_TEMPLATE_URL') )
+		define('FILE_GALLERY_DEFAULT_TEMPLATE_URL', apply_filters('file_gallery_default_template_url', FILE_GALLERY_URL . '/templates/default'));
+	
+	if( ! defined('FILE_GALLERY_DEFAULT_TEMPLATE_ABSPATH') )
+		define('FILE_GALLERY_DEFAULT_TEMPLATE_ABSPATH', apply_filters('file_gallery_default_template_abspath', FILE_GALLERY_ABSPATH . '/templates/default'));
+}
+add_action('after_setup_theme', 'file_gallery_filtered_constants');
 
 
 /**
@@ -287,7 +759,7 @@ function file_gallery_add_library_query_vars( $input )
 	if( "media-upload.php" == $pagenow && "library" == $_GET["tab"] && is_numeric($_GET['post_id']) )
 	{
 		if( isset($_GET['exclude']) && "current" == $_GET['exclude'] )
-			$input .= " AND `post_parent` != " . intval($_GET["post_id"]) . " ";
+			$input .= " AND `post_parent` != " . (int) $_GET["post_id"] . " ";
 
 		if( isset($options["library_filter_duplicates"]) && true == $options["library_filter_duplicates"] )
 			$input .= " AND $wpdb->posts.ID NOT IN ( SELECT ID FROM $wpdb->posts AS ps INNER JOIN $wpdb->postmeta AS pm ON pm.post_id = ps.ID WHERE pm.meta_key = '_is_copy_of' ) ";
@@ -491,6 +963,7 @@ function file_gallery_css_admin()
 		|| 'page.php' 			== $pagenow 
 		|| 'page-new.php' 		== $pagenow 
 		|| 'media.php' 			== $pagenow 
+		|| 'options-media.php'	== $pagenow 
 		|| 'media-upload.php'	== $pagenow 
 		|| 'edit.php'			== $pagenow 
 		|| (isset($current_screen->post_type) && 'post' == $current_screen->base)
@@ -685,40 +1158,10 @@ add_filter('manage_media_columns', 'file_gallery_media_columns');
 
 
 /**
- * Just a variables placeholder for now
- *
- * @since 1.6.5.1
- */
-class File_Gallery
-{
-	var $gallery_id;
-	var $overrides;
-	var $acf = false;
-	var $version = '1.6.5.3';
-
-
-	function __construct()
-	{
-		$this->File_Gallery();
-	}
-	
-	
-	function File_Gallery()
-	{
-		if( false !== strpos(serialize(get_option('active_plugins')), 'acf.php') )
-			$this->acf = true;
-	}
-};
-
-$file_gallery = new File_Gallery();
-
-
-/**
  * Includes
  */
-require_once('includes/attachments.php');
-require_once('includes/attachments-custom-fields.php');
 require_once('includes/media-settings.php');
+require_once('includes/attachments.php');
 require_once('includes/miscellaneous.php');
 require_once('includes/mime-types.php');
 require_once('includes/lightboxes-support.php');
@@ -727,8 +1170,16 @@ require_once('includes/main.php');
 require_once('includes/functions.php');
 require_once('includes/cache.php');
 require_once('includes/regenerate-images.php');
+require_once('includes/attachments-custom-fields.php');
 
-if( 3.1 <= floatval($wp_version) )
+if( 3.1 <= floatval(get_bloginfo('version')) )
 	require_once('includes/media-tags-list-table.class.php');
+
+add_action('activated_plugin','save_error');
+function save_error(){
+    update_option('plugin_error',  ob_get_contents());
+}
+
+// echo get_option('plugin_error');
 
 ?>
