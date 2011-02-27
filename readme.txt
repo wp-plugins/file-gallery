@@ -3,7 +3,7 @@ Contributors: aesqe
 Donate link: http://skyphe.org/donate/
 Tags: attachment, attachments, gallery, galleries, template, templates, shortcode, file, files, attach, detach, unattach, copy, media, tags, library, custom, custom fields, custom fields for attachments, attachment custom fields
 Requires at least: 3.0
-Tested up to: 3.1-RC3
+Tested up to: 3.1
 Stable tag: 1.6.5.4
 
 File Gallery extends WordPress media (attachments) capabilities 
@@ -80,10 +80,13 @@ more... Here's the full list of features:
 == Changelog ==
 
 = 1.6.7 =
-* February 6th, 2011
+* March XX, 2011
 * reworked the settings system so it's easier to add new options
 * improved lightbox support, more flexibility
-* added new gallery option: gallery class
+* new gallery option: gallery class
+* new metabox option: alternative color scheme (working on it)
+* ability to copy attachments from WPML translations which aren't
+  primary translations
 * bugfixes, bugfixes, bugfixes
 
 = 1.6.6-beta =

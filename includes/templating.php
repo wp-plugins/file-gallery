@@ -317,9 +317,11 @@ add_action('wp_print_scripts', 'file_gallery_print_scripts');
  * @since 1.6.5.1
  */
 function file_gallery_do_pagination( $max_num_pages = 0, $page = 0 )
-{	
+{
 	if( 0 < $max_num_pages && 0 < $page )
 	{
+		
+		
 		$out = array();
 		
 		remove_query_arg('page');
@@ -484,17 +486,17 @@ function file_gallery_shortcode( $content = false, $attr = false )
 	$offset = (int) $offset;
 	$page   = (int) get_query_var('page');
 
-	if( 'false' === $rel || 0 === intval($rel) )
+	if( 'false' === $rel || (is_numeric($rel) && 0 === (int) $rel) )
 		$_rel = false;
 	else
 		$_rel = true;
 
-	if( 'false' === $output_params || 0 === intval($output_params) )
+	if( 'false' === $output_params || (is_numeric($output_params) && 0 === (int) $output_params) )
 		$output_params = false;
 	else
 		$output_params = true;
 	
-	if( 'false' === $paginate || 0 === intval($paginate) || 0 > $limit )
+	if( 'false' === $paginate || (is_numeric($paginate) && 0 === (int) $paginate) || 0 > $limit )
 	{
 		$paginate   = false;
 		$found_rows = '';
@@ -775,6 +777,8 @@ function file_gallery_shortcode( $content = false, $attr = false )
 
 			if( $thumb_alt = get_post_meta($attachment->ID, '_wp_attachment_image_alt', true) )
 				$param['thumb_alt'] = $thumb_alt;
+			
+			$param['attachment_id'] = $attachment->ID;
 		}
 		
 		$param = array_map('trim', $param);
@@ -798,7 +802,7 @@ function file_gallery_shortcode( $content = false, $attr = false )
 			// add the column break class and append a line break...
 			if ( $columns > 0 && ++$i % $columns == 0 )
 				$endcol = ' gallery-endcol';
-			
+
 			// parse template
 			ob_start();
 				extract( $param );
@@ -830,7 +834,7 @@ function file_gallery_shortcode( $content = false, $attr = false )
 		$cols = '';
 		$pagination_html = '';
 
-		if( 0 < intval($columns) )
+		if( 0 < (int) $columns )
 			$cols = ' columns_' . $columns;
 		
 		if( isset($starttag_class) && '' != $starttag_class )
@@ -838,8 +842,10 @@ function file_gallery_shortcode( $content = false, $attr = false )
 		
 		$trans_append = "\n<!-- file gallery output cached on " . date('Y.m.d @ H:i:s', time()) . "-->\n";
 		
-		if( is_single() && isset($file_gallery_query->max_num_pages) && 1 < $file_gallery_query->max_num_pages )
+		if( is_singular() && isset($file_gallery_query->max_num_pages) && 1 < $file_gallery_query->max_num_pages )
+		{
 			$pagination_html = file_gallery_do_pagination( $file_gallery_query->max_num_pages, $page );
+		}
 		
 		$gallery_class = apply_filters('file_gallery_galleryclass', 'gallery ' . str_replace(' ', '-', $template) . $cols . $stc . ' ' . $galleryclass);
 		

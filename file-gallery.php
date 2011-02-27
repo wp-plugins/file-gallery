@@ -141,6 +141,14 @@ function file_gallery_do_settings()
 				'section' => 0,
 				'position' => 0
 			),
+			'alt_color_scheme' => array(
+				'default' => 1, 
+				'display' => true,
+				'title' => __('Use alternative color scheme (a bit more contrast)?', 'file-gallery'),
+				'type' => 'checkbox',
+				'section' => 0,
+				'position' => 0
+			),
 			'auto_enqueued_scripts' => array(
 				'default' => 'thickbox', 
 				'display' => true,
@@ -486,15 +494,27 @@ function file_gallery_do_settings()
 			 */
 			'insert_options_state' => array(
 				'default' => 1, 
-				'display' => false
+				'display' => true,
+				'title' => __('Gallery insert options state', 'file-gallery'),
+				'type' => 'checkbox',
+				'section' => 0,
+				'position' => 0
 			),
 			'insert_single_options_state' => array(
 				'default' => 1, 
-				'display' => false
+				'display' => true,
+				'title' => __('Single images insert options state', 'file-gallery'),
+				'type' => 'checkbox',
+				'section' => 0,
+				'position' => 0
 			),
 			'acf_state' => array(
 				'default' => 1, 
-				'display' => false
+				'display' => true,
+				'title' => __('Attachment custom fields state', 'file-gallery'),
+				'type' => 'checkbox',
+				'section' => 0,
+				'position' => 0
 			)
 		);
 	
@@ -982,9 +1002,14 @@ add_action('admin_print_styles', 'file_gallery_css_admin');
  * Edit post/page meta box content
  */
 function file_gallery_content()
-{	
+{
+	$options = get_option('file_gallery');
+	
+	if( true == $options['alt_color_scheme'] )
+		$class = ' class="alternative-color-scheme"';
+	
 	echo 
-	'<div id="fg_container">
+	'<div id="fg_container"' . $class . '>
 		&nbsp;
 		<noscript>' . __('File Gallery requires Javascript to function. Please enable it in your browser.', 'file-gallery') . '</noscript>
 	</div>

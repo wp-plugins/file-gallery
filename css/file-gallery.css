@@ -52,10 +52,16 @@
 	display: none;
 }
 
-#file_gallery fieldset p
+#poststuff .inside #fg_container fieldset p
 {
 	float: left;
-	display: block;
+}
+
+#poststuff .inside #fg_container.alternative-color-scheme fieldset p
+{
+	background: #F0F0F0;
+	margin: 3px;
+	padding: 0 3px;
 }
 
 #file_gallery fieldset p input,
@@ -644,7 +650,9 @@ textarea, input, select
 #file_gallery_mimetype,
 #file_gallery_linkclass,
 #file_gallery_single_imageclass,
-#file_gallery_single_linkclass
+#file_gallery_single_linkclass,
+#file_gallery_galleryclass,
+#file_gallery_postid
 {
 	width: 95px;
 }

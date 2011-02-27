@@ -82,7 +82,7 @@ function file_gallery_list_attachments(&$count_attachments, $post_id, $attachmen
 			elseif( "" != strval($copies) )
 				$classes[] = "has_copies copies-" . implode("-", $copies);
 			
-			if( intval($thumb_id) === intval($attachment->ID) )
+			if( (int) $thumb_id === (int) $attachment->ID )
 			{
 				$classes[]       = "post_thumb";
 				$post_thumb_link = "unset";
@@ -473,7 +473,7 @@ function file_gallery_main( $ajax = true )
 	}
 	elseif( "file_gallery_main_update" == $action )
 	{
-		$attachment_id = intval($_POST['attachment_id']);
+		$attachment_id = (int) $_POST['attachment_id'];
 
 		$attachment_data['ID'] 			  = $attachment_id;
 		$attachment_data['post_alt']      = $_POST['post_alt'];
@@ -499,7 +499,7 @@ function file_gallery_main( $ajax = true )
 		$tax_input = "";
 		$old_media_tags = "";
 		
-		$get_old_media_tags = wp_get_object_terms(intval($_POST['attachment_id']), FILE_GALLERY_MEDIA_TAG_NAME);
+		$get_old_media_tags = wp_get_object_terms((int) $_POST['attachment_id'], FILE_GALLERY_MEDIA_TAG_NAME);
 		
 		if( !empty($get_old_media_tags) )
 		{

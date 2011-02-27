@@ -922,7 +922,7 @@ jQuery(document).ready(function()
 			file_gallery.options.file_gallery_mode = "list";
 			
 			jQuery("#fg_container")
-				.html("<p class=\"loading_image\"><img src=\"" + file_gallery.options.file_gallery_url + "/images/ajax-loader.gif\" /><br />" + file_gallery.L10n.saving_attachment_data + "</p>");
+				.html("<p class=\"loading_image\"><img src=\"" + file_gallery.options.file_gallery_url + "/images/ajax-loader.gif\" alt=\"" + file_gallery.L10n.saving_attachment_data + "\" /><br />" + file_gallery.L10n.saving_attachment_data + "</p>");
 			
 			jQuery.post
 			(
@@ -1004,7 +1004,7 @@ jQuery(document).ready(function()
 					
 				jQuery("#fg_container")
 					.css({"height" : jQuery("#fg_container").height()})
-					.html("<p class=\"loading_image\"><img src=\"" + file_gallery.options.file_gallery_url + "/images/ajax-loader.gif\" /><br />" + a + "</p>");
+					.html("<p class=\"loading_image\"><img src=\"" + file_gallery.options.file_gallery_url + "/images/ajax-loader.gif\" alt=\"loading\" /><br />" + a + "</p>");
 				
 				data = {
 						post_id 			: jQuery("#post_ID").val(),
@@ -1061,7 +1061,7 @@ jQuery(document).ready(function()
 		
 				jQuery("#fg_container")
 					.css({"height" : jQuery("#fg_container").height()})
-					.html("<p class=\"loading_image\"><img src=\"" + file_gallery.options.file_gallery_url + "/images/ajax-loader.gif\" /><br />" + a + "</p>");
+					.html("<p class=\"loading_image\"><img src=\"" + file_gallery.options.file_gallery_url + "/images/ajax-loader.gif\" alt=\"loading\" /><br />" + a + "</p>");
 		
 				data = {
 						post_id 			: jQuery("#post_ID").val(),
@@ -1190,7 +1190,7 @@ jQuery(document).ready(function()
 			
 			jQuery("#fg_container")
 				//.css({"height" : 505 })
-				.html("<p class=\"loading_image\"><img src=\"" + file_gallery.options.file_gallery_url + "/images/ajax-loader.gif\" /><br />" + file_gallery.L10n.loading_attachment_data + "</p>");
+				.html("<p class=\"loading_image\"><img src=\"" + file_gallery.options.file_gallery_url + "/images/ajax-loader.gif\" alt=\"" + file_gallery.L10n.loading_attachment_data + "\" /><br />" + file_gallery.L10n.loading_attachment_data + "</p>");
 			
 			jQuery.post
 			(
@@ -1218,7 +1218,7 @@ jQuery(document).ready(function()
 			image.src = jQuery(element).attr("href");
 		
 			jQuery("#image_dialog")
-				.html('<p class="loading_image"><img src="' + file_gallery.options.file_gallery_url + '/images/ajax-loader.gif" alt="" />	</p>')
+				.html('<p class="loading_image"><img src="' + file_gallery.options.file_gallery_url + '/images/ajax-loader.gif" alt="loading" />	</p>')
 				.dialog( 'option', 'width',  'auto' )
 				.dialog( 'option', 'height', 'auto' )
 				.dialog("open");
@@ -1244,7 +1244,7 @@ jQuery(document).ready(function()
 				}
 				
 				jQuery("#image_dialog")
-					.html('<img src="' + src + '" width="' + iw + '" height="' + ih + '" alt="" />')
+					.html('<img src="' + src + '" width="' + iw + '" height="' + ih + '" alt="image" />')
 					.dialog( 'option', 'width',  iw + 50 )
 					.dialog( 'option', 'height', ih + 50 )
 					.dialog( 'option', 'position', 'center');
@@ -1531,21 +1531,44 @@ jQuery(document).ready(function()
 	// WPML
 	if( jQuery("#icl_div").length > 0 )
 	{
-		var fg_icl_ori_id = jQuery("#icl_translation_of option:selected").val();
-		
-		if( "undefined" != typeof(fg_icl_ori_id) && "undefined" != fg_icl_ori_id )
+		if( jQuery("#icl_translations_table").length > 0 )
 		{
-			jQuery("#icl_div .inside").append('<a href="#" id="file_gallery_copy_from_wmpl_original">Copy all attachments from the original post</a>');
-			
-			jQuery("#file_gallery_copy_from_wmpl_original").bind("click", function()
+			jQuery("#icl_translations_table a[title=edit]").each(function()
 			{
-				if( confirm(file_gallery.L10n.copy_all_from_original) )
-					file_gallery.copy_all_attachments(fg_icl_ori_id);
-				
-				return false;
+				var fg_icl_trans_id = Number(jQuery(this).attr('href').match(/post=([\d]+)&/).pop());
+	
+				if( "number" == typeof(fg_icl_trans_id) )
+				{
+					jQuery(this).after('<a title="Copy all attachments from this translation" href="#" id="copy-from-translation-' + fg_icl_trans_id + '"><img src="' + file_gallery.options.file_gallery_url + '/images/famfamfam_silk/image_add.png" alt="Copy all attachments from this translation" /></a>');
+	
+					jQuery("#copy-from-translation-" + fg_icl_trans_id).bind("click", function()
+					{
+						if( confirm("Copy all attachments from this translation?") )
+							file_gallery.copy_all_attachments(fg_icl_trans_id);
+	
+						return false;
+					});
+				}
 			});
 		}
-	}
+		else
+		{
+			var fg_icl_ori_id = jQuery("#icl_translation_of option:selected").val();
+	
+			if( "undefined" != typeof(fg_icl_ori_id) && "undefined" != fg_icl_ori_id )
+			{
+				jQuery("#icl_div .inside").append('<a href="#" id="file_gallery_copy_from_wmpl_original">Copy all attachments from the original post</a>');
+	
+				jQuery("#file_gallery_copy_from_wmpl_original").bind("click", function()
+				{
+					if( confirm(file_gallery.L10n.copy_all_from_original) )
+						file_gallery.copy_all_attachments(fg_icl_ori_id);
+	
+					return false;
+				});
+			}
+		}
+	} 
 
 
 	// show / hide additional gallery options depending on preselected values

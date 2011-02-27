@@ -190,7 +190,7 @@ function file_gallery_edit_attachment()
 	$type 			= 'image';
 	$media_tags		= array();
 	$options		= get_option('file_gallery');
-	$attachment_id	= intval($_POST['attachment_id']);
+	$attachment_id	= (int) $_POST['attachment_id'];
 	$attachment		= get_post( $attachment_id );
 	
 	if( ! $attachment )
@@ -324,7 +324,7 @@ function file_gallery_copy_attachments_to_post()
 	
 	check_ajax_referer('file-gallery-attach');
 	
-	$post_id 	  = intval($_POST['post_id']);
+	$post_id 	  = (int) $_POST['post_id'];
 	$attached_ids = $_POST['ids'];
 	
 	// get checked attachments
@@ -399,7 +399,7 @@ function file_gallery_copy_attachment_to_post( $aid, $post_id )
 {
 	global $wpdb;
 	
-	if( ! is_numeric($aid) || ! is_numeric($post_id) || 0 === intval($aid) || 0 === intval($post_id) )
+	if( ! is_numeric($aid) || ! is_numeric($post_id) || 0 === (int) $aid || 0 === (int) $post_id )
 		return -1;
 	
 	$attachment = get_post($aid);
@@ -657,7 +657,7 @@ function file_gallery_handle_deleted_attachment( $post_id )
 	{
 		foreach( $copies as $k => $v )
 		{
-			if( intval($post_id) === intval($v) )
+			if( (int) $post_id === (int) $v )
 				unset($copies[$k]);
 		}
 		

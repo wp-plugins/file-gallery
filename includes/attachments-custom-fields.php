@@ -96,7 +96,7 @@ function file_gallery_add_new_attachment_custom_field()
 {
 	check_ajax_referer('add_new_attachment_custom_field_nonce');
 	
-	$attachment_id = intval($_POST['attachment_id']);
+	$attachment_id = (int) $_POST['attachment_id'];
 	$key = $_POST['key'];
 	$value = $_POST['value'];
 	
@@ -117,7 +117,7 @@ function file_gallery_delete_attachment_custom_field()
 {
 	check_ajax_referer('delete_attachment_custom_field_nonce');
 	
-	$attachment_id = intval($_POST['attachment_id']);
+	$attachment_id = (int) $_POST['attachment_id'];
 	$key = $_POST['key'];
 	$value = $_POST['value'];
 	

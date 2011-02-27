@@ -1,10 +1,14 @@
 <?php
 	$starttag = 'div';
 	$cleartag = "\n<br class='clear' />\n";
-	$intermediate_size = wp_get_attachment_image_src($attachment->ID, 'medium');
-	$name = urlencode($intermediate_size[0]);
 	$mimetype = 'image';
-	
+
+	if( isset($attachment_id) )
+	{
+		$intermediate_size = wp_get_attachment_image_src($attachment_id, 'medium');
+		$name = urlencode($intermediate_size[0]);
+	}
+
 	if( isset($js_dependencies) )
 		array_unshift($js_dependencies, 'jquery');
 	

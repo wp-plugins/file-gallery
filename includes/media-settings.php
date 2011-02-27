@@ -300,6 +300,9 @@ function file_gallery_options_fields( $args )
 	$name_id = 'name="file_gallery[' . $args['name'] . ']" id="file_gallery_' . $args['name'] . '"';
 	$ro = true == $args['disabled'] ? ' readonly="readonly"' : '';
 	
+	if( in_array($args['type'], array('checkbox', 'button')) )
+		$ro = true == $args['disabled'] ? ' disabled="disabled"' : '';
+	
 	if( 'intermediate_image_sizes' == $args['type'] )
 	{
 		$checked = '';
