@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: File Gallery 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-02-06 19:44+0100\n"
+"POT-Creation-Date: 2011-02-27 15:42+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Bruno Babic <aesqe@skyphe.org>\n"
 "Language-Team: \n"
@@ -16,407 +16,416 @@ msgstr ""
 "X-Poedit-KeywordsList: __;_e;__ngettext\n"
 "X-Poedit-SearchPath-0: ..\n"
 
-#: ../file-gallery.php:68
+#: ../file-gallery.php:130
 msgid "Disable 'File Gallery' handling of [gallery] shortcode?"
 msgstr "לבטל את השימוש של 'File Gallery' בשורטקוד [gallery] ?"
 
-#: ../file-gallery.php:76
+#: ../file-gallery.php:138
 msgid "Display File Gallery on which post types?"
 msgstr "באילו סוגי פוסטים להציג את File Gallery?"
 
-#: ../file-gallery.php:85
+#: ../file-gallery.php:147
+msgid "Use alternative color scheme (a bit more contrast)?"
+msgstr ""
+
+#: ../file-gallery.php:155
 msgid "Auto enqueue lightbox scripts for which link classes (separate with commas)?"
 msgstr "צירוף אוטומטי של לייטבוקס לקלאסים הבאים של קישורים: (הפרד בפסיקים)"
 
-#: ../file-gallery.php:93
+#: ../file-gallery.php:163
 msgid "Default WordPress image size for thumbnails in File Gallery metabox on post editing screens?"
 msgstr "מידות ברירת מחדל של וורדפרס לתמונות מוקטנות בחלונית של File Gallery במסכי עריכת פוסט?"
 
-#: ../file-gallery.php:102
+#: ../file-gallery.php:172
 msgid "Default width (in pixels) for thumbnails in File Gallery metabox on post editing screens?"
 msgstr "רוחב ברירת מחדל (בפיקסלים) עבור תמונות מוקטנות בחלונית של File Gallery במסכי עריכת פוסט?"
 
-#: ../file-gallery.php:112
+#: ../file-gallery.php:182
 msgid "Some default values for when inserting a gallery into a post"
 msgstr "מספר ערכי ברירת מחדל עבור הכנסת גלריה לפוסט"
 
-#: ../file-gallery.php:112
-#: ../file-gallery.php:217
+#: ../file-gallery.php:182
+#: ../file-gallery.php:287
 #: ../includes/main-form.php:45
 #: ../includes/main-form.php:231
 #: ../includes/media-settings.php:26
 msgid "size"
 msgstr "מידות"
 
-#: ../file-gallery.php:121
-#: ../file-gallery.php:226
+#: ../file-gallery.php:191
+#: ../file-gallery.php:296
 msgid "link"
 msgstr "קישור"
 
-#: ../file-gallery.php:130
+#: ../file-gallery.php:200
 #: ../includes/main-form.php:71
 msgid "linked image size"
 msgstr "גדלי תמונה מקושרים"
 
-#: ../file-gallery.php:139
-#: ../file-gallery.php:235
+#: ../file-gallery.php:209
+#: ../file-gallery.php:305
 #: ../includes/main-form.php:66
 #: ../includes/main-form.php:93
 #: ../includes/main-form.php:246
 #: ../includes/main-form.php:251
-#: ../includes/media-settings.php:143
+#: ../includes/media-settings.php:141
 msgid "external url"
 msgstr "קישור חיצוני"
 
-#: ../file-gallery.php:147
+#: ../file-gallery.php:217
 msgid "order by"
 msgstr "סדר לפי"
 
-#: ../file-gallery.php:156
+#: ../file-gallery.php:226
 #: ../includes/main-form.php:103
 msgid "order"
 msgstr "סדר"
 
-#: ../file-gallery.php:165
+#: ../file-gallery.php:235
 #: ../includes/main-form.php:118
 msgid "template"
 msgstr "תבנית"
 
-#: ../file-gallery.php:174
-#: ../file-gallery.php:243
+#: ../file-gallery.php:244
+#: ../file-gallery.php:313
 #: ../includes/main-form.php:98
 #: ../includes/main-form.php:256
 msgid "link class"
 msgstr "class של הקישור"
 
-#: ../file-gallery.php:182
-#: ../file-gallery.php:251
+#: ../file-gallery.php:252
+#: ../file-gallery.php:321
 #: ../includes/main-form.php:144
 #: ../includes/main-form.php:261
 msgid "image class"
 msgstr "class של התמונה"
 
-#: ../file-gallery.php:190
+#: ../file-gallery.php:260
 #: ../includes/main-form.php:172
 msgid "columns"
 msgstr "עמודות"
 
-#: ../file-gallery.php:199
+#: ../file-gallery.php:269
 #: ../includes/main-form.php:149
 msgid "mime type"
 msgstr "mime type"
 
-#: ../file-gallery.php:207
+#: ../file-gallery.php:277
 #: ../includes/main-form.php:139
-#, fuzzy
 msgid "gallery class"
-msgstr "class של התמונה"
+msgstr "class של הגלריה"
 
-#: ../file-gallery.php:217
+#: ../file-gallery.php:287
 msgid "...and for when inserting (a) single image(s) into a post"
 msgstr "ועבור הכנסת תמונה אחת לפוסט..."
 
-#: ../file-gallery.php:259
+#: ../file-gallery.php:329
 #: ../includes/main-form.php:266
 msgid "alignment"
 msgstr "יישור"
 
-#: ../file-gallery.php:270
+#: ../file-gallery.php:340
 msgid "Cache"
 msgstr "מטמון/קאש (Cache)"
 
-#: ../file-gallery.php:270
+#: ../file-gallery.php:340
 msgid "Enable caching?"
 msgstr "לאפשר מטמון (Caching)?"
 
-#: ../file-gallery.php:278
+#: ../file-gallery.php:348
 msgid "Cache expires after how many seconds? (leave as is if you don't know what it means)"
 msgstr "לאחר כמה שניות יפוג תוקף זיכרון מטמון? (השאר כפי שזה אם אינך יודע מה הכוונה)"
 
-#: ../file-gallery.php:286
-#, fuzzy
+#: ../file-gallery.php:356
 msgid "Cache non-HTML gallery output (<em>array, object, json</em>)"
-msgstr "שמור בקאש פלט שאינו מידע HTML (<em>array, object, json</em>) ?"
+msgstr "שמור בקאש פלט גלריה שאינו מידע HTML (<em>array, object, json</em>) ?"
 
-#: ../file-gallery.php:296
+#: ../file-gallery.php:366
 msgid "Edit screens options"
 msgstr "אפשרויות מסכי העריכה"
 
-#: ../file-gallery.php:296
+#: ../file-gallery.php:366
 msgid "Display attachment count?"
 msgstr "להציג כמות הקבצים המצורפים?"
 
-#: ../file-gallery.php:304
+#: ../file-gallery.php:374
 msgid "Filter out duplicate attachments (copies) when browsing media library?"
 msgstr "האם לפלטר החוצה קבצים מצורפים כפולים (העתקים) כאשר מעיינים בספריית המדיה?"
 
-#: ../file-gallery.php:312
+#: ../file-gallery.php:382
 msgid "Display media tags for attachments in media library?"
 msgstr "הצג את תגי המדיה עבור קבצים מצורפים שבספריית המדיה?"
 
-#: ../file-gallery.php:320
+#: ../file-gallery.php:390
 msgid "Display post thumb (if set)?"
 msgstr "להציג את תמונת הפוסט (אם קיימת)"
 
-#: ../file-gallery.php:330
+#: ../file-gallery.php:400
 msgid "Other options"
 msgstr "אפשרויות נוספות"
 
-#: ../file-gallery.php:330
+#: ../file-gallery.php:400
 msgid "Display galleries within post excerpts?"
 msgstr "האם להציג את הגלריות בתוך תקצירי פוסט?"
 
-#: ../file-gallery.php:336
+#: ../file-gallery.php:406
 msgid "galleries are shown on full posts only"
 msgstr "גלריות מוצגות רק בפוסטים מלאים"
 
-#: ../file-gallery.php:338
+#: ../file-gallery.php:408
 msgid "Replacement text for galleries within post excerpts (if you haven't checked the above option)"
 msgstr "טקסט חלופי לגלריות שבתוך תקצירי פוסט (אם לא סימנת את האפשרות למעלה)"
 
-#: ../file-gallery.php:346
-#, fuzzy
+#: ../file-gallery.php:416
 msgid "Display options for inserting galleries into a post?"
-msgstr "הצגת אפשרויות להכנסת גלריות / תמונות בודדות לפוסט?"
+msgstr "להציג אפשרויות להכנסת גלריות לפוסט?"
 
-#: ../file-gallery.php:354
-#, fuzzy
+#: ../file-gallery.php:424
 msgid "Display options for inserting single images into a post?"
-msgstr "הצגת אפשרויות להכנסת גלריות / תמונות בודדות לפוסט?"
+msgstr "להציג אפשרויות להכנסת תמונות בודדות לפוסט?"
 
-#: ../file-gallery.php:362
-#, fuzzy
+#: ../file-gallery.php:432
 msgid "Display attachment custom fields?"
-msgstr "להציג כמות הקבצים המצורפים?"
+msgstr "להציג שדות מיוחדים של קובץ מצורף?"
 
-#: ../file-gallery.php:370
+#: ../file-gallery.php:440
 msgid "Display 'insert gallery' button even if gallery options are hidden?"
-msgstr ""
+msgstr "להציג את הכפתור 'הכנס גלריה גם אם אפשרויות גלריה חבויות?"
 
-#: ../file-gallery.php:378
+#: ../file-gallery.php:448
 msgid "Display 'insert single image(s)' button even if single image options are hidden?"
-msgstr ""
+msgstr "להציג את הכפתור 'הכנס אימאג'ים בודדים' גם אם אפשרויות של אימאג' בודד חבויות?"
 
-#: ../file-gallery.php:386
+#: ../file-gallery.php:456
 msgid "Delete all options on deactivation?"
 msgstr "מחיקת כל האפשרויות בזמן כיבוי התוסף?"
 
-#: ../file-gallery.php:399
+#: ../file-gallery.php:469
 msgid "File gallery folder"
 msgstr "תיקיית File Gallery"
 
-#: ../file-gallery.php:407
+#: ../file-gallery.php:477
 msgid "File gallery path"
 msgstr "נתיב ל- File Gallery"
 
-#: ../file-gallery.php:415
+#: ../file-gallery.php:485
 msgid "Media tag taxonomy name"
+msgstr "שם טקסונומיה של תגי מדיה"
+
+#: ../file-gallery.php:498
+msgid "Gallery insert options state"
 msgstr ""
 
-#: ../file-gallery.php:594
+#: ../file-gallery.php:506
+msgid "Single images insert options state"
+msgstr ""
+
+#: ../file-gallery.php:514
+#, fuzzy
+msgid "Attachment custom fields state"
+msgstr "להציג שדות מיוחדים של קובץ מצורף?"
+
+#: ../file-gallery.php:676
 msgid "Settings"
 msgstr "הגדרות"
 
-#: ../file-gallery.php:612
-#: ../file-gallery.php:664
-#: ../file-gallery.php:882
-#: ../file-gallery.php:1091
+#: ../file-gallery.php:694
+#: ../file-gallery.php:746
+#: ../file-gallery.php:964
+#: ../file-gallery.php:1178
 #: ../includes/main-form.php:203
 msgid "Media tags"
 msgstr "תגיות מדיה"
 
-#: ../file-gallery.php:613
-#: ../file-gallery.php:618
+#: ../file-gallery.php:695
+#: ../file-gallery.php:700
 msgid "Media tag"
 msgstr "תגיות מדיה"
 
-#: ../file-gallery.php:736
+#: ../file-gallery.php:818
 #: ../includes/main-form.php:289
 msgid "Switch to tags"
 msgstr "המרה לתגים"
 
-#: ../file-gallery.php:737
+#: ../file-gallery.php:819
 msgid "Switch to list of attachments"
 msgstr "מעבר לרשימת המצורפים"
 
-#: ../file-gallery.php:738
+#: ../file-gallery.php:820
 #: ../includes/main-form.php:33
 msgid "Insert checked attachments into post as"
 msgstr "הכנסת קבצים מצורפים מסומנים לתוך הפוסט כ"
 
-#: ../file-gallery.php:739
+#: ../file-gallery.php:821
 msgid "No files are currently attached to this post."
 msgstr "אין בינתיים קבצים המשוייכים לפוסט זה"
 
-#: ../file-gallery.php:740
+#: ../file-gallery.php:822
 msgid "Are you sure that you want to delete these attachments? Press [OK] to delete or [Cancel] to abort."
 msgstr "האם אתה בטוח שברצונך למחוק קבצים מצורפים אלה? לחץ אישור למחיקה, או ביטול לביטול הפעולה."
 
-#: ../file-gallery.php:741
+#: ../file-gallery.php:823
 msgid "saving attachment data..."
 msgstr "שומר מידע של קובץ מצורף..."
 
-#: ../file-gallery.php:742
+#: ../file-gallery.php:824
 msgid "loading attachment data..."
 msgstr "טוען מידע של קובץ מצורף..."
 
-#: ../file-gallery.php:743
+#: ../file-gallery.php:825
 msgid "deleting attachment..."
 msgstr "מוחק  קובץ מצורף"
 
-#: ../file-gallery.php:744
+#: ../file-gallery.php:826
 msgid "deleting attachments..."
 msgstr "מוחק קבצים מצורפים..."
 
-#: ../file-gallery.php:745
+#: ../file-gallery.php:827
 msgid "loading..."
 msgstr "טוען..."
 
-#: ../file-gallery.php:746
+#: ../file-gallery.php:828
 msgid "detaching attachment"
 msgstr "מוחק קבצים מצורפים"
 
-#: ../file-gallery.php:747
+#: ../file-gallery.php:829
 msgid "detaching attachments"
 msgstr "ניתוק קבצים מצורפים"
 
-#: ../file-gallery.php:748
+#: ../file-gallery.php:830
 msgid "Are you sure that you want to detach these attachments? Press [OK] to detach or [Cancel] to abort."
 msgstr "האם אתה בטוח שברצונך לנתק קבצים מצורפים אלה? לחץ אישור לניתוק, או ביטול לביטול הפעולה."
 
-#: ../file-gallery.php:749
+#: ../file-gallery.php:831
 msgid "close"
 msgstr "סגירה"
 
-#: ../file-gallery.php:750
+#: ../file-gallery.php:832
 msgid "loading attachments"
 msgstr "טוען קבצים מצורפים"
 
-#: ../file-gallery.php:751
+#: ../file-gallery.php:833
 msgid "Featured image set successfully"
 msgstr "תמונת פוסט נשמרה בהצלחה"
 
-#: ../file-gallery.php:752
+#: ../file-gallery.php:834
 msgid "Featured image removed"
 msgstr "תמונת פוסט הוסרה"
 
-#: ../file-gallery.php:753
+#: ../file-gallery.php:835
 msgid "Copy all attachments from the original post?"
 msgstr "העתקת כל הקבצים המצורפים מהפוסט המקורי?"
 
-#: ../file-gallery.php:754
+#: ../file-gallery.php:836
 #: ../includes/main.php:141
 msgid "Set as featured image"
 msgstr "קבע כתמונת פוסט"
 
-#: ../file-gallery.php:755
+#: ../file-gallery.php:837
 #: ../includes/main.php:143
 msgid "Unset as featured image"
 msgstr "הסר בחירה כתמונת פוסט"
 
-#: ../file-gallery.php:771
-#: ../file-gallery.php:817
+#: ../file-gallery.php:853
+#: ../file-gallery.php:899
 #: ../includes/attachments-custom-fields.php:45
 #: ../includes/attachments-custom-fields.php:171
 msgid "Add New Custom Field"
 msgstr "הוספת שדה מיוחד חדש"
 
-#: ../file-gallery.php:772
-#: ../file-gallery.php:818
+#: ../file-gallery.php:854
+#: ../file-gallery.php:900
 #: ../includes/attachments-custom-fields.php:62
 #: ../includes/attachments-custom-fields.php:174
 msgid "Add Custom Field"
 msgstr "הוספת שדה מיוחד"
 
-#: ../file-gallery.php:773
-#: ../file-gallery.php:819
+#: ../file-gallery.php:855
+#: ../file-gallery.php:901
 msgid "Error deleting attachment custom field!"
 msgstr "שגיאה במחיקת שדה מיוחד לקובץ מצורף!"
 
-#: ../file-gallery.php:774
-#: ../file-gallery.php:820
+#: ../file-gallery.php:856
+#: ../file-gallery.php:902
 msgid "Error adding attachment custom field!"
 msgstr "שגיאה בהוספת שדה מיוחד לקובץ מצורף!"
 
-#: ../file-gallery.php:775
-#: ../file-gallery.php:821
+#: ../file-gallery.php:857
+#: ../file-gallery.php:903
 #: ../includes/attachments-custom-fields.php:51
 #: ../includes/attachments-custom-fields.php:174
 msgid "Name:"
 msgstr "שם:"
 
-#: ../file-gallery.php:776
-#: ../file-gallery.php:822
+#: ../file-gallery.php:858
+#: ../file-gallery.php:904
 #: ../includes/attachments-custom-fields.php:174
 msgid "Value:"
 msgstr "ערך:"
 
-#: ../file-gallery.php:843
+#: ../file-gallery.php:925
 msgid "Attach all checked items to current post"
 msgstr "צירוף כל הפריטים שנבחרו לפוסט הנוכחי"
 
-#: ../file-gallery.php:844
-#, fuzzy
+#: ../file-gallery.php:926
 msgid "Exclude current post's attachments"
 msgstr "לא לכלול קבצים מצורפים של הפוסט הנוכחי"
 
-#: ../file-gallery.php:845
-#, fuzzy
+#: ../file-gallery.php:927
 msgid "Include current post's attachments"
 msgstr "כלול קבצים מצורפים של הפוסט הנוכחי"
 
-#: ../file-gallery.php:927
+#: ../file-gallery.php:1014
 msgid "File Gallery requires Javascript to function. Please enable it in your browser."
 msgstr "תוסף זה דורש שימוש בג'אווה סקריפט. אנא הפעל אפשרות זו בדפדפן שלך"
 
-#: ../file-gallery.php:932
+#: ../file-gallery.php:1019
 msgid "Delete attachment dialog"
 msgstr "מחיקת דיאלוג קובץ מצורף"
 
-#: ../file-gallery.php:933
+#: ../file-gallery.php:1020
 msgid "Warning: one of the attachments you've chosen to delete has copies."
 msgstr "זהירות: לאחד מהקבצים המצורפים שבחרת למחוק קיימים עותקים."
 
-#: ../file-gallery.php:934
+#: ../file-gallery.php:1021
 msgid "How do you wish to proceed?"
 msgstr "איך ברצונך להמשיך?"
 
-#: ../file-gallery.php:935
+#: ../file-gallery.php:1022
 msgid "Click here if you have no idea what this dialog means"
 msgstr "לחץ כאן אם אינך יודע מה משמעות תיבה זו"
 
-#: ../file-gallery.php:935
+#: ../file-gallery.php:1022
 msgid "(opens File Gallery help in new browser window)"
-msgstr ""
+msgstr "(פותח את העזרה של תוסף File Gallery בחלון חדש)"
 
-#: ../file-gallery.php:938
+#: ../file-gallery.php:1025
 #: ../includes/main-form.php:23
 msgid "Copy all attachments from another post"
 msgstr "העתקת כל הקבצים המצורפים לפוסט אחר"
 
-#: ../file-gallery.php:941
+#: ../file-gallery.php:1028
 #: ../includes/main-form.php:192
 msgid "Post ID:"
 msgstr "ID"
 
-#: ../file-gallery.php:965
-#: ../file-gallery.php:970
-#: ../file-gallery.php:971
+#: ../file-gallery.php:1052
+#: ../file-gallery.php:1057
+#: ../file-gallery.php:1058
 msgid "File gallery"
 msgstr "File gallery"
 
-#: ../file-gallery.php:1019
+#: ../file-gallery.php:1106
 msgid "No. of attachments"
 msgstr "מספר קבצים מצורפים"
 
-#: ../file-gallery.php:1022
+#: ../file-gallery.php:1109
 msgid "Post thumb"
 msgstr "תמונת פוסט"
 
-#: ../file-gallery.php:1055
-#, fuzzy
+#: ../file-gallery.php:1142
 msgid "No Media Tags"
-msgstr "תגיות מדיה"
+msgstr "אין תגיות מדיה"
 
 #: ../includes/attachments-custom-fields.php:64
 #: ../includes/attachments-custom-fields.php:172
@@ -443,9 +452,8 @@ msgid "Attachment URL"
 msgstr "URL של הקובץ המצורף"
 
 #: ../includes/attachments-custom-fields.php:149
-#, fuzzy
 msgid "Parent Post URL"
-msgstr "כתובת הפוסט (URL)"
+msgstr "כתובת פוסט אב (URL)"
 
 #: ../includes/attachments.php:198
 #, php-format
@@ -454,7 +462,7 @@ msgstr "קובץ מצורף עם מזהה מספר <strong>%d</strong> אינו 
 
 #: ../includes/attachments.php:240
 msgid "Regenerate this image's thumbnails"
-msgstr ""
+msgstr "ייצר מחדש תמונה ממוזערת של אימאג' זה"
 
 #: ../includes/attachments.php:247
 msgid "ID:"
@@ -469,14 +477,12 @@ msgid "Uploaded by:"
 msgstr "הועלה ע\"י:"
 
 #: ../includes/attachments.php:251
-#, fuzzy
 msgid "IDs of copies of this attachment:"
-msgstr "מעבר לרשימת המצורפים"
+msgstr "מספרי ID של העתקי קןבץ מצורף זה:"
 
 #: ../includes/attachments.php:254
-#, fuzzy
 msgid "This attachment is a copy of attachment ID"
-msgstr "מעבר לרשימת המצורפים"
+msgstr "קובץ מצורף זה הוא העתק של קובץ מצורף עם מספר ID"
 
 #: ../includes/attachments.php:272
 msgid "Alternate text for this image"
@@ -595,25 +601,25 @@ msgstr "גלריה"
 
 #: ../includes/main-form.php:48
 #: ../includes/main-form.php:73
-#: ../includes/media-settings.php:173
+#: ../includes/media-settings.php:171
 msgid "thumbnail"
 msgstr "מוקטן"
 
 #: ../includes/main-form.php:49
 #: ../includes/main-form.php:74
-#: ../includes/media-settings.php:179
+#: ../includes/media-settings.php:177
 msgid "medium"
 msgstr "בינוני"
 
 #: ../includes/main-form.php:50
 #: ../includes/main-form.php:75
-#: ../includes/media-settings.php:185
+#: ../includes/media-settings.php:183
 msgid "large"
 msgstr "גדול"
 
 #: ../includes/main-form.php:51
 #: ../includes/main-form.php:76
-#: ../includes/media-settings.php:191
+#: ../includes/media-settings.php:189
 msgid "full"
 msgstr "מלא"
 
@@ -624,25 +630,25 @@ msgstr "קישור אל"
 
 #: ../includes/main-form.php:62
 #: ../includes/main-form.php:242
-#: ../includes/media-settings.php:139
+#: ../includes/media-settings.php:137
 msgid "nothing (do not link)"
 msgstr "ללא (אל תקשר)"
 
 #: ../includes/main-form.php:63
 #: ../includes/main-form.php:243
-#: ../includes/media-settings.php:140
+#: ../includes/media-settings.php:138
 msgid "file"
 msgstr "קובץ"
 
 #: ../includes/main-form.php:64
 #: ../includes/main-form.php:244
-#: ../includes/media-settings.php:141
+#: ../includes/media-settings.php:139
 msgid "attachment page"
 msgstr "עמוד הקובץ המצורף"
 
 #: ../includes/main-form.php:65
 #: ../includes/main-form.php:245
-#: ../includes/media-settings.php:142
+#: ../includes/media-settings.php:140
 msgid "parent post"
 msgstr "פוסט הורה"
 
@@ -651,27 +657,27 @@ msgid "link 'rel' attribute"
 msgstr "מאפיין קישור 'rel'"
 
 #: ../includes/main-form.php:105
-#: ../includes/media-settings.php:146
+#: ../includes/media-settings.php:144
 msgid "file gallery"
 msgstr "file gallery"
 
 #: ../includes/main-form.php:106
-#: ../includes/media-settings.php:147
+#: ../includes/media-settings.php:145
 msgid "random"
 msgstr "אקראי"
 
 #: ../includes/main-form.php:107
-#: ../includes/media-settings.php:148
+#: ../includes/media-settings.php:146
 msgid "menu order"
 msgstr "סדר מותאם אישית"
 
 #: ../includes/main-form.php:108
-#: ../includes/media-settings.php:149
+#: ../includes/media-settings.php:147
 msgid "title"
 msgstr "כותרת"
 
 #: ../includes/main-form.php:109
-#: ../includes/media-settings.php:150
+#: ../includes/media-settings.php:148
 msgid "date / time"
 msgstr "תאריך / שעה"
 
@@ -689,20 +695,19 @@ msgstr "הגבלה"
 
 #: ../includes/main-form.php:159
 msgid "offset"
-msgstr ""
+msgstr "לקזז"
 
 #: ../includes/main-form.php:164
 msgid "paginate"
-msgstr ""
+msgstr "דפדוף"
 
 #: ../includes/main-form.php:206
 msgid "current post's attachments only?"
 msgstr "הקבצים המצורפים של הפוסט הנוכחי בלבד?"
 
 #: ../includes/main-form.php:218
-#, fuzzy
 msgid "Insert a gallery"
-msgstr "גלריה"
+msgstr "הכנסת גלריה"
 
 #: ../includes/main-form.php:226
 #: ../includes/main-form.php:282
@@ -710,26 +715,26 @@ msgid "single files"
 msgstr "קבצים יחידים"
 
 #: ../includes/main-form.php:268
-#: ../includes/media-settings.php:133
-#: ../includes/media-settings.php:157
+#: ../includes/media-settings.php:131
+#: ../includes/media-settings.php:155
 msgid "none"
 msgstr "ללא"
 
 #: ../includes/main-form.php:269
-#: ../includes/media-settings.php:134
-#: ../includes/media-settings.php:158
+#: ../includes/media-settings.php:132
+#: ../includes/media-settings.php:156
 msgid "left"
 msgstr "שמאל"
 
 #: ../includes/main-form.php:270
-#: ../includes/media-settings.php:135
-#: ../includes/media-settings.php:159
+#: ../includes/media-settings.php:133
+#: ../includes/media-settings.php:157
 msgid "right"
 msgstr "ימין"
 
 #: ../includes/main-form.php:271
-#: ../includes/media-settings.php:136
-#: ../includes/media-settings.php:160
+#: ../includes/media-settings.php:134
+#: ../includes/media-settings.php:158
 msgid "center"
 msgstr "מרכז"
 
@@ -739,7 +744,7 @@ msgstr "האם להציג כיתוב?"
 
 #: ../includes/main-form.php:296
 msgid "Insert single image(s)"
-msgstr ""
+msgstr "הכנסת אימאג'/ים בודד/ים"
 
 #: ../includes/main-form.php:313
 #, php-format
@@ -829,15 +834,15 @@ msgstr "קובץ/קבצים נותק/ו"
 msgid "Error detaching attachment(s)"
 msgstr "שגיאה בניתוק קבצים מצורפים"
 
-#: ../includes/main.php:540
+#: ../includes/main.php:542
 msgid "Attachment data updated"
 msgstr "נתוני קובץ מצורף עודכנו"
 
-#: ../includes/main.php:544
+#: ../includes/main.php:546
 msgid "Error updating attachment data!"
 msgstr "שגיאה בעדכון נתוני קובץ מצורף"
 
-#: ../includes/main.php:549
+#: ../includes/main.php:551
 msgid "No change."
 msgstr "ללא שינוי"
 
@@ -866,31 +871,31 @@ msgstr "כאן ניתן לקבוע מאפייני רוחב, גובה וחיתו�
 msgid "File Gallery help file is located in the \"help\" subfolder of the plugin. You can <a href=\"%s/help/index.html\" target=\"_blank\">click here to open it in new window</a>."
 msgstr "קובץ העזרה של File Gallery ממוקם בתיקיית  \"help\" של התוסף. <a href=\"%s/help/index.html\" target=\"_blank\">הקלק כאן</a> כדי לפתוח את קובץ העזרה בחלון חדש. "
 
-#: ../includes/media-settings.php:153
+#: ../includes/media-settings.php:151
 msgid "ascending"
 msgstr "סדר עולה"
 
-#: ../includes/media-settings.php:154
+#: ../includes/media-settings.php:152
 msgid "descending"
 msgstr "סדר יורד"
 
-#: ../includes/media-settings.php:314
+#: ../includes/media-settings.php:318
 msgid "Crop medium size to exact dimensions"
 msgstr "חיתוך גודל בינוני למידות מדויקות"
 
-#: ../includes/media-settings.php:320
+#: ../includes/media-settings.php:324
 msgid "Crop large size to exact dimensions"
 msgstr "חיתוך גודל גדול למידות מדויקות"
 
-#: ../includes/media-settings.php:334
+#: ../includes/media-settings.php:338
 msgid "Width"
 msgstr "רוחב"
 
-#: ../includes/media-settings.php:336
+#: ../includes/media-settings.php:340
 msgid "Height"
 msgstr "גובה"
 
-#: ../includes/media-settings.php:339
+#: ../includes/media-settings.php:343
 #, php-format
 msgid "Crop %s size to exact dimensions"
 msgstr "האם לחתוך את הגודל %s למידות מדויקות?"
@@ -905,35 +910,33 @@ msgstr "שגיאה בבסיס הנתונים! פונקציה: file_gallery_save_
 
 #: ../includes/regenerate-images.php:17
 msgid "No valid attachment IDs were supplied!"
-msgstr ""
+msgstr "לא ניתנו מספרי מזהה (ID) חוקיים של קובץ מצורף"
 
 #: ../includes/regenerate-images.php:28
 #, php-format
 msgid "Error: %s while regenerating image ID %d"
-msgstr ""
+msgstr "שגיאה: %s בזמן ייצור מחדש של אימאג' מספר %d"
 
 #: ../includes/regenerate-images.php:30
 #, php-format
 msgid "Unknown error while regenerating image ID %d"
-msgstr ""
+msgstr "התרחשה שגיאה לא ידוע בזמן ייצור מחדש של אימאג' מספר %d"
 
 #: ../includes/regenerate-images.php:41
-#, fuzzy
 msgid "Attachment thumbnails were successfully regenerated"
-msgstr "כל הקבצים המצורפים הועתקו בהצלחה מפוסט %d."
+msgstr "תמונות ממוזערות נוצרו מחדש בהצלחה"
 
 #: ../includes/regenerate-images.php:43
-#, fuzzy
 msgid "All attachments' thumbnails were successfully regenerated"
-msgstr "כל הקבצים המצורפים הועתקו בהצלחה מפוסט %d."
+msgstr "כל התמונות הממוזערות של הקובץ המצורף נוצרו מחדש בהצלחה"
 
 #: ../includes/regenerate-images.php:48
 msgid "There were errors and some of the attachments' thumbnails weren't successfully regenerated!"
-msgstr ""
+msgstr "התרחשו מספר שגיאות ותמונות ממוזערות של חלק מהקבצים המצורפים לא נוצרו מחדש!"
 
 #: ../includes/regenerate-images.php:50
 msgid "There were errors and none of the attachments' thumbnails were successfully regenerated!"
-msgstr ""
+msgstr "התרחשו מספר שגיאות ולא נוצרו תמונות ממוזערות לאף אחד מהקבצים המצורפים !"
 
 #: ../includes/templating.php:250
 msgid "file does not exist:"
