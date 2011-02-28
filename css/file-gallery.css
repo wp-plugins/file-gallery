@@ -57,11 +57,16 @@
 	float: left;
 }
 
-#poststuff .inside #fg_container.alternative-color-scheme fieldset p
+#poststuff .inside #fg_container.alternative-color-scheme #file_gallery_gallery_options p,
+#poststuff .inside #fg_container.alternative-color-scheme #file_gallery_single_options p
 {
 	background: #F0F0F0;
+	border: 1px solid #DDDDDD;
 	margin: 3px;
 	padding: 0 3px;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
 }
 
 #file_gallery fieldset p input,
@@ -800,6 +805,9 @@ textarea, input, select
 .attachment_info_has_copies
 {
 	background: #D6F1B3;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
 }
 
 .thumb_switch_load,
