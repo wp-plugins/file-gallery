@@ -3,7 +3,7 @@ Contributors: aesqe
 Donate link: http://skyphe.org/donate/
 Tags: attachment, attachments, gallery, galleries, template, templates, shortcode, file, files, attach, detach, unattach, copy, media, tags, library, custom, custom fields, custom fields for attachments, attachment custom fields
 Requires at least: 3.0
-Tested up to: 3.1
+Tested up to: 3.2-bleeding
 Stable tag: 1.6.5.4
 
 File Gallery extends WordPress media (attachments) capabilities 
@@ -63,7 +63,7 @@ more... Here's the full list of features:
 8.  Copying attachments from media library
 9.  With "WPML Multilingual CMS" plugin istalled, you'll be able to copy 
     all attachments from the original post to translated one in two clicks
-10. custom fields for attachments
+10. Custom fields for attachments
 
 
 
@@ -79,12 +79,12 @@ more... Here's the full list of features:
 
 == Changelog ==
 
-= 1.6.7 =
+= 1.7 =
 * March XX, 2011
 * reworked the settings system so it's easier to add new options
 * improved lightbox support, more flexibility
 * new gallery option: gallery class
-* new metabox option: alternative color scheme (working on it)
+* new metabox option: alternative color scheme (and still working on it)
 * ability to copy attachments from WPML translations which aren't
   primary translations
 * bugfixes, bugfixes, bugfixes

@@ -312,38 +312,6 @@ add_action('wp_print_scripts', 'file_gallery_print_scripts');
 
 
 /**
- * Built-in pagination for galleries
- *
- * @since 1.6.5.1
- */
-function file_gallery_do_pagination( $max_num_pages = 0, $page = 0 )
-{
-	if( 0 < $max_num_pages && 0 < $page )
-	{
-		
-		
-		$out = array();
-		
-		remove_query_arg('page');
-		
-		while( 0 < $max_num_pages )
-		{
-			if( (int) $page === (int) $max_num_pages )
-				$out[] = '<span class="current">' . $max_num_pages . '</span>';
-			else
-				$out[] = str_replace('<a ', '<a class="page"', _wp_link_page($max_num_pages)) . $max_num_pages . '</a>';
-			
-			$max_num_pages--;
-		}
-		
-		return '<div class="wp-pagenavi">' . "\n" . implode("\n", array_reverse($out)) . "\n" . '</div>';
-	}
-	
-	return '';
-}
-
-
-/**
  * For easy inline overriding of shortcode-set options
  *
  * @since 1.6.5.1
@@ -862,6 +830,98 @@ function file_gallery_shortcode( $content = false, $attr = false )
 	
 	return apply_filters('file_gallery_output', $output, $post->ID, $file_gallery->gallery_id);
 }
+
+
+/**
+ * Built-in pagination for galleries
+ *
+ * @since 1.6.5.1
+ */
+function file_gallery_do_pagination( $total = 0, $page = 0 )
+{
+	if( 0 < $total && 0 < $page )
+	{
+		remove_query_arg('page');
+
+		$options = get_option('file_gallery');
+		$out = array('<span class="current">' . $page . '</span>');
+
+		if( ! isset($options['pagination_count']) || empty($options['pagination_count']) || 0 >= $options['pagination_count'] )
+			$limit = 9;
+		else
+			$limit = $options['pagination_count'];
+
+		$l = $limit;
+		$end = false;
+		$start = false;
+		$current = $page;
+
+		$sides = ($limit - 1) / 2;
+		$sl = ceil($sides);
+		$sr = floor($sides);
+		
+		// skip to first page link
+		if( ($limit - $sl) < $current )
+			$start = true;
+		
+		// skip to last page link
+		if( ($total - $sr) > $current )
+			$end = true;
+
+		// left side
+		if( 1 < $current )
+		{
+			$current--;
+
+			while( 0 < $current && 0 < $sl)
+			{
+				array_unshift($out, str_replace('<a ', '<a class="page"', _wp_link_page($current)) . $current . '</a>');
+				
+				$current--;
+				$sl--;
+				$limit--;
+			}
+			
+			$c = $current;
+		}
+
+		$current = $page + 1;
+		$sr += $sl;
+		
+		// right side
+		while( $current <= $total && 0 < $sr )
+		{
+			array_push($out, str_replace('<a ', '<a class="page"', _wp_link_page($current)) . $current . '</a>');
+			
+			$current++;
+			$sr--;
+			$limit--;
+		}
+		
+		// leftovers
+		while( 1 < $limit )
+		{
+			array_unshift($out, str_replace('<a ', '<a class="page"', _wp_link_page($c)) . $c . '</a>');
+
+			$c--;
+			$limit--;
+		}
+		
+		if( $start )
+			array_unshift($out, str_replace('<a ', '<a title="' . __('Skip to first page', 'file-gallery') . '" class="page"', _wp_link_page(1)) . '&laquo;</a>');
+		
+		if( $end )
+			array_push($out, str_replace('<a ', '<a title="' . __('Skip to last page', 'file-gallery') . '" class="page"', _wp_link_page($total)) . '&raquo;</a>');
+		
+		if( 'rtl' == get_bloginfo('text_direction') )
+			$out = array_reverse($out);
+		
+		return '<div class="wp-pagenavi">' . "\n" . implode("\n", $out) . "\n</div>";
+	}
+	
+	return '';
+}
+
 
 function file_gallery_register_shortcode_handler()
 {

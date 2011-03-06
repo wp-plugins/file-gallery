@@ -244,7 +244,7 @@ function file_gallery_edit_attachment()
 		<?php endif; ?>
 		<br />
 		<div id="attachment_data">
-			<p><strong><?php _e('ID:', 'file-gallery'); ?></strong> <?php echo $attachment->ID; ?></p>
+			<p><strong><?php _e('ID:', 'file-gallery'); ?></strong> <a href="<?php echo admin_url('media.php?attachment_id=' . $attachment->ID . '&action=edit'); ?>" target="_blank"><?php echo $attachment->ID; ?></a></p>
 			<p><strong><?php _e('Date uploaded:', 'file-gallery'); ?></strong><br /><?php echo date(get_option('date_format'), strtotime($attachment->post_date)); ?></p>
 			<p><strong><?php _e('Uploaded by:', 'file-gallery'); ?></strong> <?php echo $post_author; ?></p>
 			<?php if( $has_copies ) : ?>
@@ -557,7 +557,7 @@ function file_gallery_delete_attachment( $post_id )
 
 
 /**
- * Cancels file deletion by returning an empty string as file path
+ * Cancels deletion of the actual _file_ by returning an empty string as file path
  * if the deleted attachment had copies or was a copy itself
  */
 function file_gallery_cancel_file_deletion_if_attachment_copies( $file )
@@ -567,15 +567,16 @@ function file_gallery_cancel_file_deletion_if_attachment_copies( $file )
 	if( defined('FILE_GALLERY_SKIP_DELETE_CANCEL') && true === FILE_GALLERY_SKIP_DELETE_CANCEL )
 		return $file;
 	
+	$_file = $file;
 	$was_original = true;
-	
+		
 	// get '_wp_attached_file' value based on upload path
 	if( false !== get_option('uploads_use_yearmonth_folders') )
 	{
-		$file = explode('/', $file);
-		$c    = count($file);
+		$_file = explode('/', $_file);
+		$c     = count($_file);
 		
-		$file = $file[$c-3] . '/' . $file[$c-2] . '/' . $file[$c-1];
+		$_file = $_file[$c-3] . '/' . $_file[$c-2] . '/' . $_file[$c-1];
 	}
 	
 	// find all attachments that share the same file
@@ -585,7 +586,7 @@ function file_gallery_cancel_file_deletion_if_attachment_copies( $file )
 			 FROM $wpdb->postmeta 
 			 WHERE `meta_key` = '_wp_attached_file' 
 			 AND `meta_value` = '%s'", 
-			$file
+			$_file
 		)
 	);
 	
@@ -610,7 +611,7 @@ function file_gallery_cancel_file_deletion_if_attachment_copies( $file )
 		}
 		
 		$uploadpath = wp_upload_dir();
-		$file_path  = path_join($uploadpath['basedir'], $file);
+		$file_path  = path_join($uploadpath['basedir'], $_file);
 		
 		if( file_gallery_file_is_displayable_image($file_path) ) // if it's an image - regenerate its intermediate sizes
 			$regenerate = wp_update_attachment_metadata($this_copies[0], wp_generate_attachment_metadata($this_copies[0], $file_path));

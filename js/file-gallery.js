@@ -315,6 +315,9 @@ jQuery(document).ready(function()
 			container.css({"height" : "auto"});
 			jQuery("#file_gallery_switch_to_tags").not(".hidden").show();
 			
+			if( 0 === jQuery("#postdivrich").length )
+				jQuery("#file_gallery_upload_media").show();
+			
 			// hide elements if post has no attachments
 			if( 0 === file_gallery.options.num_attachments )
 			{

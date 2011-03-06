@@ -2,7 +2,7 @@
 /*
 Plugin Name: File Gallery
 Plugin URI: http://skyphe.org/code/wordpress/file-gallery/
-Version: 1.6.7
+Version: 1.7
 Description: "File Gallery" extends WordPress' media (attachments) capabilities by adding a new gallery shortcode handler with templating support, a new interface for attachment handling when editing posts, and much more.
 Author: Bruno "Aesqe" Babic
 Author URI: http://skyphe.org
@@ -39,7 +39,7 @@ class File_Gallery
 	 * their default values, 
 	 * and false default values
 	 *
-	 * @since 1.6.7
+	 * @since 1.7
 	 */
 	var $settings = array();
 	var $defaults = array();
@@ -65,7 +65,7 @@ class File_Gallery
 	/**
 	 * Current version of this plugin
 	 */
-	var $version = '1.6.7';
+	var $version = '1.7';
 
 	/***/
 	function __construct()
@@ -117,7 +117,7 @@ define('FILE_GALLERY_DEFAULT_TEMPLATES', serialize( array('default', 'file-galle
 
 /**
  * 
- * @since 1.6.7
+ * @since 1.7
  */
 function file_gallery_do_settings()
 {
@@ -146,6 +146,14 @@ function file_gallery_do_settings()
 				'display' => true,
 				'title' => __('Use alternative color scheme (a bit more contrast)?', 'file-gallery'),
 				'type' => 'checkbox',
+				'section' => 0,
+				'position' => 0
+			),
+			'pagination_count' => array(
+				'default' => 9, 
+				'display' => true,
+				'title' => __('How many page links should be shown in pagination?', 'file-gallery'),
+				'type' => 'text',
 				'section' => 0,
 				'position' => 0
 			),
@@ -1003,9 +1011,10 @@ add_action('admin_print_styles', 'file_gallery_css_admin');
  */
 function file_gallery_content()
 {
+	$class = '';
 	$options = get_option('file_gallery');
 	
-	if( true == $options['alt_color_scheme'] )
+	if( isset($options['alt_color_scheme']) && true == $options['alt_color_scheme'] )
 		$class = ' class="alternative-color-scheme"';
 	
 	echo 
@@ -1200,11 +1209,12 @@ require_once('includes/attachments-custom-fields.php');
 if( 3.1 <= floatval(get_bloginfo('version')) )
 	require_once('includes/media-tags-list-table.class.php');
 
-add_action('activated_plugin','save_error');
+/* DEBUG 
 function save_error(){
     update_option('plugin_error',  ob_get_contents());
 }
-
-// echo get_option('plugin_error');
+add_action('activated_plugin','save_error');
+echo get_option('plugin_error');
+*/
 
 ?>

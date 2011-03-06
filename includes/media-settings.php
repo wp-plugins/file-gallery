@@ -117,7 +117,7 @@ function file_gallery_parse_args( $args, $defaults )
 /**
  * Creates select option dropdowns
  *
- * @since 1.6.7
+ * @since 1.7
  */
 function file_gallery_dropdown( $name, $type )
 {	
@@ -212,7 +212,7 @@ function file_gallery_dropdown( $name, $type )
 /**
  * Returns a checkbox for each post type
  *
- * @since 1.6.7
+ * @since 1.7
  */
 function file_gallery_post_type_checkboxes()
 {
@@ -244,7 +244,7 @@ function file_gallery_post_type_checkboxes()
 /**
  * Registers each File Gallery setting to the media settings page
  *
- * @since 1.6.7
+ * @since 1.7
  */
 function file_gallery_add_settings()
 {
@@ -291,7 +291,7 @@ function file_gallery_add_settings()
 /**
  * Returns form elements for the media settings page
  *
- * @since 1.6.7
+ * @since 1.7
  */
 function file_gallery_options_fields( $args )
 {

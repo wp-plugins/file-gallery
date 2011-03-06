@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: File Gallery v1.5.9\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-02-27 15:42+0100\n"
-"PO-Revision-Date: 2011-02-27 15:42+0100\n"
+"POT-Creation-Date: 2011-03-06 22:01+0100\n"
+"PO-Revision-Date: 2011-03-06 22:01+0100\n"
 "Last-Translator: Bruno Babic <aesqe@skyphe.org>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -32,491 +32,495 @@ msgstr "Afficher File Gallery dans quel type de billets ?"
 msgid "Use alternative color scheme (a bit more contrast)?"
 msgstr ""
 
-# @ file-gallery
 #: file-gallery.php:155
+msgid "How many page links should be shown in pagination?"
+msgstr ""
+
+# @ file-gallery
+#: file-gallery.php:163
 msgid "Auto enqueue lightbox scripts for which link classes (separate with commas)?"
 msgstr "File d'attente automatique des scripts lightbox pour quel classes de lien (séparés par une virgule) ?"
 
 # @ file-gallery
-#: file-gallery.php:163
+#: file-gallery.php:171
 msgid "Default WordPress image size for thumbnails in File Gallery metabox on post editing screens?"
 msgstr "Taille par défaut des images Wordpress pour les miniatures dans la metabox File Gallery sur les écrans d'édition de billets ?"
 
 # @ file-gallery
-#: file-gallery.php:172
+#: file-gallery.php:180
 msgid "Default width (in pixels) for thumbnails in File Gallery metabox on post editing screens?"
 msgstr "Largeur par défaut (en pixels) pour les miniatures dans la metabox File Gallery sur les écrans d'édition de billets ?"
 
 # @ file-gallery
-#: file-gallery.php:182
+#: file-gallery.php:190
 msgid "Some default values for when inserting a gallery into a post"
 msgstr "Quelques valeurs par défaut pour l'insertion d'une galerie dans un billet"
 
 # @ file-gallery
-#: file-gallery.php:182
-#: file-gallery.php:287
-#: includes/main-form.php:45
-#: includes/main-form.php:231
+#: file-gallery.php:190
+#: file-gallery.php:295
+#: includes/main-form.php:48
+#: includes/main-form.php:234
 #: includes/media-settings.php:26
 msgid "size"
 msgstr "taille"
 
 # @ file-gallery
-#: file-gallery.php:191
-#: file-gallery.php:296
+#: file-gallery.php:199
+#: file-gallery.php:304
 msgid "link"
 msgstr "lien"
 
 # @ file-gallery
-#: file-gallery.php:200
-#: includes/main-form.php:71
+#: file-gallery.php:208
+#: includes/main-form.php:74
 msgid "linked image size"
 msgstr "taille des images avec lien"
 
 # @ file-gallery
-#: file-gallery.php:209
-#: file-gallery.php:305
-#: includes/main-form.php:66
-#: includes/main-form.php:93
-#: includes/main-form.php:246
-#: includes/main-form.php:251
+#: file-gallery.php:217
+#: file-gallery.php:313
+#: includes/main-form.php:69
+#: includes/main-form.php:96
+#: includes/main-form.php:249
+#: includes/main-form.php:254
 #: includes/media-settings.php:141
 msgid "external url"
 msgstr "URL externe"
 
 # @ file-gallery
-#: file-gallery.php:217
+#: file-gallery.php:225
 msgid "order by"
 msgstr "rangé par"
 
 # @ file-gallery
-#: file-gallery.php:226
-#: includes/main-form.php:103
+#: file-gallery.php:234
+#: includes/main-form.php:106
 msgid "order"
 msgstr "ordre"
 
 # @ file-gallery
-#: file-gallery.php:235
-#: includes/main-form.php:118
+#: file-gallery.php:243
+#: includes/main-form.php:121
 msgid "template"
 msgstr "modèle"
 
 # @ file-gallery
-#: file-gallery.php:244
-#: file-gallery.php:313
-#: includes/main-form.php:98
-#: includes/main-form.php:256
+#: file-gallery.php:252
+#: file-gallery.php:321
+#: includes/main-form.php:101
+#: includes/main-form.php:259
 msgid "link class"
 msgstr "classe de lien"
 
 # @ file-gallery
-#: file-gallery.php:252
-#: file-gallery.php:321
-#: includes/main-form.php:144
-#: includes/main-form.php:261
+#: file-gallery.php:260
+#: file-gallery.php:329
+#: includes/main-form.php:147
+#: includes/main-form.php:264
 msgid "image class"
 msgstr "classe d'image"
 
 # @ file-gallery
-#: file-gallery.php:260
-#: includes/main-form.php:172
+#: file-gallery.php:268
+#: includes/main-form.php:175
 msgid "columns"
 msgstr "colonnes"
 
 # @ file-gallery
-#: file-gallery.php:269
-#: includes/main-form.php:149
+#: file-gallery.php:277
+#: includes/main-form.php:152
 msgid "mime type"
 msgstr "type de mime"
 
 # @ file-gallery
-#: file-gallery.php:277
-#: includes/main-form.php:139
+#: file-gallery.php:285
+#: includes/main-form.php:142
 #, fuzzy
 msgid "gallery class"
 msgstr "classe d'image"
 
 # @ file-gallery
-#: file-gallery.php:287
+#: file-gallery.php:295
 msgid "...and for when inserting (a) single image(s) into a post"
 msgstr "... et pour l'insertion d'une ou plusieurs images dans un billet"
 
 # @ file-gallery
-#: file-gallery.php:329
-#: includes/main-form.php:266
+#: file-gallery.php:337
+#: includes/main-form.php:269
 msgid "alignment"
 msgstr "alignement"
 
 # @ file-gallery
-#: file-gallery.php:340
+#: file-gallery.php:348
 msgid "Cache"
 msgstr ""
 
 # @ file-gallery
-#: file-gallery.php:340
+#: file-gallery.php:348
 msgid "Enable caching?"
 msgstr "Activer le cache ?"
 
 # @ file-gallery
-#: file-gallery.php:348
+#: file-gallery.php:356
 msgid "Cache expires after how many seconds? (leave as is if you don't know what it means)"
 msgstr "Au bout de combien de secondes expire le cache ? (laisser en blanc si vous ignorez ce que cela signifie)"
 
 # @ file-gallery
-#: file-gallery.php:356
+#: file-gallery.php:364
 #, fuzzy
 msgid "Cache non-HTML gallery output (<em>array, object, json</em>)"
 msgstr "Mettre en cache le rendu de galerie non HTML (<em>array, object, json</em>) ?"
 
 # @ file-gallery
-#: file-gallery.php:366
+#: file-gallery.php:374
 msgid "Edit screens options"
 msgstr "Edition des options d'écrans"
 
 # @ file-gallery
-#: file-gallery.php:366
+#: file-gallery.php:374
 msgid "Display attachment count?"
 msgstr "Afficher le nombre de fichiers attachés ?"
 
 # @ file-gallery
-#: file-gallery.php:374
+#: file-gallery.php:382
 msgid "Filter out duplicate attachments (copies) when browsing media library?"
 msgstr "Exclure les fichiers attachés dupliqués (copies) lors du parcours de la bibliothèque de médias ?"
 
 # @ file-gallery
-#: file-gallery.php:382
+#: file-gallery.php:390
 msgid "Display media tags for attachments in media library?"
 msgstr "Afficher les tags média pour les fichiers attachés dans la bibliothèque de médias ?"
 
 # @ file-gallery
-#: file-gallery.php:390
+#: file-gallery.php:398
 msgid "Display post thumb (if set)?"
 msgstr "Afficher les miniatures de billet (si défini) ?"
 
 # @ file-gallery
-#: file-gallery.php:400
+#: file-gallery.php:408
 msgid "Other options"
 msgstr "Autres options"
 
 # @ file-gallery
-#: file-gallery.php:400
+#: file-gallery.php:408
 msgid "Display galleries within post excerpts?"
 msgstr "Afficher les galeries à l'intérieur des extraits de billet ?"
 
 # @ file-gallery
-#: file-gallery.php:406
+#: file-gallery.php:414
 msgid "galleries are shown on full posts only"
 msgstr "Les galeries ne sont visibles que dans les billets entiers"
 
 # @ file-gallery
-#: file-gallery.php:408
+#: file-gallery.php:416
 msgid "Replacement text for galleries within post excerpts (if you haven't checked the above option)"
 msgstr "Texte de remplacement pour les galeries incluses dans les extraits de billet (si vous n'avez pas sélectionné l'option ci-dessus)"
 
 # @ file-gallery
-#: file-gallery.php:416
+#: file-gallery.php:424
 msgid "Display options for inserting galleries into a post?"
 msgstr "Afficher les options pour insérer des galeries dans un billet ?"
 
 # @ file-gallery
-#: file-gallery.php:424
+#: file-gallery.php:432
 msgid "Display options for inserting single images into a post?"
 msgstr "Afficher les options pour insérer des images séparées dans un billet ?"
 
 # @ file-gallery
-#: file-gallery.php:432
+#: file-gallery.php:440
 msgid "Display attachment custom fields?"
 msgstr "Afficher les champs personnalisé de fichiers attachés ?"
 
 # @ file-gallery
-#: file-gallery.php:440
+#: file-gallery.php:448
 msgid "Display 'insert gallery' button even if gallery options are hidden?"
 msgstr "Afficher un bouton 'insérer une galerie' même si les options de galerie sont cachées ?"
 
 # @ file-gallery
-#: file-gallery.php:448
+#: file-gallery.php:456
 msgid "Display 'insert single image(s)' button even if single image options are hidden?"
 msgstr "Afficher un bouton 'insérer une/plusieurs image(s) simple(s)' même si les options d'images sont cachées ?"
 
 # @ file-gallery
-#: file-gallery.php:456
+#: file-gallery.php:464
 msgid "Delete all options on deactivation?"
 msgstr "Supprimer toutes les options lors de la désactivation ?"
 
 # @ file-gallery
-#: file-gallery.php:469
+#: file-gallery.php:477
 msgid "File gallery folder"
 msgstr "Répertoire de File Gallery"
 
 # @ file-gallery
-#: file-gallery.php:477
+#: file-gallery.php:485
 msgid "File gallery path"
 msgstr "Chemin de File Gallery"
 
-#: file-gallery.php:485
+#: file-gallery.php:493
 msgid "Media tag taxonomy name"
 msgstr ""
 
-#: file-gallery.php:498
+#: file-gallery.php:506
 msgid "Gallery insert options state"
 msgstr ""
 
-#: file-gallery.php:506
+#: file-gallery.php:514
 msgid "Single images insert options state"
 msgstr ""
 
 # @ file-gallery
-#: file-gallery.php:514
+#: file-gallery.php:522
 #, fuzzy
 msgid "Attachment custom fields state"
 msgstr "Afficher les champs personnalisé de fichiers attachés ?"
 
 # @ file-gallery
-#: file-gallery.php:676
+#: file-gallery.php:684
 msgid "Settings"
 msgstr "Réglages"
 
 # @ file-gallery
-#: file-gallery.php:694
-#: file-gallery.php:746
-#: file-gallery.php:964
-#: file-gallery.php:1178
-#: includes/main-form.php:203
+#: file-gallery.php:702
+#: file-gallery.php:754
+#: file-gallery.php:972
+#: file-gallery.php:1186
+#: includes/main-form.php:206
 msgid "Media tags"
 msgstr "Mots clef média"
 
 # @ file-gallery
-#: file-gallery.php:695
-#: file-gallery.php:700
+#: file-gallery.php:703
+#: file-gallery.php:708
 msgid "Media tag"
 msgstr "Mot clef média"
 
 # @ file-gallery
-#: file-gallery.php:818
-#: includes/main-form.php:289
+#: file-gallery.php:826
+#: includes/main-form.php:292
 msgid "Switch to tags"
 msgstr "Basculer vers les tags"
 
 # @ file-gallery
-#: file-gallery.php:819
+#: file-gallery.php:827
 msgid "Switch to list of attachments"
 msgstr "Basculer vers la liste des pièces attachées"
 
 # @ file-gallery
-#: file-gallery.php:820
-#: includes/main-form.php:33
+#: file-gallery.php:828
+#: includes/main-form.php:36
 msgid "Insert checked attachments into post as"
 msgstr "Insérer les attachements sélectionnés dans le billet en tant que"
 
 # @ file-gallery
-#: file-gallery.php:821
+#: file-gallery.php:829
 msgid "No files are currently attached to this post."
 msgstr "Aucun fichier n'est rattaché à ce billet pour le moment"
 
 # @ file-gallery
-#: file-gallery.php:822
+#: file-gallery.php:830
 msgid "Are you sure that you want to delete these attachments? Press [OK] to delete or [Cancel] to abort."
 msgstr "Êtes-vous sûr de supprimer ces fichiers attachés ? Cliquez [OK] pour supprimer ou [Annuler] pour l'éviter."
 
 # @ file-gallery
-#: file-gallery.php:823
+#: file-gallery.php:831
 msgid "saving attachment data..."
 msgstr "sauvegarde des informations d'attachement..."
 
 # @ file-gallery
-#: file-gallery.php:824
+#: file-gallery.php:832
 msgid "loading attachment data..."
 msgstr "chargement des informations d'attachement ..."
 
 # @ file-gallery
-#: file-gallery.php:825
+#: file-gallery.php:833
 msgid "deleting attachment..."
 msgstr "suppression du fichier attaché ..."
 
 # @ file-gallery
-#: file-gallery.php:826
+#: file-gallery.php:834
 msgid "deleting attachments..."
 msgstr "suppression des fichiers attachés ..."
 
 # @ file-gallery
-#: file-gallery.php:827
+#: file-gallery.php:835
 msgid "loading..."
 msgstr "chargement ..."
 
 # @ file-gallery
-#: file-gallery.php:828
+#: file-gallery.php:836
 msgid "detaching attachment"
 msgstr "détachement du fichier attaché"
 
 # @ file-gallery
-#: file-gallery.php:829
+#: file-gallery.php:837
 msgid "detaching attachments"
 msgstr "détachement des fichiers attachés"
 
 # @ file-gallery
-#: file-gallery.php:830
+#: file-gallery.php:838
 msgid "Are you sure that you want to detach these attachments? Press [OK] to detach or [Cancel] to abort."
 msgstr "Êtes-vous sûr de vouloir détacher ces fichiers attachés ? Presser [OK] pour détacher ou [Annuler] pour éviter."
 
 # @ file-gallery
-#: file-gallery.php:831
+#: file-gallery.php:839
 msgid "close"
 msgstr "fermer"
 
 # @ file-gallery
-#: file-gallery.php:832
+#: file-gallery.php:840
 msgid "loading attachments"
 msgstr "chargement des fichiers attachés"
 
 # @ file-gallery
-#: file-gallery.php:833
+#: file-gallery.php:841
 msgid "Featured image set successfully"
 msgstr "Image de présentation définie avec succès"
 
 # @ file-gallery
-#: file-gallery.php:834
+#: file-gallery.php:842
 msgid "Featured image removed"
 msgstr "Image de présentation retirée"
 
 # @ file-gallery
-#: file-gallery.php:835
+#: file-gallery.php:843
 msgid "Copy all attachments from the original post?"
 msgstr "Copier tous les fichiers attachés du billet d'origine ?"
 
 # @ file-gallery
-#: file-gallery.php:836
+#: file-gallery.php:844
 #: includes/main.php:141
 msgid "Set as featured image"
 msgstr "Définir comme image de présentation"
 
 # @ file-gallery
-#: file-gallery.php:837
+#: file-gallery.php:845
 #: includes/main.php:143
 msgid "Unset as featured image"
 msgstr "Retirer le statut d'image de présentation"
 
 # @ file-gallery
 # @ ile-gallery
-#: file-gallery.php:853
-#: file-gallery.php:899
+#: file-gallery.php:861
+#: file-gallery.php:907
 #: includes/attachments-custom-fields.php:45
 #: includes/attachments-custom-fields.php:171
 msgid "Add New Custom Field"
 msgstr "Ajouter un nouveau champ personnalisé"
 
 # @ file-gallery
-#: file-gallery.php:854
-#: file-gallery.php:900
+#: file-gallery.php:862
+#: file-gallery.php:908
 #: includes/attachments-custom-fields.php:62
 #: includes/attachments-custom-fields.php:174
 msgid "Add Custom Field"
 msgstr "Ajouter un champ personnalisé"
 
 # @ file-gallery
-#: file-gallery.php:855
-#: file-gallery.php:901
+#: file-gallery.php:863
+#: file-gallery.php:909
 msgid "Error deleting attachment custom field!"
 msgstr "Erreur lors de la suppression d'un champs personnalisé pour fichier attaché !"
 
 # @ file-gallery
-#: file-gallery.php:856
-#: file-gallery.php:902
+#: file-gallery.php:864
+#: file-gallery.php:910
 msgid "Error adding attachment custom field!"
 msgstr "Erreur lors de l'ajout d'un champ personnalisé pour fichier atttaché !"
 
 # @ file-gallery
-#: file-gallery.php:857
-#: file-gallery.php:903
+#: file-gallery.php:865
+#: file-gallery.php:911
 #: includes/attachments-custom-fields.php:51
 #: includes/attachments-custom-fields.php:174
 msgid "Name:"
 msgstr "Nom:"
 
 # @ file-gallery
-#: file-gallery.php:858
-#: file-gallery.php:904
+#: file-gallery.php:866
+#: file-gallery.php:912
 #: includes/attachments-custom-fields.php:174
 msgid "Value:"
 msgstr "Valeur:"
 
 # @ file-gallery
-#: file-gallery.php:925
+#: file-gallery.php:933
 msgid "Attach all checked items to current post"
 msgstr "Attacher tous les éléments cochés dans le billet actuel"
 
 # @ file-gallery
-#: file-gallery.php:926
+#: file-gallery.php:934
 #, fuzzy
 msgid "Exclude current post's attachments"
 msgstr "Exclure les pièces attachées au billet actuel"
 
 # @ file-gallery
-#: file-gallery.php:927
+#: file-gallery.php:935
 #, fuzzy
 msgid "Include current post's attachments"
 msgstr "Inclure les pièces attachées du billet actuel"
 
 # @ file-gallery
-#: file-gallery.php:1014
+#: file-gallery.php:1022
 msgid "File Gallery requires Javascript to function. Please enable it in your browser."
 msgstr "File Gallery nécessite Javascript pour fonctionner. Veuillez l'activer dans votre navigateur."
 
 # @ file-gallery
-#: file-gallery.php:1019
+#: file-gallery.php:1027
 msgid "Delete attachment dialog"
 msgstr "Supprimer le dialogue de fichier attaché"
 
 # @ file-gallery
-#: file-gallery.php:1020
+#: file-gallery.php:1028
 msgid "Warning: one of the attachments you've chosen to delete has copies."
 msgstr "Avertissement: un des fichiers attachés choisi pour être supprimé a des copies."
 
 # @ file-gallery
-#: file-gallery.php:1021
+#: file-gallery.php:1029
 msgid "How do you wish to proceed?"
 msgstr "Comment voulez-vous procéder ?"
 
 # @ file-gallery
-#: file-gallery.php:1022
+#: file-gallery.php:1030
 msgid "Click here if you have no idea what this dialog means"
 msgstr "Cliquez ici si vous ne comprenez pas la signification de ce dialogue"
 
 # @ file-gallery
-#: file-gallery.php:1022
+#: file-gallery.php:1030
 msgid "(opens File Gallery help in new browser window)"
 msgstr "(ouvrir l'aide de File Gallery dans une nouvelle fenêtre du navigateur)"
 
 # @ file-gallery
-#: file-gallery.php:1025
-#: includes/main-form.php:23
+#: file-gallery.php:1033
+#: includes/main-form.php:26
 msgid "Copy all attachments from another post"
 msgstr "Copier tous les fichiers attachés d'un autre billet"
 
 # @ file-gallery
-#: file-gallery.php:1028
-#: includes/main-form.php:192
+#: file-gallery.php:1036
+#: includes/main-form.php:195
 msgid "Post ID:"
 msgstr "ID du billet:"
 
 # @ file-gallery
-#: file-gallery.php:1052
-#: file-gallery.php:1057
-#: file-gallery.php:1058
+#: file-gallery.php:1060
+#: file-gallery.php:1065
+#: file-gallery.php:1066
 msgid "File gallery"
 msgstr ""
 
 # @ file-gallery
-#: file-gallery.php:1106
+#: file-gallery.php:1114
 msgid "No. of attachments"
 msgstr "Nombre de fichiers attachés"
 
 # @ file-gallery
-#: file-gallery.php:1109
+#: file-gallery.php:1117
 msgid "Post thumb"
 msgstr "Miniature de billet"
 
 # @ file-gallery
-#: file-gallery.php:1142
+#: file-gallery.php:1150
 msgid "No Media Tags"
 msgstr "Aucun tag média"
 
@@ -534,8 +538,8 @@ msgstr "Champs personnalisés"
 
 # @ file-gallery
 #: includes/attachments-custom-fields.php:72
-#: includes/main-form.php:40
-#: includes/main-form.php:227
+#: includes/main-form.php:43
+#: includes/main-form.php:230
 msgid "show/hide this fieldset"
 msgstr "montrer/cacher ce champ"
 
@@ -682,241 +686,245 @@ msgstr "Tous les fichiers attachés ont été copiés avec succès à partir du 
 msgid "You have successfully cleared the File Gallery cache."
 msgstr "Vous avez vidé avec succès le cache de File Gallery."
 
+#: includes/main-form.php:20
+msgid "Add an Image"
+msgstr ""
+
 # @ file-gallery
-#: includes/main-form.php:19
+#: includes/main-form.php:22
 msgid "Refresh attachments"
 msgstr "Rafraîchir les fichiers attachés"
 
 # @ file-gallery
-#: includes/main-form.php:20
+#: includes/main-form.php:23
 msgid "Check all"
 msgstr "Tout sélectionner"
 
 # @ file-gallery
-#: includes/main-form.php:21
+#: includes/main-form.php:24
 msgid "Uncheck all"
 msgstr "Tout déselectionner"
 
 # @ file-gallery
-#: includes/main-form.php:22
+#: includes/main-form.php:25
 msgid "Save attachment order"
 msgstr "Sauvegarder l'ordre des fichiers attachés"
 
 # @ file-gallery
-#: includes/main-form.php:24
+#: includes/main-form.php:27
 msgid "Delete all checked"
 msgstr "Supprimer tous les sélectionnés"
 
 # @ file-gallery
-#: includes/main-form.php:25
+#: includes/main-form.php:28
 msgid "Detach all checked"
 msgstr "Détacher tous les sélectionnés"
 
 # @ file-gallery
-#: includes/main-form.php:26
+#: includes/main-form.php:29
 msgid "Clear File Gallery cache"
 msgstr "Effacer le cache de File Gallery"
 
 # @ file-gallery
-#: includes/main-form.php:27
+#: includes/main-form.php:30
 msgid "Adjust media settings"
 msgstr "Ajuster les réglages média"
 
 # @ file-gallery
-#: includes/main-form.php:28
+#: includes/main-form.php:31
 msgid "Open help file"
 msgstr "Ouvrir le fichier d'aide"
 
 # @ file-gallery
-#: includes/main-form.php:39
-#: includes/main-form.php:198
+#: includes/main-form.php:42
+#: includes/main-form.php:201
 msgid "a gallery"
 msgstr "une galerie"
 
 # @ file-gallery
-#: includes/main-form.php:48
-#: includes/main-form.php:73
+#: includes/main-form.php:51
+#: includes/main-form.php:76
 #: includes/media-settings.php:171
 msgid "thumbnail"
 msgstr "miniature"
 
 # @ file-gallery
-#: includes/main-form.php:49
-#: includes/main-form.php:74
+#: includes/main-form.php:52
+#: includes/main-form.php:77
 #: includes/media-settings.php:177
 msgid "medium"
 msgstr ""
 
 # @ file-gallery
-#: includes/main-form.php:50
-#: includes/main-form.php:75
+#: includes/main-form.php:53
+#: includes/main-form.php:78
 #: includes/media-settings.php:183
 msgid "large"
 msgstr "grande"
 
 # @ file-gallery
-#: includes/main-form.php:51
-#: includes/main-form.php:76
+#: includes/main-form.php:54
+#: includes/main-form.php:79
 #: includes/media-settings.php:189
 msgid "full"
 msgstr "entière"
 
 # @ file-gallery
-#: includes/main-form.php:60
-#: includes/main-form.php:240
+#: includes/main-form.php:63
+#: includes/main-form.php:243
 msgid "link to"
 msgstr "lien vers"
 
 # @ file-gallery
-#: includes/main-form.php:62
-#: includes/main-form.php:242
+#: includes/main-form.php:65
+#: includes/main-form.php:245
 #: includes/media-settings.php:137
 msgid "nothing (do not link)"
 msgstr "aucun (ne pas lier)"
 
 # @ file-gallery
-#: includes/main-form.php:63
-#: includes/main-form.php:243
+#: includes/main-form.php:66
+#: includes/main-form.php:246
 #: includes/media-settings.php:138
 msgid "file"
 msgstr "fichier"
 
 # @ file-gallery
-#: includes/main-form.php:64
-#: includes/main-form.php:244
+#: includes/main-form.php:67
+#: includes/main-form.php:247
 #: includes/media-settings.php:139
 msgid "attachment page"
 msgstr "page de fichier attaché"
 
 # @ file-gallery
-#: includes/main-form.php:65
-#: includes/main-form.php:245
+#: includes/main-form.php:68
+#: includes/main-form.php:248
 #: includes/media-settings.php:140
 msgid "parent post"
 msgstr "billet parent"
 
 # @ file-gallery
-#: includes/main-form.php:85
+#: includes/main-form.php:88
 msgid "link 'rel' attribute"
 msgstr "attribut de lien 'rel'"
 
 # @ file-gallery
-#: includes/main-form.php:105
+#: includes/main-form.php:108
 #: includes/media-settings.php:144
 msgid "file gallery"
 msgstr "galerie de fichiers"
 
 # @ file-gallery
-#: includes/main-form.php:106
+#: includes/main-form.php:109
 #: includes/media-settings.php:145
 msgid "random"
 msgstr "au hasard"
 
 # @ file-gallery
-#: includes/main-form.php:107
+#: includes/main-form.php:110
 #: includes/media-settings.php:146
 msgid "menu order"
 msgstr "ordre de menu"
 
 # @ file-gallery
-#: includes/main-form.php:108
+#: includes/main-form.php:111
 #: includes/media-settings.php:147
 msgid "title"
 msgstr "titre"
 
 # @ file-gallery
-#: includes/main-form.php:109
+#: includes/main-form.php:112
 #: includes/media-settings.php:148
 msgid "date / time"
 msgstr "date / heure"
 
 # @ file-gallery
-#: includes/main-form.php:112
+#: includes/main-form.php:115
 msgid "ASC"
 msgstr ""
 
 # @ file-gallery
-#: includes/main-form.php:113
+#: includes/main-form.php:116
 msgid "DESC"
 msgstr ""
 
 # @ file-gallery
-#: includes/main-form.php:154
+#: includes/main-form.php:157
 msgid "limit"
 msgstr "limite"
 
 # @ file-gallery
-#: includes/main-form.php:159
+#: includes/main-form.php:162
 msgid "offset"
 msgstr "décalage"
 
 # @ file-gallery
-#: includes/main-form.php:164
+#: includes/main-form.php:167
 msgid "paginate"
 msgstr "paginé"
 
 # @ file-gallery
-#: includes/main-form.php:206
+#: includes/main-form.php:209
 msgid "current post's attachments only?"
 msgstr "uniquement les fichiers attachés du billet actuel ?"
 
 # @ file-gallery
-#: includes/main-form.php:218
+#: includes/main-form.php:221
 msgid "Insert a gallery"
 msgstr "Insérer une galerie"
 
 # @ file-gallery
-#: includes/main-form.php:226
-#: includes/main-form.php:282
+#: includes/main-form.php:229
+#: includes/main-form.php:285
 msgid "single files"
 msgstr "fichiers individuels"
 
 # @ file-gallery
-#: includes/main-form.php:268
+#: includes/main-form.php:271
 #: includes/media-settings.php:131
 #: includes/media-settings.php:155
 msgid "none"
 msgstr "aucun"
 
 # @ file-gallery
-#: includes/main-form.php:269
+#: includes/main-form.php:272
 #: includes/media-settings.php:132
 #: includes/media-settings.php:156
 msgid "left"
 msgstr "gauche"
 
 # @ file-gallery
-#: includes/main-form.php:270
+#: includes/main-form.php:273
 #: includes/media-settings.php:133
 #: includes/media-settings.php:157
 msgid "right"
 msgstr "droite"
 
 # @ file-gallery
-#: includes/main-form.php:271
+#: includes/main-form.php:274
 #: includes/media-settings.php:134
 #: includes/media-settings.php:158
 msgid "center"
 msgstr "centré"
 
 # @ file-gallery
-#: includes/main-form.php:276
+#: includes/main-form.php:279
 msgid "display caption?"
 msgstr "afficher la légende ?"
 
 # @ file-gallery
-#: includes/main-form.php:296
+#: includes/main-form.php:299
 msgid "Insert single image(s)"
 msgstr "Insérer une/plusieurs image(s) simple(s)"
 
 # @ file-gallery
-#: includes/main-form.php:313
+#: includes/main-form.php:316
 #, php-format
 msgid "File Gallery &mdash; %d attachment."
 msgstr "File Gallery &mdash; %d fichier attaché."
 
 # @ file-gallery
-#: includes/main-form.php:316
+#: includes/main-form.php:319
 #, php-format
 msgid "File Gallery &mdash; %d attachments."
 msgstr "File Gallery &mdash; %d fichiers attachés."
@@ -1154,4 +1162,12 @@ msgstr "le fichier n'existe pas:"
 #: includes/templating.php:250
 msgid "using default style"
 msgstr "utiliser le style par défaut"
+
+#: includes/templating.php:911
+msgid "Skip to first page"
+msgstr ""
+
+#: includes/templating.php:914
+msgid "Skip to last page"
+msgstr ""
 

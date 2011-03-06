@@ -57,6 +57,11 @@
 	float: left;
 }
 
+#poststuff .inside #fg_container fieldset#fieldset_attachment_custom_fields p
+{
+	float: none;
+}
+
 #poststuff .inside #fg_container.alternative-color-scheme #file_gallery_gallery_options p,
 #poststuff .inside #fg_container.alternative-color-scheme #file_gallery_single_options p
 {
@@ -377,7 +382,7 @@
 #fg_info
 {
 	float: left;
-	width: 40%;
+	width: 35%;
 }
 
 #fg_buttons
@@ -386,17 +391,17 @@
 	position:relative;
 	margin-right: 2px;
 	text-align: right;
-	width: 50%;
+	width: 55%;
 }
 
 #fg_buttons.alt
 {
 	background: none;
 	width: auto;
-	/*float: none;*/
 }
 
-#fg_buttons input
+#fg_buttons input,
+#file_gallery_upload_media
 {
 	width: 32px;
 	height: 24px;
@@ -411,13 +416,24 @@
 	box-shadow: 0 0 1px rgba(0, 0, 0, 0.2);
 }
 
-#fg_buttons input:hover
+#file_gallery_upload_media
+{
+	float: left;
+	background-image: url(../images/media-button-image.gif);
+	display: none;
+	overflow: hidden;
+	text-indent: 9999px;
+}
+
+#fg_buttons input:hover,
+#file_gallery_upload_media:hover
 {
 	background-color: #F1F1F1;
 	border-color: #DFDFDF;
 }
 
-#fg_buttons input:active
+#fg_buttons input:active,
+#file_gallery_upload_media:active
 {
 	background-color: #FFFFFF;
 	border-color: #FFFFBB;
@@ -800,6 +816,10 @@ textarea, input, select
 {
 	padding: 5px;
 	background: #C0E0F0;
+	
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
 }
 
 .attachment_info_has_copies
