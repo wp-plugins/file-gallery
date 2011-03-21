@@ -79,7 +79,7 @@ more... Here's the full list of features:
 
 == Changelog ==
 
-= 1.7 =
+= 1.7-RC1 =
 * March 21st, 2011
 * reworked the settings system so it's easier to add new options
 * improved lightbox support, more flexibility
