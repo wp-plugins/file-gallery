@@ -237,7 +237,7 @@ function file_gallery_edit_attachment()
 		<?php if( 'image' == $type ) : ?>
 		<a href="<?php echo $fullsize_src; ?>" title="" class="attachment_edit_thumb"><img src="<?php echo $size_src; ?>" alt="image" /></a>
 		<p>
-			<a href="#" id="regenerate[<?php echo $attachment->ID; ?>]" class="regenerate"><?php _e("Regenerate this image's thumbnails", "file-gallery"); ?></a>
+			<a href="#" id="regenerate[<?php echo $attachment->ID; ?>]" class="file_gallery_regenerate"><?php _e("Regenerate this image's thumbnails", "file-gallery"); ?></a>
 		</p>
 		<?php else : ?>
 		<img src="<?php echo $size_src; ?>" alt="image" />

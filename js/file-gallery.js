@@ -19,7 +19,7 @@ jQuery(document).ready(function()
 		tinymce : function()
 		{			
 			// get editor instance
-			var ed = tinymce.EditorManager.get('content');
+			var ed = tinymce.EditorManager.get("content");
 			
 			if( ! ed )
 			{
@@ -51,7 +51,7 @@ jQuery(document).ready(function()
 			// clear options on delete
 			ed.onEvent.add(function(ed, e)
 			{
-				if( 46 === e.keyCode && 'keyup' == e.type && true === file_gallery.gallery_image_clicked )
+				if( 46 === e.keyCode && "keyup" == e.type && true === file_gallery.gallery_image_clicked )
 				{					
 					jQuery("#file_gallery_uncheck_all").trigger("click");
 					file_gallery.gallery_image_clicked = false;
@@ -68,7 +68,7 @@ jQuery(document).ready(function()
 			// skips setContent for webkit browsers if tinyMCE version is below 3.3.6
 			if( (! jQuery.browser.webkit && ! jQuery.browser.safari) || (3 <= parseFloat(tinymce.majorVersion) && 3.6 <= parseFloat(tinymce.minorVersion)) )
 			{
-				var ed = tinymce.EditorManager.get('content'),
+				var ed = tinymce.EditorManager.get("content"),
 					new_content = serial.replace(/\[gallery([^\]]*)\]/g, function(a,b)
 					{
 						return "<img src='" + tinymce.baseURL + "/plugins/wpgallery/img/t.gif' class='wpGallery mceItem' title='gallery" + tinymce.DOM.encode(b) + "' id='file_gallery_tmp_" + file_gallery.tmp + "' />";
@@ -76,8 +76,8 @@ jQuery(document).ready(function()
 				
 				ed.selection.setContent(new_content);
 				
-				ed.selection.select(ed.getDoc().getElementById('file_gallery_tmp_' + file_gallery.tmp));
-				tinyMCE.execCommand('mceFocus', false, 'content');
+				ed.selection.select(ed.getDoc().getElementById("file_gallery_tmp_" + file_gallery.tmp));
+				tinyMCE.execCommand("mceFocus", false, "content");
 				
 				file_gallery.tmp++;
 			}
@@ -107,7 +107,7 @@ jQuery(document).ready(function()
 				post_id = opt.match(/id=['"](\d+)['"]/),
 				size = opt.match(/\ssize=['"]([^'"]+)['"]/i),
 				linkto = opt.match(/link=['"]([^'"]+)['"]/i),
-				thelink = linkto ? linkto[1] : 'attachment',
+				thelink = linkto ? linkto[1] : "attachment",
 				linkrel = opt.match(/rel=['"]([^'"]+)['"]/i),
 				linksize = opt.match(/link_size=['"]([^'"]+)['"]/i),
 				external_url = '',
@@ -125,29 +125,29 @@ jQuery(document).ready(function()
 				tags = opt.match(/tags=['"]([^'"]+)['"]/i),
 				tags_from = opt.match(/tags_from=['"]([^'"]+)['"]/i);
 
-			if( linkto && 'none' != thelink && 'file' != thelink && 'parent_post' != thelink )
+			if( linkto && "none" != thelink && "file" != thelink && "parent_post" != thelink )
 			{
 				external_url = decodeURIComponent(thelink);
-				thelink = 'external_url';
+				thelink = "external_url";
 			}
 			
-			jQuery("#file_gallery_postid").val( post_id ? post_id[1] : ''  );
-			jQuery("#file_gallery_size").val(size ? size[1] : 'thumbnail' );
+			jQuery("#file_gallery_postid").val( post_id ? post_id[1] : ""  );
+			jQuery("#file_gallery_size").val(size ? size[1] : "thumbnail" );
 			jQuery("#file_gallery_linkto").val( thelink );
-			jQuery("#file_gallery_linkrel").val(linkrel ? linkrel[1] : 'true' );
-			jQuery("#file_gallery_linksize").val(linksize ? linksize[1] : 'full' );
+			jQuery("#file_gallery_linkrel").val(linkrel ? linkrel[1] : "true" );
+			jQuery("#file_gallery_linksize").val(linksize ? linksize[1] : "full" );
 			jQuery("#file_gallery_external_url").val( external_url );
-			jQuery("#file_gallery_template").val(template ? template[1] : 'default' );
-			jQuery("#file_gallery_order").val(order ? order[1] : 'ASC' );
-			jQuery("#file_gallery_orderby").val(orderby ? orderby[1] : 'file gallery' );
-			jQuery("#file_gallery_linkclass").val(linkclass ? linkclass[1] : '' );
-			jQuery("#file_gallery_imageclass").val(imageclass ? imageclass[1] : '' );
-			jQuery("#file_gallery_galleryclass").val(galleryclass ? galleryclass[1] : '' );
-			jQuery("#file_gallery_mimetype").val(mimetype ? mimetype[1] : '' );
-			jQuery("#file_gallery_limit").val(limit ? limit[1] : '' );
-			jQuery("#file_gallery_offset").val(offset ? offset[1] : '' );
-			jQuery("#file_gallery_paginate").val(paginate ? paginate[1] : 'false' );
-			jQuery("#file_gallery_columns").val(columns ? columns[1] : '3' );
+			jQuery("#file_gallery_template").val(template ? template[1] : "default" );
+			jQuery("#file_gallery_order").val(order ? order[1] : "ASC" );
+			jQuery("#file_gallery_orderby").val(orderby ? orderby[1] : "file gallery" );
+			jQuery("#file_gallery_linkclass").val(linkclass ? linkclass[1] : "" );
+			jQuery("#file_gallery_imageclass").val(imageclass ? imageclass[1] : "" );
+			jQuery("#file_gallery_galleryclass").val(galleryclass ? galleryclass[1] : "" );
+			jQuery("#file_gallery_mimetype").val(mimetype ? mimetype[1] : "" );
+			jQuery("#file_gallery_limit").val(limit ? limit[1] : "" );
+			jQuery("#file_gallery_offset").val(offset ? offset[1] : "" );
+			jQuery("#file_gallery_paginate").val(paginate ? paginate[1] : "false" );
+			jQuery("#file_gallery_columns").val(columns ? columns[1] : "3" );
 						
 			if( tags )
 			{
@@ -173,15 +173,15 @@ jQuery(document).ready(function()
 			else if( null !== attachment_includes )
 				attachment_ids = attachment_includes[1].split(",");
 			else
-				attachment_ids = 'all';
+				attachment_ids = "all";
 			
-			if( 0 < jQuery('#file_gallery_list li').length )
+			if( 0 < jQuery("#file_gallery_list li").length )
 			{
 				jQuery("#file_gallery_uncheck_all").trigger("click_tinymce_gallery");
 				
-				jQuery('#fg_container .sortableitem .checker').map(function()
+				jQuery("#fg_container .sortableitem .checker").map(function()
 				{
-					if( 'all' === attachment_ids )
+					if( "all" === attachment_ids )
 						return this.checked = true;
 
 					id = jQuery(this).attr("id").replace("att-chk-", "");
@@ -190,7 +190,7 @@ jQuery(document).ready(function()
 						return this.checked = true;
 				});
 				
-				file_gallery.serialize('tinymce_gallery');
+				file_gallery.serialize("tinymce_gallery");
 			}
 		},
 
@@ -203,11 +203,11 @@ jQuery(document).ready(function()
 			if( false === file_gallery.gallery_image_clicked )
 				return;
 
-			var ed = tinymce.EditorManager.get('content');
+			var ed = tinymce.EditorManager.get("content");
 
 			ed.selection.collapse(false);
-			tinyMCE.execCommand('mceRepaint', false, 'content');
-			tinyMCE.execCommand('mceFocus', false, 'content');
+			tinyMCE.execCommand("mceRepaint", false, "content");
+			tinyMCE.execCommand("mceFocus", false, "content");
 		},
 
 
@@ -218,7 +218,7 @@ jQuery(document).ready(function()
 		{
 			var all_checked = true;
 			
-			jQuery('#fg_container .sortableitem .checker').map(function()
+			jQuery("#fg_container .sortableitem .checker").map(function()
 			{
 				if( ! this.checked )
 				{
@@ -242,7 +242,7 @@ jQuery(document).ready(function()
 				fieldsets = jQuery("#file_gallery_fieldsets").val(),
 				data = null;	
 			
-			if( 'return_from_single_attachment' == response_message )
+			if( "return_from_single_attachment" == response_message )
 			{
 				file_gallery.tinymce_deselect();
 				response_message = null;
@@ -402,10 +402,10 @@ jQuery(document).ready(function()
 				file_gallery_order = "",
 				file_gallery_orderby = "";
 			
-			if( 'undefined' == typeof(internal_event) )
-				internal_event = 'normal';
+			if( "undefined" == typeof(internal_event) )
+				internal_event = "normal";
 			
-			if( 'false' == jQuery("#file_gallery_linkrel").val() )
+			if( "false" == jQuery("#file_gallery_linkrel").val() )
 				linkrel = ' rel="false"';
 
 			if( "external_url" == linkto_val )
@@ -623,7 +623,7 @@ jQuery(document).ready(function()
 			}
 			catch(error)
 			{
-				alert(error.description);
+				alert("Error initializing jQuery.ui.sortables: " + error.description);
 			};
 			
 			if( true !== file_gallery.refreshed )
@@ -646,32 +646,33 @@ jQuery(document).ready(function()
 					});
 				
 				// set up delete originals choice dialog
-				jQuery("#delete_dialog")
+				jQuery("#file_gallery_delete_dialog")
 					.dialog(
 					{
-						autoOpen  : false,
-						closeText : file_gallery.L10n.close,
-						bgiframe  : true,
-						resizable : false,
-						width     : 600,
-						modal     : true,
-						draggable : false,
+						autoOpen    : false,
+						closeText   : file_gallery.L10n.close,
+						bgiframe    : true,
+						resizable   : false,
+						width       : 600,
+						modal       : true,
+						draggable   : false,
+						dialogClass : 'wp-dialog',
 						close     : function(event, ui)
 									{
-										var id = jQuery("#delete_dialog").data("single_delete_id");
+										var id = jQuery("#file_gallery_delete_dialog").data("single_delete_id");
 										jQuery("#detach_or_delete_" + id + ", #detach_attachment_" + id + ",#del_attachment_" + id).fadeOut(100);
 									},
 						buttons   :
 						{
 							"Cancel" : function()
 							{
-								var id = jQuery("#delete_dialog").data("single_delete_id");
+								var id = jQuery("#file_gallery_delete_dialog").data("single_delete_id");
 								
 								jQuery("#file_gallery_delete_what").val("data_only");
 								jQuery("#detach_or_delete_" + id + ", #detach_attachment_" + id + ",#del_attachment_" + id).fadeOut(100);
-								jQuery("#delete_dialog").removeData("single_delete_id");
+								jQuery("#file_gallery_delete_dialog").removeData("single_delete_id");
 								
-								jQuery(this).dialog('close');
+								jQuery(this).dialog("close");
 							},
 							"Delete attachment data only" : function()
 							{
@@ -679,7 +680,7 @@ jQuery(document).ready(function()
 								
 								if( jQuery(this).hasClass("single") )
 								{
-									id = jQuery("#delete_dialog").data("single_delete_id");
+									id = jQuery("#file_gallery_delete_dialog").data("single_delete_id");
 								}
 								else
 								{
@@ -690,7 +691,7 @@ jQuery(document).ready(function()
 								jQuery("#file_gallery_delete_what").val("data_only");
 								file_gallery.delete_attachments( id, message );
 								
-								jQuery(this).dialog('close');
+								jQuery(this).dialog("close");
 							},
 							"Delete attachment data, its copies and the files" : function()
 							{
@@ -698,7 +699,7 @@ jQuery(document).ready(function()
 								
 								if( jQuery(this).hasClass("single") )
 								{
-									id = jQuery("#delete_dialog").data("single_delete_id");
+									id = jQuery("#file_gallery_delete_dialog").data("single_delete_id");
 								}
 								else
 								{
@@ -709,39 +710,41 @@ jQuery(document).ready(function()
 								jQuery("#file_gallery_delete_what").val("all");
 								file_gallery.delete_attachments( id, message );
 								
-								jQuery(this).dialog('close');
+								jQuery(this).dialog("close");
 							}
 						}
 					});
 					
-				jQuery("#image_dialog")
+				jQuery("#file_gallery_image_dialog")
 					.dialog(
 					{
-						autoOpen  : false,
-						closeText : file_gallery.L10n.close,
-						bgiframe  : true,
-						resizable : false,
-						position  : "center",
-						modal     : true,
-						draggable : false
+						autoOpen    : false,
+						closeText   : file_gallery.L10n.close,
+						bgiframe    : true,
+						resizable   : false,
+						position    : "center",
+						modal       : true,
+						draggable   : false,
+						dialogClass : 'wp-dialog'
 					});
 				
 				jQuery("#file_gallery_copy_all_dialog")
 					.dialog(
 					{
-						autoOpen  : false,
-						closeText : file_gallery.L10n.close,
-						bgiframe  : true,
-						resizable : false,
-						position  : "center",
-						width     : 500,
-						modal     : true,
-						draggable : false,
-						buttons   :
+						autoOpen    : false,
+						closeText   : file_gallery.L10n.close,
+						bgiframe    : true,
+						resizable   : false,
+						position    : "center",
+						width       : 500,
+						modal       : true,
+						draggable   : false,
+						dialogClass : 'wp-dialog',
+						buttons     :
 						{
 							"Cancel" : function()
 							{
-								jQuery(this).dialog('close');
+								jQuery(this).dialog("close");
 							},
 							"Continue" : function()
 							{
@@ -751,14 +754,17 @@ jQuery(document).ready(function()
 								
 								if( isNaN(from_id) || 0 === from_id )
 								{
-									alert("Supplied ID (" + from_id + ") is zero or not a number, please correct.");
+									if( isNaN(from_id) )
+										from_id = "-none-";
+
+									alert(file_gallery.L10n.copy_from_is_nan_or_zero.replace(/%d/, from_id));
 									
 									return false;
 								}
 								
 								file_gallery.copy_all_attachments(from_id);
 								
-								jQuery(this).dialog('close');
+								jQuery(this).dialog("close");
 							}
 						}
 					});
@@ -772,7 +778,7 @@ jQuery(document).ready(function()
 		delete_dialog : function( id, single )
 		{
 			var m = false,
-				delete_dialog = jQuery("#delete_dialog"),
+				delete_dialog = jQuery("#file_gallery_delete_dialog"),
 				o = jQuery("#file_gallery_originals").val();
 			
 			if( single )
@@ -912,8 +918,8 @@ jQuery(document).ready(function()
 				files_or_tags.val("files");
 			}
 			
-			if( 'undefined' == typeof(do_switch) || false === do_switch )
-				file_gallery.serialize('files_or_tags');
+			if( "undefined" == typeof(do_switch) || false === do_switch )
+				file_gallery.serialize("files_or_tags");
 		},
 
 
@@ -947,8 +953,8 @@ jQuery(document).ready(function()
 				},
 				function(response)
 				{
-					jQuery('#fg_container').html(response).css({"height" : "auto"});
-					jQuery('#file_gallery_response').stop().fadeTo(0, 1).show().fadeOut(7500);
+					jQuery("#fg_container").html(response).css({"height" : "auto"});
+					jQuery("#file_gallery_response").stop().fadeTo(0, 1).show().fadeOut(7500);
 					
 					file_gallery.setup();
 				},
@@ -1007,7 +1013,7 @@ jQuery(document).ready(function()
 					
 				jQuery("#fg_container")
 					.css({"height" : jQuery("#fg_container").height()})
-					.html("<p class=\"loading_image\"><img src=\"" + file_gallery.options.file_gallery_url + "/images/ajax-loader.gif\" alt=\"loading\" /><br />" + a + "</p>");
+					.html('<p class="loading_image"><img src="' + file_gallery.options.file_gallery_url + '/images/ajax-loader.gif" alt="' + file_gallery.L10n.loading + '" /><br />' + a + '</p>');
 				
 				data = {
 						post_id 			: jQuery("#post_ID").val(),
@@ -1064,7 +1070,7 @@ jQuery(document).ready(function()
 		
 				jQuery("#fg_container")
 					.css({"height" : jQuery("#fg_container").height()})
-					.html("<p class=\"loading_image\"><img src=\"" + file_gallery.options.file_gallery_url + "/images/ajax-loader.gif\" alt=\"loading\" /><br />" + a + "</p>");
+					.html('<p class="loading_image"><img src="' + file_gallery.options.file_gallery_url + '/images/ajax-loader.gif" alt="' + file_gallery.L10n.loading + '" /><br />' + a + '</p>');
 		
 				data = {
 						post_id 			: jQuery("#post_ID").val(),
@@ -1081,11 +1087,11 @@ jQuery(document).ready(function()
 					data,
 					function(response)
 					{
-						jQuery('#fg_container')
+						jQuery("#fg_container")
 							.html(response)
 							.css({"height" : "auto"});
 						
-						jQuery('#file_gallery_response')
+						jQuery("#file_gallery_response")
 							.stop()
 							.fadeTo(0, 1)
 							.show()
@@ -1128,7 +1134,7 @@ jQuery(document).ready(function()
 				data,
 				function(response)
 				{
-					jQuery('#file_gallery_response').html(response).fadeOut(7500);
+					jQuery("#file_gallery_response").html(response).fadeOut(7500);
 				},
 				"html"
 			);
@@ -1140,7 +1146,7 @@ jQuery(document).ready(function()
 		 */
 		send_single : function()
 		{
-			attachment_id = jQuery('#data_collector_checked').val();
+			attachment_id = jQuery("#data_collector_checked").val();
 		
 			if( "" == attachment_id || "undefined" == typeof( attachment_id ) )
 				return false;
@@ -1148,14 +1154,14 @@ jQuery(document).ready(function()
 			var data = {
 				action		  : "file_gallery_send_single",
 				attachment_id : attachment_id,
-				size 		  : jQuery('#file_gallery_single_size').val(),
-				linkto 		  : jQuery('#file_gallery_single_linkto').val(),
-				external_url  : jQuery('#file_gallery_single_external_url').val(),
-				linkclass 	  : jQuery('#file_gallery_single_linkclass').val(),
-				imageclass 	  : jQuery('#file_gallery_single_imageclass').val(),
-				align 	      : jQuery('#file_gallery_single_align').val(),
+				size 		  : jQuery("#file_gallery_single_size").val(),
+				linkto 		  : jQuery("#file_gallery_single_linkto").val(),
+				external_url  : jQuery("#file_gallery_single_external_url").val(),
+				linkclass 	  : jQuery("#file_gallery_single_linkclass").val(),
+				imageclass 	  : jQuery("#file_gallery_single_imageclass").val(),
+				align 	      : jQuery("#file_gallery_single_align").val(),
 				post_id 	  : jQuery("#post_ID").val(),
-				caption       : jQuery('#file_gallery_single_caption:checked').length ? true : false,
+				caption       : jQuery("#file_gallery_single_caption:checked").length ? true : false,
 				_ajax_nonce	  : file_gallery.options.file_gallery_nonce
 			};
 			
@@ -1220,8 +1226,8 @@ jQuery(document).ready(function()
 			var image = new Image();
 			image.src = jQuery(element).attr("href");
 		
-			jQuery("#image_dialog")
-				.html('<p class="loading_image"><img src="' + file_gallery.options.file_gallery_url + '/images/ajax-loader.gif" alt="loading" />	</p>')
+			jQuery("#file_gallery_image_dialog")
+				.html('<p class="loading_image"><img src="' + file_gallery.options.file_gallery_url + '/images/ajax-loader.gif" alt="' + file_gallery.L10n.loading + '" />	</p>')
 				.dialog( 'option', 'width',  'auto' )
 				.dialog( 'option', 'height', 'auto' )
 				.dialog("open");
@@ -1246,10 +1252,10 @@ jQuery(document).ready(function()
 					ih = ratio * iw;
 				}
 				
-				jQuery("#image_dialog")
+				jQuery("#file_gallery_image_dialog")
 					.html('<img src="' + src + '" width="' + iw + '" height="' + ih + '" alt="image" />')
-					.dialog( 'option', 'width',  iw + 50 )
-					.dialog( 'option', 'height', ih + 50 )
+					//.dialog( 'option', 'width',  iw + 50 )
+					//.dialog( 'option', 'height', ih + 50 )
 					.dialog( 'option', 'position', 'center');
 			});
 			
@@ -1490,13 +1496,13 @@ jQuery(document).ready(function()
 		
 		regenerate_thumbnails : function( attachment_ids )
 		{
-			var el = "#file_gallery_attachment_edit_image a.regenerate",
+			var el = "#file_gallery_attachment_edit_image a.file_gallery_regenerate",
 				text = jQuery(el).html();
 			
 			if( 0 == jQuery('#file_gallery_response').length )
 				jQuery('#fg_container').append('<div id="file_gallery_response"></div>');
 			
-			jQuery(el).html("working...");
+			jQuery(el).html('<img src="' + file_gallery.options.file_gallery_url + '/images/ajax-loader.gif" alt="' + file_gallery.L10n.regenerating + '" />' + file_gallery.L10n.regenerating);
 
 			jQuery.post
 			(
@@ -1521,7 +1527,7 @@ jQuery(document).ready(function()
 
 	
 	// regenerate thumbnails
-	jQuery("#file_gallery_attachment_edit_image a.regenerate").live('click', function(e)
+	jQuery("#file_gallery_attachment_edit_image a.file_gallery_regenerate").live('click', function(e)
 	{
 		var id = jQuery(this).attr('id').replace(/\]/, '').replace(/regenerate\[/, '');
 		
@@ -1542,11 +1548,11 @@ jQuery(document).ready(function()
 	
 				if( "number" == typeof(fg_icl_trans_id) )
 				{
-					jQuery(this).after('<a title="Copy all attachments from this translation" href="#" id="copy-from-translation-' + fg_icl_trans_id + '"><img src="' + file_gallery.options.file_gallery_url + '/images/famfamfam_silk/image_add.png" alt="Copy all attachments from this translation" /></a>');
+					jQuery(this).after('<a title="' + file_gallery.L10n.copy_all_from_translation + '" href="#" id="copy-from-translation-' + fg_icl_trans_id + '"><img src="' + file_gallery.options.file_gallery_url + '/images/famfamfam_silk/image_add.png" alt="' + file_gallery.L10n.copy_all_from_translation + '" /></a>');
 	
 					jQuery("#copy-from-translation-" + fg_icl_trans_id).bind("click", function()
 					{
-						if( confirm("Copy all attachments from this translation?") )
+						if( confirm(file_gallery.L10n.copy_all_from_translation_) )
 							file_gallery.copy_all_attachments(fg_icl_trans_id);
 	
 						return false;
@@ -1560,11 +1566,11 @@ jQuery(document).ready(function()
 	
 			if( "undefined" != typeof(fg_icl_ori_id) && "undefined" != fg_icl_ori_id )
 			{
-				jQuery("#icl_div .inside").append('<a href="#" id="file_gallery_copy_from_wmpl_original">Copy all attachments from the original post</a>');
+				jQuery("#icl_div .inside").append('<a href="#" id="file_gallery_copy_from_wmpl_original">' + file_gallery.L10n.copy_all_from_original + '</a>');
 	
 				jQuery("#file_gallery_copy_from_wmpl_original").bind("click", function()
 				{
-					if( confirm(file_gallery.L10n.copy_all_from_original) )
+					if( confirm(file_gallery.L10n.copy_all_from_original_) )
 						file_gallery.copy_all_attachments(fg_icl_ori_id);
 	
 					return false;
@@ -1963,11 +1969,9 @@ if( ! Array.indexOf )
 {
 	Array.prototype.indexOf = function(obj)
 	{
-		var l = this.length,
-			i;
+		var l = this.length, i;
 		
-		for( i=0; i<l; i++ )
-		{
+		for( i=0; i<l; i++ ){
 			if( this[i] == obj )
 				return i;
 		}
@@ -1980,14 +1984,18 @@ if( ! Array.indexOf )
 /**
  * thanks to http://phpjs.org/functions/strip_tags:535
  */
-function strip_tags (input, allowed) {
-   allowed = (((allowed || "") + "")
-	  .toLowerCase()
-	  .match(/<[a-z][a-z0-9]*>/g) || [])
-	  .join(''); // making sure the allowed arg is a string containing only tags in lowercase (<a><b><c>)
-   var tags = /<\/?([a-z][a-z0-9]*)\b[^>]*>/gi,
-	   commentsAndPhpTags = /<!--[\s\S]*?-->|<\?(?:php)?[\s\S]*?\?>/gi;
-   return input.replace(commentsAndPhpTags, '').replace(tags, function($0, $1){
-	  return allowed.indexOf('<' + $1.toLowerCase() + '>') > -1 ? $0 : '';
-   });
+function strip_tags (input, allowed)
+{
+	allowed = (((allowed || "") + "")
+		.toLowerCase()
+		.match(/<[a-z][a-z0-9]*>/g) || [])
+		.join(''); // making sure the allowed arg is a string containing only tags in lowercase (<a><b><c>)
+	
+	var tags = /<\/?([a-z][a-z0-9]*)\b[^>]*>/gi,
+	commentsAndPhpTags = /<!--[\s\S]*?-->|<\?(?:php)?[\s\S]*?\?>/gi;
+
+	return input.replace(commentsAndPhpTags, '').replace(tags, function($0, $1)
+	{
+		return allowed.indexOf('<' + $1.toLowerCase() + '>') > -1 ? $0 : '';
+	});
 }

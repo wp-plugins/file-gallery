@@ -469,12 +469,20 @@ function file_gallery_do_settings()
 			
 			
 			/**
-			 * Dsiabled options
+			 * Disabled options
 			 */
+			'version' => array(
+				'default' => '1.7',
+				'display' => 'disabled',
+				'title' => __('File Gallery version', 'file-gallery'),
+				'type' => 'text',
+				'section' => 0,
+				'position' => 0
+			),
 			'folder' => array(
 				'default' => FILE_GALLERY_URL,
 				'display' => 'disabled',
-				'title' => __('File gallery folder', 'file-gallery'),
+				'title' => __('File Gallery folder', 'file-gallery'),
 				'type' => 'text',
 				'section' => 0,
 				'position' => 0
@@ -482,7 +490,7 @@ function file_gallery_do_settings()
 			'abspath' => array(
 				'default' => FILE_GALLERY_ABSPATH,
 				'display' => 'disabled',
-				'title' => __('File gallery path', 'file-gallery'),
+				'title' => __('File Gallery path', 'file-gallery'),
 				'type' => 'text',
 				'section' => 0,
 				'position' => 100
@@ -578,6 +586,11 @@ function file_gallery_activate()
 		$defaults['folder']  = FILE_GALLERY_URL;
 		$defaults['abspath'] = FILE_GALLERY_ABSPATH;
 	}
+	else // Fresh installation, show on posts and pages
+	{
+		$defaults['show_on_post_type_post'] = 1;
+		$defaults['show_on_post_type_page'] = 1;
+	}
 	
 	update_option('file_gallery', $defaults);
 	
@@ -671,8 +684,27 @@ function file_gallery_filtered_constants()
 	
 	if( ! defined('FILE_GALLERY_DEFAULT_TEMPLATE_ABSPATH') )
 		define('FILE_GALLERY_DEFAULT_TEMPLATE_ABSPATH', apply_filters('file_gallery_default_template_abspath', FILE_GALLERY_ABSPATH . '/templates/default'));
+	
+	// Default CSS styles
+	file_gallery_register_styles();
 }
 add_action('after_setup_theme', 'file_gallery_filtered_constants');
+
+
+/**
+ * Registers the default CSS files
+ */
+function file_gallery_register_styles()
+{
+	global $file_gallery;
+
+	wp_register_style('file_gallery_columns', FILE_GALLERY_URL . '/templates/columns.css', '', $file_gallery->version);
+	
+	wp_register_style('file_gallery_default', FILE_GALLERY_URL . '/templates/default/gallery.css', '', $file_gallery->version);
+	wp_register_style('file_gallery_file-gallery', FILE_GALLERY_THEME_TEMPLATES_URL . '/file-gallery/gallery.css', '', $file_gallery->version);
+	wp_register_style('file_gallery_list', FILE_GALLERY_THEME_TEMPLATES_URL . '/list/gallery.css', '', $file_gallery->version);
+	wp_register_style('file_gallery_simple', FILE_GALLERY_THEME_TEMPLATES_URL . '/simple/gallery.css', '', $file_gallery->version);
+}
 
 
 /**
@@ -823,26 +855,31 @@ function file_gallery_js_admin()
 	{
 		// file_gallery.L10n
 		$file_gallery_localize = array(
-			"switch_to_tags" 			=> __("Switch to tags", "file-gallery"),
-			"switch_to_files" 			=> __("Switch to list of attachments", "file-gallery"),
-			"fg_info" 					=> __("Insert checked attachments into post as", "file-gallery"),
-			"no_attachments_upload" 	=> __("No files are currently attached to this post.", "file-gallery"),
-			"sure_to_delete" 			=> __("Are you sure that you want to delete these attachments? Press [OK] to delete or [Cancel] to abort.", "file-gallery"),
-			"saving_attachment_data" 	=> __("saving attachment data...", "file-gallery"),
-			"loading_attachment_data"	=> __("loading attachment data...", "file-gallery"),
-			"deleting_attachment" 		=> __("deleting attachment...", "file-gallery"),
-			"deleting_attachments" 		=> __("deleting attachments...", "file-gallery"),
-			"loading" 					=> __("loading...", "file-gallery"),
-			"detaching_attachment"		=> __("detaching attachment", "file-gallery"),
-			"detaching_attachments"		=> __("detaching attachments", "file-gallery"),
-			"sure_to_detach"			=> __("Are you sure that you want to detach these attachments? Press [OK] to detach or [Cancel] to abort.", "file-gallery"),
-			"close"						=> __("close", "file-gallery"),
-			"loading_attachments"		=> __("loading attachments", "file-gallery"),
-			"post_thumb_set"			=> __("Featured image set successfully", "file-gallery"),
-			"post_thumb_unset"			=> __("Featured image removed", "file-gallery"),
-			"copy_all_from_original"	=> __("Copy all attachments from the original post?", "file-gallery"),
-			"set_as_featured"			=> __("Set as featured image", "file-gallery"),
-			"unset_as_featured"			=> __("Unset as featured image", "file-gallery")
+			"switch_to_tags" 			 => __("Switch to tags", "file-gallery"),
+			"switch_to_files" 			 => __("Switch to list of attachments", "file-gallery"),
+			"fg_info" 					 => __("Insert checked attachments into post as", "file-gallery"),
+			"no_attachments_upload" 	 => __("No files are currently attached to this post.", "file-gallery"),
+			"sure_to_delete" 			 => __("Are you sure that you want to delete these attachments? Press [OK] to delete or [Cancel] to abort.", "file-gallery"),
+			"saving_attachment_data" 	 => __("saving attachment data...", "file-gallery"),
+			"loading_attachment_data"	 => __("loading attachment data...", "file-gallery"),
+			"deleting_attachment" 		 => __("deleting attachment...", "file-gallery"),
+			"deleting_attachments" 		 => __("deleting attachments...", "file-gallery"),
+			"loading" 					 => __("loading...", "file-gallery"),
+			"detaching_attachment"		 => __("detaching attachment", "file-gallery"),
+			"detaching_attachments"		 => __("detaching attachments", "file-gallery"),
+			"sure_to_detach"			 => __("Are you sure that you want to detach these attachments? Press [OK] to detach or [Cancel] to abort.", "file-gallery"),
+			"close"						 => __("close", "file-gallery"),
+			"loading_attachments"		 => __("loading attachments", "file-gallery"),
+			"post_thumb_set"			 => __("Featured image set successfully", "file-gallery"),
+			"post_thumb_unset"			 => __("Featured image removed", "file-gallery"),
+			'copy_all_from_original'	 => __('Copy all attachments from the original post', 'file-gallery'),
+			'copy_all_from_original_'	 => __('Copy all attachments from the original post?', 'file-gallery'),
+			'copy_all_from_translation'  => __('Copy all attachments from this translation', 'file-gallery'),
+			'copy_all_from_translation_' => __('Copy all attachments from this translation?', 'file-gallery'),
+			"set_as_featured"			 => __("Set as featured image", "file-gallery"),
+			"unset_as_featured"			 => __("Unset as featured image", "file-gallery"),
+			'copy_from_is_nan_or_zero'   => __('Supplied ID (%d) is zero or not a number, please correct.', 'file-gallery'),
+			'regenerating'               => __('regenerating...', 'file-gallery')
 		);
 		
 		// file_gallery.options
@@ -850,6 +887,7 @@ function file_gallery_js_admin()
 			"file_gallery_url"   => FILE_GALLERY_URL,
 			"file_gallery_nonce" => wp_create_nonce('file-gallery'),
 			"file_gallery_mode"  => "list",
+
 			"num_attachments"    => 1,
 			"tags_from"          => true,
 			"clear_cache_nonce"  => wp_create_nonce('file-gallery-clear_cache'),
@@ -1020,12 +1058,16 @@ function file_gallery_content()
 	echo 
 	'<div id="fg_container"' . $class . '>
 		&nbsp;
-		<noscript>' . __('File Gallery requires Javascript to function. Please enable it in your browser.', 'file-gallery') . '</noscript>
+		<noscript>
+			<div class="error" style="margin: 0;">
+				<p>' . __('File Gallery requires Javascript to function. Please enable it in your browser.', 'file-gallery') . '</p>
+			</div>
+		</noscript>
 	</div>
 				
-	<div id="image_dialog"></div>
+	<div id="file_gallery_image_dialog"></div>
 	
-	<div id="delete_dialog" title="' . __('Delete attachment dialog', 'file-gallery') . '">
+	<div id="file_gallery_delete_dialog" title="' . __('Delete attachment dialog', 'file-gallery') . '">
 		<p><strong>' . __("Warning: one of the attachments you've chosen to delete has copies.", 'file-gallery') . '</strong></p>
 		<p>' . __('How do you wish to proceed?', 'file-gallery') . '</p>
 		<p><a href="' . FILE_GALLERY_URL . '/help/index.html#deleting_originals" target="_blank">' . __('Click here if you have no idea what this dialog means', 'file-gallery') . '</a> ' . __('(opens File Gallery help in new browser window)', 'file-gallery') . '</p>
@@ -1058,13 +1100,13 @@ function file_gallery()
 			if( ! in_array( $type, array('nav_menu_item', 'revision', 'attachment') ) && 
 				isset($options['show_on_post_type_' . $type]) && true == $options['show_on_post_type_' . $type]
 			)
-				add_meta_box('file_gallery', __( 'File gallery', 'file-gallery' ), 'file_gallery_content', $type);
+				add_meta_box('file_gallery', __( 'File Gallery', 'file-gallery' ), 'file_gallery_content', $type, 'normal');
 		}
 	}
 	else // pre 2.9
 	{
-		add_meta_box('file_gallery', __( 'File gallery', 'file-gallery' ), 'file_gallery_content', 'post');
-		add_meta_box('file_gallery', __( 'File gallery', 'file-gallery' ), 'file_gallery_content', 'page');
+		add_meta_box('file_gallery', __( 'File Gallery', 'file-gallery' ), 'file_gallery_content', 'post', 'normal');
+		add_meta_box('file_gallery', __( 'File Gallery', 'file-gallery' ), 'file_gallery_content', 'page', 'normal');
 	}
 }
 add_action('admin_menu', 'file_gallery');

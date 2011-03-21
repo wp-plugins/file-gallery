@@ -10,7 +10,7 @@ jQuery(document).ready(function()
 		fg_inex_href = current_tab + "&amp;exclude=current",
 		fg_inex      = file_gallery.L10n.exclude_current;
 
-	if( "-1" != current_tab.search("exclude=current") )
+	if( -1 < current_tab.search("exclude=current") )
 	{
 		fg_inex_href = current_tab.replace(/&exclude=current/, "");
 		fg_inex = file_gallery.L10n.include_current;
@@ -23,12 +23,12 @@ jQuery(document).ready(function()
 	jQuery('.media-item').each(function()
 	{
 		if( ! jQuery(this).hasClass("child-of-" + post_id) )
-			jQuery(this).prepend('<input type=\"checkbox\" class=\"attach_me\" value=\"' + jQuery(this).attr('id').split('-').pop() + '\" />');
+			jQuery(this).prepend('<input type="checkbox" class="attach_me" value="' + jQuery(this).attr('id').split('-').pop() + '" />');
 	});
 	
 	// appends a div in which we display the ajax response
-	jQuery('#library-form')
-		.append('<p id="file_gallery_attach_response" class="updated fade" style="visibility: hidden; margin: 0 18px 15px 0; padding:3px 10px;">&nbsp;</p><input type="button" class="button" id="file_gallery_attach_button" value="' + file_gallery.L10n.attach_all_checked_copy + '" />');
+	jQuery("#library-form")
+		.append('<div class="updated" style="margin: 0 18px 15px 0; display: none;"><p id="file_gallery_attach_response" >&nbsp;</p></div><input type="button" class="button" id="file_gallery_attach_button" value="' + file_gallery.L10n.attach_all_checked_copy + '" />');
 	
 	// attaches checked attachments to current post
 	jQuery("#file_gallery_attach_button").bind("click", function()
@@ -55,8 +55,10 @@ jQuery(document).ready(function()
 				
 				jQuery('#file_gallery_attach_response')
 					.html(response)
-					.css({'opacity' : 0, 'visibility' : 'visible'})
-					.fadeTo(200, 1);
+					.parent()
+						.fadeTo(0, 0)
+						.css({"display" : "block"})
+						.fadeTo(200, 1);
 			},
 			'html'
 		);
