@@ -684,27 +684,8 @@ function file_gallery_filtered_constants()
 	
 	if( ! defined('FILE_GALLERY_DEFAULT_TEMPLATE_ABSPATH') )
 		define('FILE_GALLERY_DEFAULT_TEMPLATE_ABSPATH', apply_filters('file_gallery_default_template_abspath', FILE_GALLERY_ABSPATH . '/templates/default'));
-	
-	// Default CSS styles
-	file_gallery_register_styles();
 }
 add_action('after_setup_theme', 'file_gallery_filtered_constants');
-
-
-/**
- * Registers the default CSS files
- */
-function file_gallery_register_styles()
-{
-	global $file_gallery;
-
-	wp_register_style('file_gallery_columns', FILE_GALLERY_URL . '/templates/columns.css', '', $file_gallery->version);
-	
-	wp_register_style('file_gallery_default', FILE_GALLERY_URL . '/templates/default/gallery.css', '', $file_gallery->version);
-	wp_register_style('file_gallery_file-gallery', FILE_GALLERY_THEME_TEMPLATES_URL . '/file-gallery/gallery.css', '', $file_gallery->version);
-	wp_register_style('file_gallery_list', FILE_GALLERY_THEME_TEMPLATES_URL . '/list/gallery.css', '', $file_gallery->version);
-	wp_register_style('file_gallery_simple', FILE_GALLERY_THEME_TEMPLATES_URL . '/simple/gallery.css', '', $file_gallery->version);
-}
 
 
 /**
