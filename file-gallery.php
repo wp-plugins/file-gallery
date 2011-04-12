@@ -2,7 +2,7 @@
 /*
 Plugin Name: File Gallery
 Plugin URI: http://skyphe.org/code/wordpress/file-gallery/
-Version: 1.7-RC1
+Version: 1.7-RC2
 Description: "File Gallery" extends WordPress' media (attachments) capabilities by adding a new gallery shortcode handler with templating support, a new interface for attachment handling when editing posts, and much more.
 Author: Bruno "Aesqe" Babic
 Author URI: http://skyphe.org
@@ -1030,14 +1030,8 @@ add_action('admin_print_styles', 'file_gallery_css_admin');
  */
 function file_gallery_content()
 {
-	$class = '';
-	$options = get_option('file_gallery');
-	
-	if( isset($options['alt_color_scheme']) && true == $options['alt_color_scheme'] )
-		$class = ' class="alternative-color-scheme"';
-	
 	echo 
-	'<div id="fg_container"' . $class . '>
+	'<div id="fg_container">
 		&nbsp;
 		<noscript>
 			<div class="error" style="margin: 0;">

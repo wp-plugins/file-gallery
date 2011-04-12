@@ -79,8 +79,8 @@ more... Here's the full list of features:
 
 == Changelog ==
 
-= 1.7-RC1 =
-* March 21st, 2011
+= 1.7 =
+* April 14th, 2011
 * reworked the settings system so it's easier to add new options
 * improved lightbox support, more flexibility
 * improved pagination
@@ -88,7 +88,7 @@ more... Here's the full list of features:
 * new metabox option: alternative color scheme (and still working on it)
 * ability to copy attachments from WPML translations which aren't
   primary translations
-* finally added the pot file to languages directory
+* added the pot file to languages directory
 * bugfixes, bugfixes, bugfixes
 
 = 1.6.6-beta =

@@ -224,7 +224,7 @@ function file_gallery_css_front( $mobile = false )
 			}
 			// if it does not exist in theme folder, check default plugin templates
 			elseif( is_readable(FILE_GALLERY_ABSPATH . "/templates/" . $template . "/gallery.css") )
-			{
+			{				
 				if( ! $mobile )
 					wp_enqueue_style('file_gallery_' . $template, FILE_GALLERY_URL . '/templates/' . $template . '/gallery.css');
 				else

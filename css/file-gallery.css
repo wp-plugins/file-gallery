@@ -62,8 +62,8 @@
 	float: none;
 }
 
-#poststuff .inside #fg_container.alternative-color-scheme #file_gallery_gallery_options p,
-#poststuff .inside #fg_container.alternative-color-scheme #file_gallery_single_options p
+#poststuff .inside #fg_container .alternative-color-scheme #file_gallery_gallery_options p,
+#poststuff .inside #fg_container .alternative-color-scheme #file_gallery_single_options p
 {
 	background: #F0F0F0;
 	border: 1px solid #DDDDDD;

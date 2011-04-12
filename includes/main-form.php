@@ -3,10 +3,16 @@
  * html form in which all the attachments are 
  * displayed on edit post screen in admin
  */ 
+
+	$fgf_class = '';
+	
+	if( isset($file_gallery_options['alt_color_scheme']) && true == $file_gallery_options['alt_color_scheme'] )
+		$fgf_class = ' class="alternative-color-scheme"';
+
 ?>
 <div id="file_gallery_response"><?php echo $output; ?></div>
 
-<div id="file_gallery_form">
+<div id="file_gallery_form"<?php echo $fgf_class; ?>>
 
 	<input type="hidden" name="data_collector"           id="data_collector"           value="" style="width: 90%" />
 	<input type="hidden" name="data_collector_checked"   id="data_collector_checked"   value="<?php echo $checked_attachments; ?>" style="width: 90%" />
