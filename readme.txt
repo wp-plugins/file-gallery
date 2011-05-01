@@ -1,5 +1,5 @@
 === File Gallery ===
-Contributors: aesqe
+Contributors: aesqe, azizur
 Donate link: http://skyphe.org/donate/
 Tags: attachment, attachments, gallery, galleries, template, templates, shortcode, file, files, attach, detach, unattach, copy, media, tags, library, custom, custom fields, custom fields for attachments, attachment custom fields
 Requires at least: 3.0
@@ -80,7 +80,7 @@ more... Here's the full list of features:
 == Changelog ==
 
 = 1.7 =
-* April 14th, 2011
+* May XX, 2011
 * reworked the settings system so it's easier to add new options
 * improved lightbox support, more flexibility
 * improved pagination

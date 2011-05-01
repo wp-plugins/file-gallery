@@ -1823,13 +1823,13 @@ jQuery(document).ready(function()
 	/* send gallery or single image(s) to editor */
 
 	// send populated gallery shortcode to visual editor (send as gallery button click)
-	jQuery("#file_gallery_send_gallery_legend").live("click", function()
+	jQuery("#file_gallery_send_gallery_legend").live("click", function(e)
 	{
 		var v = jQuery('#data_collector').val();
 		
 		if( "" == v || "undefined" == v )
 			return false;
-		
+
 		send_to_editor( v );
 	});
 	
