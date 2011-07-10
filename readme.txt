@@ -79,6 +79,11 @@ more... Here's the full list of features:
 
 == Changelog ==
 
+= 1.7-RC3 =
+July 10th, 2011
+* WordPress 3.2 compatible
+* minor Media Tags plugin compatibility fix
+
 = 1.7 =
 * May XX, 2011
 * reworked the settings system so it's easier to add new options

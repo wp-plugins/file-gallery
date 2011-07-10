@@ -6,6 +6,15 @@ var file_gallery =
 
 jQuery(document).ready(function()
 {
+	if( typeof(jQuery.fn.prop) !== 'function' )
+	{
+		jQuery.fn.extend({
+			prop: function( name, value ) {
+				return jQuery.access( this, name, value, true, jQuery.attr );
+			}
+		});
+	}
+	
 	jQuery.extend(file_gallery,
 	{
 		gallery_image_clicked : false,
@@ -156,9 +165,9 @@ jQuery(document).ready(function()
 				file_gallery.files_or_tags( false );
 				
 				if( tags_from )
-					jQuery("#fg_gallery_tags_from").attr("checked", false);
+					jQuery("#fg_gallery_tags_from").prop("checked", false);
 				else
-					jQuery("#fg_gallery_tags_from").attr("checked", true);
+					jQuery("#fg_gallery_tags_from").prop("checked", true);
 				
 				jQuery("#file_gallery_toggler").show();
 			}
@@ -237,7 +246,7 @@ jQuery(document).ready(function()
 		 */
 		init : function( response_message )
 		{
-			var tags_from = jQuery("#fg_gallery_tags_from").attr("checked"), 
+			var tags_from = jQuery("#fg_gallery_tags_from").prop("checked"), 
 				container = jQuery("#fg_container"), 
 				fieldsets = jQuery("#file_gallery_fieldsets").val(),
 				data = null;	
@@ -339,9 +348,9 @@ jQuery(document).ready(function()
 			
 			// tags from current post only checkbox
 			if( "false" == file_gallery.options.tags_from )
-				jQuery("#fg_gallery_tags_from").attr("checked", false);
+				jQuery("#fg_gallery_tags_from").prop("checked", false);
 			else
-				jQuery("#fg_gallery_tags_from").attr("checked", true);
+				jQuery("#fg_gallery_tags_from").prop("checked", true);
 			
 			// clickable tags
 			jQuery(".fg_insert_tag").each( function()
@@ -419,7 +428,7 @@ jQuery(document).ready(function()
 					jQuery("#fg_gallery_tags").val("");
 				
 				tags      = jQuery("#fg_gallery_tags").val();
-				tags_from = jQuery("#fg_gallery_tags_from").attr("checked");
+				tags_from = jQuery("#fg_gallery_tags_from").prop("checked");
 				
 				tags = tags.replace(/\s+/g, " ").replace(/\s+,/g, ",").replace(/,+\s*/g, ",");
 			
@@ -860,7 +869,7 @@ jQuery(document).ready(function()
 			{
 				while( 0 < dl )
 				{
-					if( false === jQuery("#att-chk-" + data[dl-1]).attr('checked') )
+					if( false === jQuery("#att-chk-" + data[dl-1]).prop('checked') )
 						delete data[dl-1];
 					
 					dl--;
@@ -1161,7 +1170,7 @@ jQuery(document).ready(function()
 				imageclass 	  : jQuery("#file_gallery_single_imageclass").val(),
 				align 	      : jQuery("#file_gallery_single_align").val(),
 				post_id 	  : jQuery("#post_ID").val(),
-				caption       : jQuery("#file_gallery_single_caption:checked").length ? true : false,
+				caption       : jQuery("#file_gallery_single_caption").is(":checked").length ? true : false,
 				_ajax_nonce	  : file_gallery.options.file_gallery_nonce
 			};
 			
@@ -1728,7 +1737,7 @@ jQuery(document).ready(function()
 	{
 		var c = "#att-chk-" + jQuery(this).parent("li:first").attr("id").replace("image-", "");
 		
-		jQuery(c).attr("checked", jQuery(c).attr("checked") ? false : true).change();
+		jQuery(c).prop("checked", jQuery(c).prop("checked") ? false : true).change();
 	});
 	
 	// attachment thumbnail double click

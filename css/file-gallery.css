@@ -743,9 +743,11 @@ textarea, input, select
 
 .attach_me
 {
-	position: absolute;
+	/*position: absolute;
 	right: 0;
-	top: 1em;
+	top: 1em;*/
+	float: right;
+	margin: 11px 6px 0 0;
 }
 
 #file_gallery_hide_gallery_options,

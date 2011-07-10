@@ -24,6 +24,8 @@ jQuery(document).ready(function()
 	{
 		if( ! jQuery(this).hasClass("child-of-" + post_id) )
 			jQuery(this).prepend('<input type="checkbox" class="attach_me" value="' + jQuery(this).attr('id').split('-').pop() + '" />');
+		else
+			jQuery(this).prepend('<input type="checkbox" class="attach_me empty" checked="checked" disabled="disabled" />');
 	});
 	
 	// appends a div in which we display the ajax response
@@ -50,7 +52,7 @@ jQuery(document).ready(function()
 				
 				jQuery('.attach_me:checked').each(function()
 				{
-					jQuery(this).remove();
+					jQuery(this).prop("disabled", "disabled");
 				});
 				
 				jQuery('#file_gallery_attach_response')

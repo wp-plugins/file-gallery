@@ -450,7 +450,7 @@ function file_gallery_shortcode( $content = false, $attr = false )
 		$file_gallery->overrides = NULL;
 	}
 
-	$limit  = (int) $limit;
+	$limit  = (int) $limit;	
 	$offset = (int) $offset;
 	$page   = (int) get_query_var('page');
 
@@ -595,6 +595,7 @@ function file_gallery_shortcode( $content = false, $attr = false )
 
 		$file_gallery_query = new WP_Query( $query );
 		$attachments = $file_gallery_query->posts;
+		
 		unset($query);
 	}
 	
@@ -899,7 +900,7 @@ function file_gallery_do_pagination( $total = 0, $page = 0 )
 		}
 		
 		// leftovers
-		while( 1 < $limit )
+		while( 1 < $limit && 0 < $c )
 		{
 			array_unshift($out, str_replace('<a ', '<a class="page"', _wp_link_page($c)) . $c . '</a>');
 
