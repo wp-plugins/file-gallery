@@ -106,10 +106,11 @@ function file_gallery_parse_attachment_data( $attachment, $size, $linkto, $linkc
 	}
 	else
 	{
-		$size_src    = FILE_GALLERY_CRYSTAL_URL . '/' . file_gallery_get_file_type($attachment->post_mime_type) . '.png';
-		$width       = '46';
-		$height      = '60';
-		$imageclass .= ' non-image';
+		$size_src        = file_gallery_https( FILE_GALLERY_CRYSTAL_URL ) . '/' . file_gallery_get_file_type($attachment->post_mime_type) . '.png';
+		$size_properties = getimagesize($size_src);
+		$width           = $size_properties[0];
+		$height          = $size_properties[1];
+		$imageclass     .= ' non-image';
 	}
 	
 	$output = '<img src="' . $size_src . '" alt="' . $thumb_alt . '" title="' . $title . '" width="' . $width . '" height="' . $height . '" class="' . trim($imageclass) . '" />';
@@ -210,7 +211,7 @@ function file_gallery_edit_attachment()
 	else
 	{
 		$fullsize_src = wp_get_attachment_url( $attachment->ID );
-		$size_src     = FILE_GALLERY_CRYSTAL_URL . '/' . file_gallery_get_file_type($attachment->post_mime_type) . '.png';
+		$size_src     = file_gallery_https( FILE_GALLERY_CRYSTAL_URL ) . '/' . file_gallery_get_file_type($attachment->post_mime_type) . '.png';
 		
 		$type = 'document';
 	}
@@ -244,7 +245,7 @@ function file_gallery_edit_attachment()
 		<?php endif; ?>
 		<br />
 		<div id="attachment_data">
-			<p><strong><?php _e('ID:', 'file-gallery'); ?></strong> <a href="<?php echo admin_url('media.php?attachment_id=' . $attachment->ID . '&action=edit'); ?>" target="_blank"><?php echo $attachment->ID; ?></a></p>
+			<p><strong><?php _e('ID:', 'file-gallery'); ?></strong> <a href="<?php echo admin_url('media.php?attachment_id=' . $attachment->ID . '&action=edit&TB_iframe=1'); ?>" class="thickbox" onclick="return false;"><?php echo $attachment->ID; ?></a></p>
 			<p><strong><?php _e('Date uploaded:', 'file-gallery'); ?></strong><br /><?php echo date(get_option('date_format'), strtotime($attachment->post_date)); ?></p>
 			<p><strong><?php _e('Uploaded by:', 'file-gallery'); ?></strong> <?php echo $post_author; ?></p>
 			<?php if( $has_copies ) : ?>
@@ -334,7 +335,7 @@ function file_gallery_copy_attachments_to_post()
 	// get current post's attachments
 	$current_attachments = get_posts('numberposts=-1&post_type=attachment&post_parent=' . $post_id);
 	
-	if( false !== $current_attachments ) // if post already has attachments
+	if( false !== $current_attachments && ! empty($current_attachments) ) // if post already has attachments
 	{
 		foreach( $possible_new_attachments as $pna ) // for each checked item...
 		{
@@ -381,6 +382,9 @@ function file_gallery_copy_attachments_to_post()
 		else
 			$output .= __('You must check the checkboxes next to attachments you want to copy to current post.', 'file-gallery');
 	}
+	
+	if( ! is_array($attached_ids) )
+		$attached_ids = array();
 	
 	// return output prepended by a list of checked attachments
 	// using # (hash) as the separator

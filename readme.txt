@@ -3,7 +3,7 @@ Contributors: aesqe, azizur
 Donate link: http://skyphe.org/donate/
 Tags: attachment, attachments, gallery, galleries, template, templates, shortcode, file, files, attach, detach, unattach, copy, media, tags, library, custom, custom fields, custom fields for attachments, attachment custom fields
 Requires at least: 3.0
-Tested up to: 3.2-bleeding
+Tested up to: 3.2.1
 Stable tag: 1.6.5.4
 
 File Gallery extends WordPress media (attachments) capabilities 
@@ -78,6 +78,12 @@ more... Here's the full list of features:
 
 
 == Changelog ==
+
+= 1.7-RC4 =
+July 23rd, 2011
+* SSL Admin support
+* Better compatibility with plugin checkboxes in media library popup
+* other minor fixes
 
 = 1.7-RC3 =
 July 10th, 2011

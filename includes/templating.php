@@ -738,7 +738,7 @@ function file_gallery_shortcode( $content = false, $attr = false )
 			}
 			else
 			{
-				$param['thumb_link']   = FILE_GALLERY_CRYSTAL_URL . '/' . file_gallery_get_file_type($attachment->post_mime_type) . '.png';
+				$param['thumb_link']   = file_gallery_https( FILE_GALLERY_CRYSTAL_URL ) . '/' . file_gallery_get_file_type($attachment->post_mime_type) . '.png';
 				$param['thumb_link']   = apply_filters('file_gallery_non_image_thumb_link', $param['thumb_link'], $attachment->post_mime_type, $attachment->ID);
 				$param['thumb_width']  = '46';
 				$param['thumb_height'] = '60';

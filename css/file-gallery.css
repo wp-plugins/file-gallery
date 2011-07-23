@@ -739,13 +739,8 @@ textarea, input, select
 	background: #FFFFFF;
 }
 
-
-
-.attach_me
+.file_gallery_attach_to_post.solo
 {
-	/*position: absolute;
-	right: 0;
-	top: 1em;*/
 	float: right;
 	margin: 11px 6px 0 0;
 }

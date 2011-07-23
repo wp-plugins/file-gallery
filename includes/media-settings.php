@@ -86,7 +86,7 @@ function file_gallery_save_media_settings( $options )
 
 	$defaults = $file_gallery->false_defaults;
 	$defaults = file_gallery_parse_args( $options, $defaults); // $defaults = shortcode_atts( $defaults, $options );
-	$defaults['folder']  = FILE_GALLERY_URL;
+	$defaults['folder']  = file_gallery_https( FILE_GALLERY_URL );
 	$defaults['abspath'] = FILE_GALLERY_ABSPATH;
 	
 	return $defaults;

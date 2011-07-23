@@ -97,7 +97,7 @@ function file_gallery_list_attachments(&$count_attachments, $post_id, $attachmen
 			// if it's not an image...
 			if( "" == $attachment_thumb )
 			{
-				$attachment_thumb[0] = FILE_GALLERY_CRYSTAL_URL . "/" . file_gallery_get_file_type($attachment->post_mime_type) . ".png";
+				$attachment_thumb[0] = file_gallery_https( FILE_GALLERY_CRYSTAL_URL ). "/" . file_gallery_get_file_type($attachment->post_mime_type) . ".png";
 				$attachment_width    = "";
 				$attachment_height   = "";
 				$non_image           = " non_image";
@@ -124,12 +124,12 @@ function file_gallery_list_attachments(&$count_attachments, $post_id, $attachmen
 				
 				if( "" == $non_image ) :
 					$attached_files .= '<a href="' . $large[0] . '" id="in-' . $attachment->ID . '-zoom" class="img_zoom">
-						<img src="' . FILE_GALLERY_URL . '/images/famfamfam_silk/magnifier.png" alt="' . __("Zoom", "file-gallery") . '" title="' . __("Zoom", "file-gallery") . '" />
+						<img src="' . file_gallery_https( FILE_GALLERY_URL ) . '/images/famfamfam_silk/magnifier.png" alt="' . __("Zoom", "file-gallery") . '" title="' . __("Zoom", "file-gallery") . '" />
 					</a>';
 				endif;
 				
 				$attached_files .= '<a href="#" id="in-' . $attachment->ID . '-edit" class="img_edit">
-					<img src="' . FILE_GALLERY_URL . '/images/famfamfam_silk/pencil.png" alt="' . __("Edit", "file-gallery") . '" title="' . __("Edit", "file-gallery") . '" />
+					<img src="' . file_gallery_https( FILE_GALLERY_URL ) . '/images/famfamfam_silk/pencil.png" alt="' . __("Edit", "file-gallery") . '" title="' . __("Edit", "file-gallery") . '" />
 				</a>
 				<input type="checkbox" id="att-chk-' . $attachment->ID . '" class="checker"' . $checked . ' title="' . __("Click to select", "file-gallery") . '" />';
 		
@@ -143,7 +143,7 @@ function file_gallery_list_attachments(&$count_attachments, $post_id, $attachmen
 						$as_featured = __("Unset as featured image", "file-gallery");
 				
 					$attached_files .= '<a href="#" class="post_thumb_status" rel="' . $attachment->ID . '" title="' . $as_featured . '">
-							<img src="' . FILE_GALLERY_URL . '/images/famfamfam_silk/star_' . $post_thumb_link . '.png" alt="' . $as_featured . '" />
+							<img src="' . file_gallery_https( FILE_GALLERY_URL ) . '/images/famfamfam_silk/star_' . $post_thumb_link . '.png" alt="' . $as_featured . '" />
 						</a>';
 					
 					$attached_files .= '<div id="post_thumb_setter_' . $attachment->ID . '" class="post_thumb_setter">
@@ -163,7 +163,7 @@ function file_gallery_list_attachments(&$count_attachments, $post_id, $attachmen
 				endif;
 
 				$attached_files .= '<a href="#" class="delete_or_detach_link" rel="' . $attachment->ID . '">
-					<img src="' . FILE_GALLERY_URL . '/images/famfamfam_silk/delete.png" alt="' . __("Detach / Delete", "file-gallery") . '" title="' . __("Detach / Delete", "file-gallery") . '" />
+					<img src="' . file_gallery_https( FILE_GALLERY_URL ) . '/images/famfamfam_silk/delete.png" alt="' . __("Detach / Delete", "file-gallery") . '" title="' . __("Detach / Delete", "file-gallery") . '" />
 				</a>
 				<div id="detach_or_delete_'  . $attachment->ID . '" class="detach_or_delete">
 					<br />';
@@ -309,7 +309,7 @@ function file_gallery_list_tags( $args = array() )
 
 				foreach( $media_tags as $tag )
 				{						
-					$list[] = '<a href="' . get_bloginfo("url") . $fs . $media_tag_slug . $ss . $tag->slug . $ts . '" class="fg_insert_tag" name="' . $tag->slug . '">' . $tag->name . '</a>';
+					$list[] = '<a href="' . file_gallery_https( get_bloginfo("url") ) . $fs . $media_tag_slug . $ss . $tag->slug . $ts . '" class="fg_insert_tag" name="' . $tag->slug . '">' . $tag->name . '</a>';
 				}
 			}
 			else

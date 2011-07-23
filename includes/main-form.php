@@ -23,7 +23,7 @@
 	
 	<div id="fg_buttons"<?php if( ( ! isset($file_gallery_options["display_gallery_fieldset"]) && ! isset($file_gallery_options["display_single_fieldset"]) ) || ( isset($file_gallery_options["display_gallery_fieldset"]) && isset($file_gallery_options["display_single_fieldset"]) && true != $file_gallery_options["display_gallery_fieldset"] && true != $file_gallery_options["display_single_fieldset"] ) ){ echo ' class="alt"'; }?>>
 	
-		<a id="file_gallery_upload_media" href="media-upload.php?post_id=<?php echo $post_id;?>&amp;type=image&amp;TB_iframe=1&amp;tab=library&amp;height=500&amp;width=640" class="thickbox button" title="<?php _e('Add an Image', 'file-gallery');?>"><?php _e('Add an Image', 'file-gallery');?></a>
+		<a id="file_gallery_upload_media" href="media-upload.php?post_id=<?php echo $post_id;?>&amp;type=image&amp;TB_iframe=1&amp;tab=library" class="thickbox button" title="<?php _e('Add an Image', 'file-gallery');?>"><?php _e('Add an Image', 'file-gallery');?></a>
 	
 		<input type="button" value="<?php _e("Refresh attachments", "file-gallery"); ?>" title="<?php _e("Refresh attachments", "file-gallery"); ?>" class="button" id="file_gallery_refresh" />
 		<input type="button" value="<?php _e("Check all", "file-gallery"); ?>" title="<?php _e("Check all", "file-gallery"); ?>" class="button" id="file_gallery_check_all" />

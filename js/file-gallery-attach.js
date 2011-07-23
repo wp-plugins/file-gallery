@@ -22,10 +22,19 @@ jQuery(document).ready(function()
 	// adds a checkbox to each attachment not already attached to current post
 	jQuery('.media-item').each(function()
 	{
-		if( ! jQuery(this).hasClass("child-of-" + post_id) )
-			jQuery(this).prepend('<input type="checkbox" class="attach_me" value="' + jQuery(this).attr('id').split('-').pop() + '" />');
+		var cbh = jQuery(this).find(":checkbox"); //short-hand
+		
+		if( cbh.length ) // thanks, alx359 :)
+		{
+			cbh.addClass('file_gallery_attach_to_post');
+		}
 		else
-			jQuery(this).prepend('<input type="checkbox" class="attach_me empty" checked="checked" disabled="disabled" />');
+		{
+			if( ! jQuery(this).hasClass("child-of-" + post_id) )
+				jQuery(this).prepend('<input type="checkbox" class="file_gallery_attach_to_post solo" value="' + jQuery(this).attr('id').split('-').pop() + '" />');
+			else
+				jQuery(this).prepend('<input type="checkbox" class="file_gallery_attach_to_post solo" checked="checked" disabled="disabled" />');
+		}
 	});
 	
 	// appends a div in which we display the ajax response
@@ -41,7 +50,7 @@ jQuery(document).ready(function()
 			{
 				action  	: "file_gallery_copy_attachments_to_post",
 				post_id	 	: post_id,
-				ids     	: jQuery.map(jQuery('.attach_me:checked'),function(i){return jQuery(i).val();}).join(","),
+				ids     	: jQuery.map(jQuery('.file_gallery_attach_to_post:checked'),function(i){return jQuery(i).val();}).join(","),
 				_ajax_nonce : file_gallery_attach_nonce
 			},
 			function(response)
@@ -50,9 +59,14 @@ jQuery(document).ready(function()
 					attached_ids = data_vars[0];
 					response     = data_vars[1];
 				
-				jQuery('.attach_me:checked').each(function()
+				jQuery('.file_gallery_attach_to_post:checked').each(function()
 				{
-					jQuery(this).prop("disabled", "disabled");
+					jQuery(this).parents(".media-item").addClass("child-of-" + post_id);
+
+					if( jQuery(this).hasClass("solo") )
+						jQuery(this).prop("disabled", true);
+					else
+						jQuery(this).prop("checked", false);
 				});
 				
 				jQuery('#file_gallery_attach_response')

@@ -10,6 +10,15 @@ jQuery(document).ready(function()
 	{
 		jQuery.fn.extend({
 			prop: function( name, value ) {
+				
+				if( 'checked' === name || 'selected' === name || 'disabled' === name || 'readonly' === name )
+				{
+					if( true === value )
+						value = name;
+					else if( false === value )
+						value = "";
+				}
+				
 				return jQuery.access( this, name, value, true, jQuery.attr );
 			}
 		});

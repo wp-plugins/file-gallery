@@ -1,6 +1,21 @@
 <?php
 
 /**
+ * Checks if wp-admin is in SLL mode and replaces 
+ * the protocol in links accordingly
+ */
+function file_gallery_https( $input )
+{
+	global $file_gallery;
+	
+	if( $file_gallery->ssl_admin && 0 === strpos($input, 'http:') && 0 !== strpos($input, 'https:') )
+		$input = 'https' . substr($input, 4);
+	
+	return $input;
+}
+
+
+/**
  * Taken from WordPress 3.1-beta1
  */
 if( ! function_exists('_wp_link_page') )
@@ -91,8 +106,8 @@ function file_gallery_get_image_size($link, $height = false)
 	
 	if( "" != $link )
 	{
-		$server_name = preg_match("#http://([^/]+)[/]?(.*)#", get_bloginfo('url'), $matches);
-		$server_name = "http://" . $matches[1];
+		$server_name = preg_match("#(http|https)://([^/]+)[/]?(.*)#", get_bloginfo('url'), $matches);
+		$server_name = $matches[1] . "://" . $matches[2];
 		
 		if( false === strpos($link, $server_name) )
 		{

@@ -153,10 +153,10 @@ a.img_edit
 }
 
 
-.attach_me
+.file_gallery_attach_to_post.solo
 {
-	left: 0 !important;
-	right:auto !important;
+	float: left !important;
+	margin: 11px 0 0 6px !important;
 }
 
 #file_gallery_hide_gallery_options,
