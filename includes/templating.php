@@ -600,7 +600,7 @@ function file_gallery_shortcode( $content = false, $attr = false )
 	}
 	
 	if( isset($query) )
-	{
+	{		
 		if( 0 < $limit )
 			$query .= " LIMIT " . $limit;
 		
@@ -617,7 +617,7 @@ function file_gallery_shortcode( $content = false, $attr = false )
 	}
 
 	if( empty($attachments) )
-		return '';
+		return '<!-- "File Gallery" plugin says: -No attachments found for the following shortcode arguments: "' . json_encode($attr) . '" -->';
 
 	// feed
 	if( is_feed() )

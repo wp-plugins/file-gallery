@@ -2,8 +2,8 @@
 Contributors: aesqe, azizur
 Donate link: http://skyphe.org/donate/
 Tags: attachment, attachments, gallery, galleries, template, templates, shortcode, file, files, attach, detach, unattach, copy, media, tags, library, custom, custom fields, custom fields for attachments, attachment custom fields
-Requires at least: 3.0
-Tested up to: 3.2.1
+Requires at least: 3.1
+Tested up to: 3.3-aortic-dissection
 Stable tag: 1.6.5.4
 
 File Gallery extends WordPress media (attachments) capabilities 
@@ -77,7 +77,25 @@ more... Here's the full list of features:
 
 
 
+== FAQ ==
+
+Q: How can I add a rel tag to the links in the gallery?
+A: See here: <a href="http://wordpress.org/support/topic/lightbox-11?replies=3#post-2254288">http://wordpress.org/support/topic/lightbox-11?replies=3#post-2254288</a>
+
+For additional information, please see the File Gallery help file.
+It's included with the installation, but you can also view it online here: 
+<a href="http://skyphe.org/wp-content/plugins/file-gallery/help/index.html">http://skyphe.org/wp-content/plugins/file-gallery/help/index.html</a>
+
+
+
 == Changelog ==
+
+= 1.7-RC5 = 
+July 31st, 2011
+* fixed MSIE tinyMCE content insert position bug
+* fixed gallery output to produce a HTML comment instead of an empty
+  string, so that the default gallery won't be shown if no attachments
+  were found for specified arguments
 
 = 1.7-RC4 =
 July 23rd, 2011

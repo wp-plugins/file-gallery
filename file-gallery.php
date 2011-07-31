@@ -2,7 +2,7 @@
 /*
 Plugin Name: File Gallery
 Plugin URI: http://skyphe.org/code/wordpress/file-gallery/
-Version: 1.7-RC4
+Version: 1.7-RC5
 Description: "File Gallery" extends WordPress' media (attachments) capabilities by adding a new gallery shortcode handler with templating support, a new interface for attachment handling when editing posts, and much more.
 Author: Bruno "Aesqe" Babic
 Author URI: http://skyphe.org
@@ -70,7 +70,7 @@ class File_Gallery
 	/**
 	 * Current version of this plugin
 	 */
-	var $version = '1.7-RC4';
+	var $version = '1.7-RC5';
 
 	/***/
 	function __construct()
@@ -78,12 +78,10 @@ class File_Gallery
 		$this->File_Gallery();
 	}
 
-	/**
-	 * Checks if Attachment custom fields plugin is installed
-	 * (not released yet)
-	 */
+	/***/
 	function File_Gallery()
 	{
+		// Checks if Attachment custom fields plugin is installed (not released yet)
 		if( false !== strpos(serialize(get_option('active_plugins')), 'attachment-custom-fields.php') )
 			$this->acf = true;
 		
@@ -646,7 +644,7 @@ function file_gallery_plugins_support()
 
 	define('FILE_GALLERY_MOBILE', $mobile);
 	
-	// Media Tags	
+	// Media Tags plugin
 	if( defined('MEDIA_TAGS_TAXONOMY') )
 		$file_gallery_media_tag_name = MEDIA_TAGS_TAXONOMY;
 	else
@@ -1222,6 +1220,7 @@ add_filter('manage_media_columns', 'file_gallery_media_columns');
 /**
  * Includes
  */
+require_once('includes/media-tags.php');
 require_once('includes/media-settings.php');
 require_once('includes/attachments.php');
 require_once('includes/miscellaneous.php');
