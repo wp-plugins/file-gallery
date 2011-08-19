@@ -79,8 +79,7 @@ more... Here's the full list of features:
 
 == FAQ ==
 
-Q: How can I add a rel tag to the links in the gallery?
-A: See here: <a href="http://wordpress.org/support/topic/lightbox-11?replies=3#post-2254288">http://wordpress.org/support/topic/lightbox-11?replies=3#post-2254288</a>
+Coming soon.
 
 For additional information, please see the File Gallery help file.
 It's included with the installation, but you can also view it online here: 
@@ -90,21 +89,29 @@ It's included with the installation, but you can also view it online here:
 
 == Changelog ==
 
+= 1.7-RC7 =
+* August 19th, 2011
+* ability to sort attachments within the File Gallery metabox by 
+  title, date, or menu_order [thanks to alexbarber]
+* custom rel attribute value for galleries [thanks to thedarkmist]
+* fixed double media tags submenus when Media Tags plugin is 
+  active [props alx359]
+
 = 1.7-RC5 = 
-July 31st, 2011
+* July 31st, 2011
 * fixed MSIE tinyMCE content insert position bug
 * fixed gallery output to produce a HTML comment instead of an empty
   string, so that the default gallery won't be shown if no attachments
   were found for specified arguments
 
 = 1.7-RC4 =
-July 23rd, 2011
+* July 23rd, 2011
 * SSL Admin support
 * Better compatibility with plugin checkboxes in media library popup
 * other minor fixes
 
 = 1.7-RC3 =
-July 10th, 2011
+* July 10th, 2011
 * WordPress 3.2 compatible
 * minor Media Tags plugin compatibility fix
 

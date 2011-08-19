@@ -93,9 +93,16 @@
 			<p id="file_gallery_linkrel_label">
 				<label for="file_gallery_linkrel"><?php _e("link 'rel' attribute", "file-gallery"); ?>:</label>
 				<select type="text" name="file_gallery_linkrel" id="file_gallery_linkrel">
-					<option value="true">true</option>
+					<option value="true">true (auto generated)</option>
 					<option value="false">false</option>
 				</select>
+				
+				&nbsp;<em><?php _e('or', 'file-gallery'); ?></em>&nbsp;
+			
+				<span id="file_gallery_linkrel_custom_label">
+					<label for="file_gallery_linkrel_custom"><?php _e("custom value", "file-gallery"); ?>:</label>
+					<input type="text" name="file_gallery_linkrel_custom" id="file_gallery_linkrel_custom" value="" />
+				</span>
 			</p>
 			
 			<p id="file_gallery_external_url_label">
@@ -299,7 +306,7 @@
 		<input type="hidden" id="files_or_tags" value="<?php echo $files_or_tags; ?>" />
 	
 	</fieldset>
-	
+
 	<?php if( false == $file_gallery_options["display_single_fieldset"] && true == $file_gallery_options['insert_single_button'] ) : ?>
 	
 	<input type="button" class="button-primary" id="file_gallery_send_single_legend" value="<?php _e("Insert single image(s)", "file-gallery"); ?>" />
@@ -307,7 +314,26 @@
 	<?php endif; ?>
 
 	<div id="file_gallery_attachment_list">
-		<?php echo file_gallery_list_attachments($count_attachments, $post_id, $attachment_order, $checked_attachments); ?>
+	
+		<p id="file_gallery_attachments_sorting">
+			<label for="file_gallery_attachments_sortby"><?php _e('Sort attachments by', 'file-gallery'); ?></label>
+		
+			<select id="file_gallery_attachments_sortby">
+				<option value="menu_order"<?php if( 'menu_order' == $attachment_orderby){ echo ' selected="selected"'; } ?>>menu order</option>
+				<option value="post_title"<?php if( 'post_title' == $attachment_orderby){ echo ' selected="selected"'; } ?>>title</option>
+				<option value="post_name"<?php if( 'post_name' == $attachment_orderby){ echo ' selected="selected"'; } ?>>name</option>
+				<option value="post_date"<?php if( 'post_date' == $attachment_orderby){ echo ' selected="selected"'; } ?>>date</option>
+			</select>
+			
+			<select id="file_gallery_attachments_sort">
+				<option value="ASC"<?php if( 'ASC' == $attachment_order){ echo ' selected="selected"'; } ?>>ASC</option>
+				<option value="DESC"<?php if( 'DESC' == $attachment_order){ echo ' selected="selected"'; } ?>>DESC</option>
+			</select>
+			
+			<input type="button" id="file_gallery_attachments_sort_submit" value="<?php _e('Go', 'file-gallery'); ?>" />
+		</p>
+	
+		<?php echo file_gallery_list_attachments($count_attachments, $post_id, $attachment_order, $checked_attachments, $attachment_orderby); ?>
 	</div>
 	
 	<div id="file_gallery_tag_list">

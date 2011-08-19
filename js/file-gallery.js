@@ -4,27 +4,59 @@ var file_gallery =
 	options : file_gallery_options
 };
 
-jQuery(document).ready(function($)
+// add access and prop for older versions of jQuery
+if( typeof(jQuery.access) !== 'function' )
 {
-	// for older versions of jQuery
-	if( typeof($.fn.prop) !== 'function' )
-	{
-		$.fn.extend({
-			prop: function( name, value ) {
-				
-				if( 'checked' === name || 'selected' === name || 'disabled' === name || 'readonly' === name )
-				{
-					if( true === value )
-						value = name;
-					else if( false === value )
-						value = "";
-				}
-				
-				return $.access( this, name, value, true, $.attr );
-			}
-		});
-	}
+	jQuery.extend({
+		access: function( elems, key, value, exec, fn, pass ) {
+			var length = elems.length;
 	
+			// Setting many attributes
+			if ( typeof key === "object" ) {
+				for ( var k in key ) {
+					jQuery.access( elems, k, key[k], exec, fn, value );
+				}
+				return elems;
+			}
+	
+			// Setting one attribute
+			if ( value !== undefined ) {
+				// Optionally, function values get executed if exec is true
+				exec = !pass && exec && jQuery.isFunction(value);
+	
+				for ( var i = 0; i < length; i++ ) {
+					fn( elems[i], key, exec ? value.call( elems[i], i, fn( elems[i], key ) ) : value, pass );
+				}
+	
+				return elems;
+			}
+	
+			// Getting an attribute
+			return length ? fn( elems[0], key ) : undefined;
+		},
+	});
+}
+	
+if( typeof(jQuery.fn.prop) !== 'function' )
+{
+	jQuery.fn.extend({
+		prop: function( name, value ) {
+			
+			if( 'checked' === name || 'selected' === name || 'disabled' === name || 'readonly' === name )
+			{
+				if( true === value )
+					value = name;
+				else if( false === value )
+					value = "";
+			}
+			
+			return jQuery.access( this, name, value, true, jQuery.attr );
+		}
+	});
+}
+
+jQuery(document).ready(function($)
+{	
 	$.extend(file_gallery,
 	{
 		gallery_image_clicked : false,
@@ -90,9 +122,10 @@ jQuery(document).ready(function($)
 				var ed = tinymce.EditorManager.get("content"),
 					new_content = serial.replace(/\[gallery([^\]]*)\]/g, function(a,b)
 					{
-						return "<img src='" + tinymce.baseURL + "/plugins/wpgallery/img/t.gif' class='wpGallery mceItem' title='gallery" + tinymce.DOM.encode(b) + "' id='file_gallery_tmp_" + file_gallery.tmp + "' />";
+						return "<img src='" + tinymce.baseURL + "/plugins/wpgallery/img/t.gif' class='wpGallery mceItem' title='gallery" + tinymce.DOM.encode(b).replace(/\[/, '\[').replace(/\]/, '\]') + "' id='file_gallery_tmp_" + file_gallery.tmp + "' />";
 					});
 				
+				ed.focus();
 				ed.selection.setContent(new_content);
 				
 				ed.selection.select(ed.getDoc().getElementById("file_gallery_tmp_" + file_gallery.tmp));
@@ -171,7 +204,13 @@ jQuery(document).ready(function($)
 			$("#file_gallery_offset").val(offset ? offset[1] : "" );
 			$("#file_gallery_paginate").val(paginate ? paginate[1] : "false" );
 			$("#file_gallery_columns").val(columns ? columns[1] : "3" );
-						
+			
+			if( linkrel && "true" != linkrel[1] && "false" != linkrel[1])
+			{
+				$("#file_gallery_linkrel").val("true");
+				$("#file_gallery_linkrel_custom").val( linkrel[1].replace(/\\\[/, '[').replace(/\\\]/, ']') );
+			}
+			
 			if( tags )
 			{
 				$("#fg_gallery_tags").val(tags[1]);
@@ -263,23 +302,27 @@ jQuery(document).ready(function($)
 			var tags_from = $("#fg_gallery_tags_from").prop("checked"), 
 				container = $("#fg_container"), 
 				fieldsets = $("#file_gallery_fieldsets").val(),
-				data = null;	
+				data = null,
+				attachment_order = $("#data_collector_full").val();	
 			
 			if( "return_from_single_attachment" == response_message )
 			{
 				file_gallery.tinymce_deselect();
-				response_message = null;
 			}
-			else if( 'refreshed' == response_message )
+			else if( "refreshed" == response_message )
 			{
 				file_gallery.refreshed = true;
-				response_message = null;
+			}
+			else if( "sorted" == response_message )
+			{
+				file_gallery.refreshed = true;
+				attachment_order = $("#file_gallery_attachments_sort").val();
 			}
 			
 			if( "undefined" == typeof(fieldsets) )
 				fieldsets = "";
 			
-			if( true === tags_from || "undefined" == typeof( tags_from )|| "undefined" == tags_from )
+			if( true === tags_from || "undefined" == typeof( tags_from ) || "undefined" == tags_from )
 				tags_from = true;
 			else
 				tags_from = false;
@@ -287,7 +330,8 @@ jQuery(document).ready(function($)
 			data = {
 					action				: "file_gallery_load",
 					post_id 			: $("#post_ID").val(),
-					attachment_order 	: $("#data_collector_full").val(),
+					attachment_order 	: attachment_order,
+					attachment_orderby 	: $("#file_gallery_attachments_sortby").val(),
 					checked_attachments : $("#data_collector_checked").val(),
 					files_or_tags 		: $("#files_or_tags").val(),
 					tag_list 			: $("#fg_gallery_tags").val(),
@@ -295,6 +339,8 @@ jQuery(document).ready(function($)
 					fieldsets			: fieldsets,
 					_ajax_nonce			: file_gallery.options.file_gallery_nonce
 			};
+			
+			response_message = null;
 			
 			container
 				.empty()
@@ -428,8 +474,15 @@ jQuery(document).ready(function($)
 			if( "undefined" == typeof(internal_event) )
 				internal_event = "normal";
 			
-			if( "false" == $("#file_gallery_linkrel").val() )
+			if( "" != $("#file_gallery_linkrel_custom").val() && "undefined" != typeof($("#file_gallery_linkrel_custom").val()) )
+			{
+				$("#file_gallery_linkrel_custom").val( $("#file_gallery_linkrel_custom").val().replace(/\[/, '').replace(/\]/, '') );
+				linkrel = ' rel="' + $("#file_gallery_linkrel_custom").val() + '"';
+			}
+			else if( "false" == $("#file_gallery_linkrel").val() )
+			{
 				linkrel = ' rel="false"';
+			}
 
 			if( "external_url" == linkto_val )
 				linkto_val = encodeURIComponent(external_url);
@@ -546,6 +599,7 @@ jQuery(document).ready(function($)
 			{
 				$("#file_gallery_linkrel_label").show();
 				$("#file_gallery_linksize_label").show();
+				$("#file_gallery_linkrel_custom_label").show();
 
 				if( "full" != $("#file_gallery_linksize").val() )
 					linksize = ' link_size="' + $("#file_gallery_linksize").val() + '"';
@@ -1214,7 +1268,7 @@ jQuery(document).ready(function($)
 		
 		tinymce_set_ie_bookmark : function()
 		{
-			if( typeof tinyMCE != 'undefined' && tinymce.isIE && ! tinyMCE.activeEditor.isHidden() )
+			if( typeof tinyMCE != 'undefined' && tinymce.isIE && tinyMCE.activeEditor && ! tinyMCE.activeEditor.isHidden() )
 			{
 				tinyMCE.activeEditor.focus();
 				tinyMCE.activeEditor.windowManager.insertimagebookmark = tinyMCE.activeEditor.selection.getBookmark();
@@ -1656,7 +1710,7 @@ jQuery(document).ready(function($)
 	/* === BINDINGS === */
 
 
-	$("#file_gallery_linkclass, #file_gallery_imageclass, #file_gallery_galleryclass, #file_gallery_mimetype, #file_gallery_limit, #file_gallery_offset, #file_gallery_external_url, #file_gallery_single_linkclass, #file_gallery_single_imageclass, #file_gallery_single_external_url, #fg_gallery_tags, #file_gallery_postid, #file_gallery_mimetype").live('keypress keyup', function(e)
+	$("#file_gallery_linkclass, #file_gallery_imageclass, #file_gallery_galleryclass, #file_gallery_mimetype, #file_gallery_limit, #file_gallery_offset, #file_gallery_external_url, #file_gallery_single_linkclass, #file_gallery_single_imageclass, #file_gallery_single_external_url, #fg_gallery_tags, #file_gallery_postid, #file_gallery_mimetype, #file_gallery_linkrel_custom").live('keypress keyup', function(e)
 	{
 		// on enter
 		if ( 13 === e.which || 13 === e.keyCode )
@@ -1881,6 +1935,12 @@ jQuery(document).ready(function($)
 	$("#file_gallery_refresh").live("click", function()
 	{
 		 file_gallery.init( 'refreshed' );
+	});
+	
+	// resort attachments button click
+	$("#file_gallery_attachments_sort_submit").live("click", function()
+	{
+		 file_gallery.init( 'sorted' );
 	});
 	
 	// delete checked attachments button click

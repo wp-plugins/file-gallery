@@ -3,7 +3,7 @@
 /**
  * Returns current post's attachments
  */
-function file_gallery_list_attachments(&$count_attachments, $post_id, $attachment_order, $checked_attachments)
+function file_gallery_list_attachments(&$count_attachments, $post_id, $attachment_order, $checked_attachments, $attachment_orderby = 'menu_order')
 {
 	global $wpdb, $_wp_additional_image_sizes;
 	
@@ -15,23 +15,30 @@ function file_gallery_list_attachments(&$count_attachments, $post_id, $attachmen
 	{
 		$attachment_ids = str_replace(',', "','", trim($attachment_order, ',') );
 		
-		$attachments = $wpdb->get_results(
-			"SELECT * FROM $wpdb->posts 
+		$query = "SELECT * FROM $wpdb->posts 
 			 WHERE $wpdb->posts.post_parent = " . $post_id . "
 			 AND $wpdb->posts.post_type = 'attachment' 
-			 ORDER BY FIELD(ID, '" . $attachment_ids . "') "
-		);
+			 ORDER BY FIELD(ID, '" . $attachment_ids . "') ";
+
+		$attachments = $wpdb->get_results( $query );
 	}
 	else
 	{
-		$attachments = get_children(
-			array(
+		if( ! in_array($attachment_order, array('ASC', 'DESC')) )
+			$attachment_order = 'ASC';
+		
+		if( ! in_array($attachment_orderby, array('post_title', 'post_name', 'post_date', 'menu_order')) )
+			$attachment_orderby = 'menu_order';
+		
+		$query = array(
 			  'post_parent' => $post_id, 
 			  'post_type' => 'attachment', 
-			  'order' => 'ASC', 
-			  'orderby' => 'menu_order',
+			  'order' => $attachment_order, 
+			  'orderby' => $attachment_orderby,
 			  'post_status' => 'inherit'
-		));
+		);
+		
+		$attachments = get_children( $query );
 	}
 
 	if( $attachments )
@@ -354,6 +361,7 @@ function file_gallery_main( $ajax = true )
 	
 	$post_id			  = isset($_POST['post_id']) ? $_POST['post_id'] : '';
 	$attachment_order	  = isset($_POST['attachment_order']) ? $_POST['attachment_order'] : '';
+	$attachment_orderby	  = isset($_POST['attachment_orderby']) ? $_POST['attachment_orderby'] : '';
 	$files_or_tags		  = isset($_POST['files_or_tags']) ? $_POST["files_or_tags"] : '';
 	$tags_from			  = isset($_POST['tags_from']) ? $_POST["tags_from"] : '';
 	$action				  = isset($_POST['action']) ? $_POST['action'] : '';

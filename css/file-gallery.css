@@ -50,6 +50,8 @@
 {
 	border: none;
 	display: none;
+	float: left;
+	clear: none !important;
 }
 
 #poststuff .inside #fg_container fieldset p
@@ -63,7 +65,8 @@
 }
 
 #poststuff .inside #fg_container .alternative-color-scheme #file_gallery_gallery_options p,
-#poststuff .inside #fg_container .alternative-color-scheme #file_gallery_single_options p
+#poststuff .inside #fg_container .alternative-color-scheme #file_gallery_single_options p,
+#poststuff .inside #fg_container .alternative-color-scheme #file_gallery_attachments_sorting
 {
 	background: #F0F0F0;
 	border: 1px solid #DDDDDD;
@@ -81,6 +84,7 @@
 	padding: 2px;
 	margin: 0px;
 	vertical-align: baseline;
+	max-width: none;
 }
 
 #fg_container select option
@@ -613,6 +617,16 @@
 {
 	display: none;
 }
+
+
+/* sorting */
+
+#file_gallery_attachments_sorting
+{
+	float: right;
+	clear: none !important;
+}
+
 
 /* wp-admin css fixes */
 
