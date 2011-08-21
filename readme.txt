@@ -89,6 +89,12 @@ It's included with the installation, but you can also view it online here:
 
 == Changelog ==
 
+= 1.7-RC8 =
+* August 21st, 2011
+* when copying attachments, copy custom fields and media tags too [thanks joo-joo]
+* disabling attachment custom fields now also affects library display
+* fixed some attachment custom fields related javascript bugs
+
 = 1.7-RC7 =
 * August 19th, 2011
 * ability to sort attachments within the File Gallery metabox by 
@@ -465,16 +471,20 @@ Help file is included, you'll find it in the "help" subfolder :)
 
 sooner:
 
-- cleanup script for media tag database taxonomy name(s)
+- manage media tags for all selected attachments
+- media tag taxonomy name, title and slug compatibility
 - audio and video preview on editing screens
 
 later:
 
 - phpdoc all the functions
+- more detailed description for file_gallery_shortcode function (what can be used in 'orderby', what do 'columns' mean) for beginner programmers
+- yoxview lightbox http://www.yellow-llama.com/yoxview-gallery-wordpress-plugin/
 
 maybe:
 
-- 
+- show attachments' Custom Fields in the main page of Media Library (custom column)
+- media library sort by file size or picture dimensions
 
 probably not, but who knows:
 

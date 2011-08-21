@@ -365,7 +365,7 @@ function file_gallery_copy_attachments_to_post()
 		}
 	
 		// generate output
-		if( !empty($attachments_exist) )
+		if( ! empty($attachments_exist) )
 		{
 			$output .= __('Some of the checked attachments were successfully attached to current post.', 'file-gallery');
 			$output .= '<br />' . __("Additionally, here are ID's of attachments you had selected, but were already attached to current post, according to their URIs.<br />You will be presented with an option to copy those attachments as well in the next version of this plugin. If that makes any sense, that is.", 'file-gallery') . ': ' . implode(',', $attachments_exist);
@@ -414,17 +414,31 @@ function file_gallery_copy_attachment_to_post( $aid, $post_id )
 
 	$attachment->metadata      = get_post_meta($attachment->ID, '_wp_attachment_metadata', true);
 	$attachment->attached_file = get_post_meta($attachment->ID, '_wp_attached_file', true);
-	
+
 	unset($attachment->ID);
 	
 	// maybe include this as an option on media settings screen...?
-	$title_extension         = apply_filters('file_gallery_attachment_copy_title_extension', '', $post_id);
+	$title_extension = apply_filters('file_gallery_attachment_copy_title_extension', '', $post_id);
 	$attachment->post_title .= $title_extension;
 	
+	// copy main attachment data
 	$attachment_id = wp_insert_attachment( $attachment, false, $post_id );
+	
+	// copy attachment custom fields
+	$acf = get_post_custom($aid);
+	
+	foreach( $acf as $key => $val )
+	{
+		foreach( $val as $v )
+		{
+			add_post_meta($attachment_id, $key, $v);
+		}
+	}
+	
+	// other meta values	
 	update_post_meta( $attachment_id, '_wp_attached_file',  $attachment->attached_file );
 	update_post_meta( $attachment_id, '_wp_attachment_metadata', $attachment->metadata );
-	
+
 	// add meta for easier differentiation between copies and originals
 	// if we're duplicating a copy, set duplicate's "_is_copy_of" value to original's ID
 	$is_a_copy = get_post_meta($aid, '_is_copy_of', true);
@@ -432,13 +446,23 @@ function file_gallery_copy_attachment_to_post( $aid, $post_id )
 	if( '' != $is_a_copy )
 		$aid = $is_a_copy;
 	
-	update_post_meta($attachment_id, '_is_copy_of',  $aid);
+	update_post_meta($attachment_id, '_is_copy_of', $aid);
 	
 	// meta for the original attachment (array holding ids of its copies)
 	$has_copies   = get_post_meta($aid, '_has_copies', true);
 	$has_copies[] = $attachment_id;
 	
 	update_post_meta($aid, '_has_copies',  $has_copies);
+	
+	// copy media tags
+	$media_tags = wp_get_object_terms(array($aid), FILE_GALLERY_MEDIA_TAG_NAME);
+	
+	foreach( $media_tags as $mt )
+	{
+		$tags[] = $mt->name;
+	}
+	
+	wp_set_object_terms($attachment_id, $tags, FILE_GALLERY_MEDIA_TAG_NAME);
 	
 	return $attachment_id;
 }

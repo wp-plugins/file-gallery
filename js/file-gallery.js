@@ -433,6 +433,11 @@ jQuery(document).ready(function($)
 			file_gallery.serialize();
 			file_gallery.tinymce();
 			file_gallery.fieldset_toggle();
+			
+			if( 0 == $("#file_gallery_list").length )
+				$("#file_gallery_attachments_sorting").hide();
+			else
+				$("#file_gallery_attachments_sorting").show();
 		},
 
 
@@ -1629,9 +1634,9 @@ jQuery(document).ready(function($)
 	{
 		var id = $(this).attr('id').replace(/\]/, '').replace(/regenerate\[/, '');
 		
-		e.preventDefault();
-		
 		file_gallery.regenerate_thumbnails( [id] );
+		
+		e.preventDefault();
 	});
 
 
@@ -1813,8 +1818,8 @@ jQuery(document).ready(function($)
 	{
 		if ( 13 === e.which || 13 === e.keyCode ) // on enter
 		{
-			e.preventDefault();
 			$("#new_custom_field_submit").trigger("click");
+			e.preventDefault();
 		}
 	});
 

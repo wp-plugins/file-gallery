@@ -2,7 +2,7 @@
 /*
 Plugin Name: File Gallery
 Plugin URI: http://skyphe.org/code/wordpress/file-gallery/
-Version: 1.7-RC7
+Version: 1.7-RC8
 Description: "File Gallery" extends WordPress' media (attachments) capabilities by adding a new gallery shortcode handler with templating support, a new interface for attachment handling when editing posts, and much more.
 Author: Bruno "Aesqe" Babic
 Author URI: http://skyphe.org
@@ -70,7 +70,7 @@ class File_Gallery
 	/**
 	 * Current version of this plugin
 	 */
-	var $version = '1.7-RC7';
+	var $version = '1.7-RC8';
 
 	/***/
 	function __construct()
@@ -656,6 +656,9 @@ add_action('plugins_loaded', 'file_gallery_plugins_support', 100);
  */
 function file_gallery_filtered_constants()
 {
+	if( defined('FILE_GALLERY_THEME_ABSPATH') )
+		return;
+	
 	$stylesheet_directory = get_stylesheet_directory();
 	$file_gallery_crystal_url = get_bloginfo('wpurl') . '/' . WPINC . '/images/crystal';
 	$file_gallery_theme_abspath = str_replace('\\', '/', $stylesheet_directory);
@@ -707,7 +710,12 @@ add_filter('plugin_action_links_' . plugin_basename(__FILE__), 'file_gallery_add
  */
 function file_gallery_add_textdomain_and_taxonomies()
 {
+	global $mediatags;
+	
 	load_plugin_textdomain('file-gallery', false, dirname(plugin_basename(__FILE__)) . '/languages');
+
+	if( is_a($mediatags, 'MediaTags') && defined('MEDIA_TAGS_TAXONOMY') )
+		return;
 
 	$args = array(
 		"public"                => true,
@@ -1203,7 +1211,10 @@ add_action('manage_media_custom_column', 'file_gallery_media_custom_column', 100
  */
 function file_gallery_media_columns( $columns )
 {
-	$columns['media_tags'] = __('Media tags', 'file-gallery');
+	global $mediatags;
+
+	if( ! (is_a($mediatags, 'MediaTags') && defined('MEDIA_TAGS_TAXONOMY')) )	
+		$columns['media_tags'] = __('Media tags', 'file-gallery');
 	
 	return $columns;
 }

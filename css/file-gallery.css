@@ -719,6 +719,11 @@ textarea, input, select
 	padding: 0;
 }
 
+#file_gallery_image_dialog img
+{
+	display: block;
+}
+
 #file_gallery_delete_dialog,
 #file_gallery_copy_all_dialog
 {

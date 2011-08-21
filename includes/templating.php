@@ -5,6 +5,9 @@
  */
 function file_gallery_get_templates()
 {
+	if( ! defined('FILE_GALLERY_THEME_TEMPLATES_ABSPATH') )
+		file_gallery_filtered_constants();
+	
 	$options = get_option('file_gallery');
 	
 	if( isset($options['cache']) && true == $options['cache'] )
@@ -15,6 +18,9 @@ function file_gallery_get_templates()
 		if( $cache )
 			return $cache;
 	}
+	
+	if( ! defined('FILE_GALLERY_THEME_TEMPLATES_ABSPATH') )
+		define('FILE_GALLERY_THEME_TEMPLATES_ABSPATH', apply_filters('file_gallery_templates_folder_abspath', $file_gallery_theme_abspath . '/file-gallery-templates'));
 	
 	$file_gallery_templates = array();
 	
@@ -90,6 +96,9 @@ function file_gallery_mobile_css( $stylesheet_url )
 function file_gallery_css_front( $mobile = false )
 {
 	global $wp_query, $file_gallery;
+	
+	if( ! defined('FILE_GALLERY_THEME_TEMPLATES_ABSPATH') )
+		file_gallery_filtered_constants();
 	
 	$options = get_option('file_gallery');
 	
@@ -195,8 +204,6 @@ function file_gallery_css_front( $mobile = false )
 		// if none of default templates are needed, don't include the 'columns.css' file
 		if( array() == array_intersect($templates, $default_templates) )
 			$columns_required = false;
-
-
 
 		// walk through template names
 		foreach($templates as $template)

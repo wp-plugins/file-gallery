@@ -178,8 +178,12 @@ function file_gallery_attachment_fields_to_edit( $form_fields, $attachment )
 	return $form_fields;
 }
 if( false === $file_gallery->acf )
-	add_filter('attachment_fields_to_edit', 'file_gallery_attachment_fields_to_edit', 10, 2);
-
+{
+	$options = get_option('file_gallery');
+	
+	if( true == $options['display_acf'] )
+		add_filter('attachment_fields_to_edit', 'file_gallery_attachment_fields_to_edit', 10, 2);
+}
 
 /**
  * Processes new and updated attachment custom field values
