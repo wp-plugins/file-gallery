@@ -72,11 +72,10 @@
 	right:auto !important;
 }
 
-.sortableitem img.fgtt
+#file_gallery_list .sortableitem img.fgtt
 {
-	float:right !important;
-	clear:left !important;
-	border-right: 1px solid #777 !important;
+	right: auto;
+	left: 4px;
 	padding: 1px 1px 0 0 !important;	
 }
 

@@ -257,7 +257,7 @@ jQuery(document).ready(function($)
 		},
 
 
-		/*
+		/**
 		 * collapses selection if gallery placeholder is clicked
 		 */
 		tinymce_deselect : function()
@@ -273,7 +273,7 @@ jQuery(document).ready(function($)
 		},
 
 
-		/*
+		/**
 		 * checks if all the attachments are, eh, checked...
 		 */
 		is_all_checked : function()
@@ -303,7 +303,10 @@ jQuery(document).ready(function($)
 				container = $("#fg_container"), 
 				fieldsets = $("#file_gallery_fieldsets").val(),
 				data = null,
-				attachment_order = $("#data_collector_full").val();	
+				attachment_order = $("#data_collector_full").val();
+			
+			if( 0 === $("#file_gallery_response").length )
+				$("#file_gallery.postbox").prepend('<div id="file_gallery_response"></div>');
 			
 			if( "return_from_single_attachment" == response_message )
 			{
@@ -355,7 +358,7 @@ jQuery(document).ready(function($)
 				function(response)
 				{
 					container.html(response);
-					
+
 					if( "undefined" != typeof( response_message ) && null !== response_message )
 						$('#file_gallery_response').html(response_message).show().fadeOut(7500);
 					
@@ -383,9 +386,6 @@ jQuery(document).ready(function($)
 			
 			container.css({"height" : "auto"});
 			$("#file_gallery_switch_to_tags").not(".hidden").show();
-			
-			if( 0 === $("#postdivrich").length )
-				$("#file_gallery_upload_media").show();
 			
 			// hide elements if post has no attachments
 			if( 0 === file_gallery.options.num_attachments )
@@ -602,7 +602,6 @@ jQuery(document).ready(function($)
 			
 			if( "file" == $("#file_gallery_linkto").val() || "external_url" == $("#file_gallery_linkto").val())
 			{
-				$("#file_gallery_linkrel_label").show();
 				$("#file_gallery_linksize_label").show();
 				$("#file_gallery_linkrel_custom_label").show();
 
@@ -611,7 +610,6 @@ jQuery(document).ready(function($)
 			}
 			else
 			{
-				$("#file_gallery_linkrel_label").hide();
 				$("#file_gallery_linksize_label").hide();
 				linksize = "";
 			}
@@ -1036,7 +1034,8 @@ jQuery(document).ready(function($)
 				function(response)
 				{
 					$("#fg_container").html(response).css({"height" : "auto"});
-					$("#file_gallery_response").stop().fadeTo(0, 1).show().fadeOut(7500);
+
+					$("#file_gallery_response").html($("#file_gallery_response_inner").html()).stop().fadeTo(0, 1).show().fadeOut(7500);
 					
 					file_gallery.setup();
 				},
@@ -1116,7 +1115,7 @@ jQuery(document).ready(function($)
 					function(response)
 					{
 						$('#fg_container').html(response).css({"height" : "auto"});
-						$('#file_gallery_response').stop().fadeTo(0, 1).css({"display" : "block"}).fadeOut(7500);
+						$('#file_gallery_response').html($("#file_gallery_response_inner").html()).stop().fadeTo(0, 1).css({"display" : "block"}).fadeOut(7500);
 						
 						file_gallery.setup();
 					},
@@ -1174,6 +1173,7 @@ jQuery(document).ready(function($)
 							.css({"height" : "auto"});
 						
 						$("#file_gallery_response")
+							.html($("#file_gallery_response_inner").html())
 							.stop()
 							.fadeTo(0, 1)
 							.show()
@@ -1301,7 +1301,6 @@ jQuery(document).ready(function($)
 			};
 			
 			$("#fg_container")
-				//.css({"height" : 505 })
 				.html("<p class=\"loading_image\"><img src=\"" + file_gallery.options.file_gallery_url + "/images/ajax-loader.gif\" alt=\"" + file_gallery.L10n.loading_attachment_data + "\" /><br />" + file_gallery.L10n.loading_attachment_data + "</p>");
 			
 			$.post
@@ -1357,8 +1356,6 @@ jQuery(document).ready(function($)
 				
 				$("#file_gallery_image_dialog")
 					.html('<img src="' + src + '" width="' + iw + '" height="' + ih + '" alt="image" />')
-					//.dialog( 'option', 'width',  iw + 50 )
-					//.dialog( 'option', 'height', ih + 50 )
 					.dialog( 'option', 'position', 'center');
 			});
 			
@@ -1602,9 +1599,6 @@ jQuery(document).ready(function($)
 			var el = "#file_gallery_attachment_edit_image a.file_gallery_regenerate",
 				text = $(el).html();
 			
-			if( 0 == $('#file_gallery_response').length )
-				$('#fg_container').append('<div id="file_gallery_response"></div>');
-			
 			$(el).html('<img src="' + file_gallery.options.file_gallery_url + '/images/ajax-loader.gif" alt="' + file_gallery.L10n.regenerating + '" />' + file_gallery.L10n.regenerating);
 
 			$.post
@@ -1616,7 +1610,7 @@ jQuery(document).ready(function($)
 				},
 				function(response)
 				{
-					$('#file_gallery_response').stop().show().css({'opacity' : 1}).html(response.message).fadeOut(7500);
+					$('#file_gallery_response').stop().html(response.message).show().css({'opacity' : 1}).fadeOut(7500);
 					$("#fg_loading_on_thumb").fadeOut(250).remove();
 					$(el).html(text);
 				},
@@ -1961,9 +1955,12 @@ jQuery(document).ready(function($)
 	});
 	
 	// save attachments menu order button click
-	$("#file_gallery_save_menu_order").live("click", function()
+	$("#file_gallery_save_menu_order, #file_gallery_save_menu_order_link").live("click", function(e)
 	{
 		file_gallery.save_menu_order();
+		
+		e.preventDefault();
+		return false;
 	});
 		
 	// check all attachments button click

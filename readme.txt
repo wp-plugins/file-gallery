@@ -86,8 +86,16 @@ It's included with the installation, but you can also view it online here:
 <a href="http://skyphe.org/wp-content/plugins/file-gallery/help/index.html">http://skyphe.org/wp-content/plugins/file-gallery/help/index.html</a>
 
 
-
 == Changelog ==
+
+= 1.7-RC9 =
+* October 1st, 2011
+* rtl direction file gallery metabox fixes
+* full Media Tags plugin compatibility
+* ability to change media_tag taxonomy name and URL slug (WP Admin -> Settings -> Permalinks),
+  various media_tag taxonomy fixes
+* rel attribute is now always available
+* "upload files" button with the file gallery metabox is always visible now
 
 = 1.7-RC8 =
 * August 21st, 2011
@@ -132,6 +140,19 @@ It's included with the installation, but you can also view it online here:
   primary translations
 * added the pot file to languages directory
 * bugfixes, bugfixes, bugfixes
+
+= 1.6.5.6 =
+* August 4th, 2011
+* fixed jQuery compatibility with WP < 3.2, sorry about that :|
+
+= 1.6.5.5 = 
+* August 1st, 2011
+* WP 3.2 (jQuery) compatibility
+* internet explorer fixes:
+  - correct position in editor when inserting content
+  - update of gallery shortcode (instead of deletion) when gallery
+    placeholder is clicked
+  - fixed File Gallery metabox items editing buttons visibility CSS bug
 
 = 1.6.6-beta =
 * January 11th, 2011
@@ -455,8 +476,9 @@ Help file is included, you'll find it in the "help" subfolder :)
 
 == Translation Credits ==
 
-* **Maor Barazany**     - Hebrew - http://www.maorb.info
-* **Jean-Michel Meyer** - French - http://www.li-an.fr/wpplugins/
+* **Maor Barazany**     - Hebrew  - http://www.maorb.info/
+* **Jean-Michel Meyer** - French  - http://www.li-an.fr/wpplugins/
+* **Pietro Palli**      - Italian - http://ppal.li/
 
 
 
@@ -472,7 +494,6 @@ Help file is included, you'll find it in the "help" subfolder :)
 sooner:
 
 - manage media tags for all selected attachments
-- media tag taxonomy name, title and slug compatibility
 - audio and video preview on editing screens
 
 later:

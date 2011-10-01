@@ -5,7 +5,7 @@ jQuery(document).ready(function()
 	if( 0 < jQuery(".gallery.simple").length && "" != file_gallery_simple_linkclass )
 	{
 		var file_gallery_doing_ajax = false;
-		
+
 		// remove the clearing element
 		jQuery(".gallery.simple br.clear").remove();
 		

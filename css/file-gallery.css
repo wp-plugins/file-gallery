@@ -52,6 +52,7 @@
 	display: none;
 	float: left;
 	clear: none !important;
+	margin-top: 4px;
 }
 
 #poststuff .inside #fg_container fieldset p
@@ -72,9 +73,19 @@
 	border: 1px solid #DDDDDD;
 	margin: 3px;
 	padding: 0 3px;
+	
 	-moz-border-radius: 5px;
 	-webkit-border-radius: 5px;
+	-ms-border-radius: 5px;
+	-o-border-radius: 5px;
 	border-radius: 5px;
+}
+
+#file_gallery_save_menu_order_link
+{
+	float: right;
+	margin-right: 10px;
+    margin-top: 6px;
 }
 
 #file_gallery fieldset p input,
@@ -307,17 +318,6 @@
 	z-index: 100;
 }
 
-#file_gallery_size,
-#file_gallery_linkto,
-#file_gallery_orderby,
-#file_gallery_order,
-#file_gallery_template,
-#file_gallery_single_linkto,
-#file_gallery_single_size
-{
-	/*width: 85px;*/
-}
-
 .hidden,
 #file_gallery_order
 {
@@ -367,20 +367,29 @@
 
 #file_gallery_response
 {
-	background: #EDEDED none repeat scroll 0 0;
 	color: #DD6611;
 	display: none;
 	height: 23px;
 	line-height: 23px;
-	margin: 1px 0 0 0;
 	padding: 0 8px;
 	position: absolute;
-	right: 25px;
-	top: 0px;
+	right: 45px;
+	top: 3px;
 	font-weight: bold;
 	-moz-border-radius: 4px;
 	-webkit-border-radius: 4px;
 	border-radius: 4px;
+}
+
+#file_gallery_response_inner
+{
+	display: none;
+}
+
+#file_gallery_toggler,
+#file_gallery_single_toggler
+{
+	margin-top: -0.5em;
 }
 
 #fg_info
@@ -393,7 +402,8 @@
 {
 	float: right;
 	position:relative;
-	margin-right: 2px;
+	margin-right: 5px;
+	margin-top: 1px;
 	text-align: right;
 	width: 55%;
 }
@@ -413,7 +423,7 @@
 	background-color: #DFDFDF;
 	background-position: center center;
 	background-repeat: no-repeat;
-	margin: 0;
+	margin: 3px 0 0 0;
 	padding: 0;
 	-moz-box-shadow: 0 0 1px rgba(0, 0, 0, 0.2);
 	-webkit-box-shadow: 0 0 1px rgba(0, 0, 0, 0.2);
@@ -422,9 +432,9 @@
 
 #file_gallery_upload_media
 {
-	float: left;
+	float: right;
+	margin-left: 3px;
 	background-image: url(../images/media-button-image.gif);
-	display: none;
 	overflow: hidden;
 	text-indent: 9999px;
 }
@@ -473,6 +483,7 @@
 #file_gallery_save_menu_order
 {
 	background-image: url(../images/famfamfam_silk/picture_save_gs75.png);
+	display: none;
 }
 #file_gallery_save_menu_order:hover
 {
@@ -591,6 +602,7 @@
 #poststuff .inside p#fg_media_tag_list
 {
 	font-size:12px;
+	clear: both;
 }
 
 #poststuff .inside p#fg_media_tag_list .fg_insert_tag
@@ -625,6 +637,21 @@
 {
 	float: right;
 	clear: none !important;
+}
+
+#file_gallery_attachments_sort_submit
+{
+	cursor: pointer;
+}
+
+#side-sortables #file_gallery_attachments_sorting
+{
+	float: left;
+}
+
+#side-sortables #file_gallery_attachments_sorting label
+{
+	display: block;
 }
 
 
@@ -1001,4 +1028,22 @@ td.column-post_thumb img
 	margin-bottom: 1em;
 	margin-left: 12px;
 	margin-top: -1em;
+}
+
+
+
+
+
+
+#media_tag_url_slug,
+#media_tag_taxonomy_name
+{
+	background: url(../images/file-gallery-logo.png) right center no-repeat;
+}
+
+#poststuff #file_gallery h3.hndle span
+{
+	width: 100%;
+	display: block;
+	background:url(../images/file-gallery-logo.png) right center no-repeat;
 }

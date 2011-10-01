@@ -10,7 +10,7 @@
 		$fgf_class = ' class="alternative-color-scheme"';
 
 ?>
-<div id="file_gallery_response"><?php echo $output; ?></div>
+<div id="file_gallery_response_inner"><?php echo $output; ?></div>
 
 <div id="file_gallery_form"<?php echo $fgf_class; ?>>
 
@@ -23,8 +23,6 @@
 	
 	<div id="fg_buttons"<?php if( ( ! isset($file_gallery_options["display_gallery_fieldset"]) && ! isset($file_gallery_options["display_single_fieldset"]) ) || ( isset($file_gallery_options["display_gallery_fieldset"]) && isset($file_gallery_options["display_single_fieldset"]) && true != $file_gallery_options["display_gallery_fieldset"] && true != $file_gallery_options["display_single_fieldset"] ) ){ echo ' class="alt"'; }?>>
 	
-		<a id="file_gallery_upload_media" href="media-upload.php?post_id=<?php echo $post_id;?>&amp;type=image&amp;TB_iframe=1&amp;tab=library" class="thickbox button" title="<?php _e('Add an Image', 'file-gallery');?>"><?php _e('Add an Image', 'file-gallery');?></a>
-	
 		<input type="button" value="<?php _e("Refresh attachments", "file-gallery"); ?>" title="<?php _e("Refresh attachments", "file-gallery"); ?>" class="button" id="file_gallery_refresh" />
 		<input type="button" value="<?php _e("Check all", "file-gallery"); ?>" title="<?php _e("Check all", "file-gallery"); ?>" class="button" id="file_gallery_check_all" />
 		<input type="button" value="<?php _e("Uncheck all", "file-gallery"); ?>" title="<?php _e("Uncheck all", "file-gallery"); ?>" class="button" id="file_gallery_uncheck_all" />
@@ -35,6 +33,7 @@
 		<input type="button" value="<?php _e("Clear File Gallery cache", "file-gallery"); ?>" title="<?php _e("Clear File Gallery cache", "file-gallery"); ?>" class="button" id="file_gallery_clear_cache_manual" />
 		<input type="button" value="<?php _e("Adjust media settings", "file-gallery"); ?>" title="<?php _e("Adjust media settings", "file-gallery"); ?>" class="button thickbox" alt="<?php echo admin_url("options-media.php"); ?>?TB_iframe=1" id="file_gallery_adjust_media_settings"  />
 		<input type="button" value="<?php _e("Open help file", "file-gallery"); ?>" title="<?php _e("Open help file", "file-gallery"); ?>" class="button thickbox" alt="<?php echo FILE_GALLERY_URL; ?>/help/index.html?TB_iframe=1" id="file_gallery_open_help"  />
+		<a id="file_gallery_upload_media" href="media-upload.php?post_id=<?php echo $post_id;?>&amp;type=image&amp;TB_iframe=1&amp;tab=library" class="thickbox button" title="<?php _e('Upload new files', 'file-gallery');?>"><?php _e('Add an Image', 'file-gallery');?></a>
 	</div>
 
 <?php if( (isset($file_gallery_options["display_gallery_fieldset"]) && true == $file_gallery_options["display_gallery_fieldset"]) || (isset($file_gallery_options["display_single_fieldset"]) && true == $file_gallery_options["display_single_fieldset"]) ) : ?>
@@ -332,6 +331,8 @@
 			
 			<input type="button" id="file_gallery_attachments_sort_submit" value="<?php _e('Go', 'file-gallery'); ?>" />
 		</p>
+		
+		<a href="#" id="file_gallery_save_menu_order_link" class="button button-secondary"><?php _e("Save attachment order", "file-gallery"); ?></a>
 	
 		<?php echo file_gallery_list_attachments($count_attachments, $post_id, $attachment_order, $checked_attachments, $attachment_orderby); ?>
 	</div>

@@ -2,7 +2,7 @@
 /*
 Plugin Name: File Gallery
 Plugin URI: http://skyphe.org/code/wordpress/file-gallery/
-Version: 1.7-RC8
+Version: 1.7-RC9
 Description: "File Gallery" extends WordPress' media (attachments) capabilities by adding a new gallery shortcode handler with templating support, a new interface for attachment handling when editing posts, and much more.
 Author: Bruno "Aesqe" Babic
 Author URI: http://skyphe.org
@@ -25,6 +25,9 @@ Author URI: http://skyphe.org
 ////////////////////////////////////////////////////////////////////////////
 
 */
+
+
+// $text_direction = 'rtl';
 
 
 /**
@@ -70,7 +73,7 @@ class File_Gallery
 	/**
 	 * Current version of this plugin
 	 */
-	var $version = '1.7-RC8';
+	var $version = '1.7-RC9';
 
 	/***/
 	function __construct()
@@ -501,10 +504,18 @@ function file_gallery_do_settings()
 				'section' => 0,
 				'position' => 100
 			),
-			'media_tag_taxonomy_slug' => array(
+			'media_tag_taxonomy_name' => array(
 				'default' => 'media_tag',
 				'display' => 'disabled',
 				'title' => __('Media tag taxonomy name', 'file-gallery'),
+				'type' => 'text',
+				'section' => 0,
+				'position' => 0
+			),
+			'media_tag_url_slug' => array(
+				'default' => 'media-tag',
+				'display' => 'disabled',
+				'title' => __('Media tags URL slug', 'file-gallery'),
 				'type' => 'text',
 				'section' => 0,
 				'position' => 0
@@ -698,7 +709,7 @@ add_action('after_setup_theme', 'file_gallery_filtered_constants');
 function file_gallery_add_settings_link( $links )
 { 
 	array_unshift( $links, '<a href="options-media.php">' . __('Settings', 'file-gallery') . '</a>' );
-	array_unshift( $links, '<a href="options-media.php">' . __('Settings', 'file-gallery') . '</a>' );
+	array_unshift( $links, '<a href="' . FILE_GALLERY_URL . '/help/index.html" target="_blank">' . __('Help', 'file-gallery') . '</a>' );
 	
 	return $links; 
 }
@@ -711,29 +722,35 @@ add_filter('plugin_action_links_' . plugin_basename(__FILE__), 'file_gallery_add
 function file_gallery_add_textdomain_and_taxonomies()
 {
 	global $mediatags;
-	
+
 	load_plugin_textdomain('file-gallery', false, dirname(plugin_basename(__FILE__)) . '/languages');
 
-	if( is_a($mediatags, 'MediaTags') && defined('MEDIA_TAGS_TAXONOMY') )
+	if( isset($mediatags) && is_a($mediatags, 'MediaTags') && defined('MEDIA_TAGS_TAXONOMY') )
 		return;
 
 	$args = array(
-		"public"                => true,
-		"query_var"             => str_replace("_", "-", FILE_GALLERY_MEDIA_TAG_NAME),
-		"update_count_callback" => "file_gallery_update_media_tag_term_count",
-		"label"                 => __("Media tags", "file-gallery"),
-		"singular_label"        => __("Media tag", "file-gallery"),
-		"rewrite"               => array(
-									"slug" => str_replace("_", "-", FILE_GALLERY_MEDIA_TAG_NAME)
+		'public'                => true,
+		'update_count_callback' => 'file_gallery_update_media_tag_term_count',
+		'rewrite'               => array(
+									'slug' => FILE_GALLERY_MEDIA_TAG_SLUG
 		),
-		"labels"                => array(
-									"singular_label" => __("Media tag", "file-gallery")
+		'labels'                => array(
+									'name'           => __('Media tags', 'file-gallery'),
+									'singular_label' => __('Media tag', 'file-gallery')
 		)
 	);
 	
-	register_taxonomy( FILE_GALLERY_MEDIA_TAG_NAME, "attachment", $args );
+	register_taxonomy( FILE_GALLERY_MEDIA_TAG_NAME, 'attachment', $args );
+
+	if( true == get_option('file_gallery_flush_rewrite_rules') )
+	{
+		global $wp_rewrite;
+		$wp_rewrite->flush_rules();
+		
+		delete_option('file_gallery_flush_rewrite_rules');
+	}
 }
-add_action("init", "file_gallery_add_textdomain_and_taxonomies");
+add_action('init', 'file_gallery_add_textdomain_and_taxonomies');
 
 
 /**
@@ -1025,6 +1042,7 @@ function file_gallery_css_admin()
 		|| 'options-media.php'	== $pagenow 
 		|| 'media-upload.php'	== $pagenow 
 		|| 'edit.php'			== $pagenow 
+		|| 'options-permalink.php' == $pagenow
 		|| (isset($current_screen->post_type) && 'post' == $current_screen->base)
 	  )
 	{
@@ -1043,7 +1061,8 @@ add_action('admin_print_styles', 'file_gallery_css_admin');
 function file_gallery_content()
 {
 	echo 
-	'<div id="fg_container">
+	'	
+	<div id="fg_container">
 		<noscript>
 			<div class="error" style="margin: 0;">
 				<p>' . __('File Gallery requires Javascript to function. Please enable it in your browser.', 'file-gallery') . '</p>

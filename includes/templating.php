@@ -508,42 +508,40 @@ function file_gallery_shortcode( $content = false, $attr = false )
 	$ignored_attachment_post_statuses  = apply_filters('file_gallery_ignored_attachment_post_statuses', array('trash', 'private', 'pending', 'future'));
 	
 	if( ! empty($approved_attachment_post_statuses) )
-		$post_statuses = " AND $wpdb->posts.post_status IN ('" . implode("', '", $approved_attachment_post_statuses) . "') ";
+		$post_statuses = " AND ($wpdb->posts.post_status IN ('" . implode("', '", $approved_attachment_post_statuses) . "') ) ";
+	elseif( ! empty($ignored_attachment_post_statuses) )
+		$post_statuses = " AND ($wpdb->posts.post_status NOT IN ('" . implode("', '", $ignored_attachment_post_statuses) . "') ) ";
 	else
-		$post_statuses = " AND $wpdb->posts.post_status NOT IN ('" . implode("', '", $ignored_attachment_post_statuses) . "') ";
+		$post_statuses = "";
 	
 	$file_gallery_query = new stdClass();
 
 	// start with tags because they negate everything else
 	if( '' != $tags )
 	{
-		$tags = str_replace(',', "','", $tags);
+		if( '' == $orderby || 'file_gallery' == $orderby )
+			$orderby = "menu_order ID";
 
-		$query = 
-		"SELECT " . $found_rows . " * FROM $wpdb->posts 
-		 LEFT JOIN $wpdb->term_relationships ON($wpdb->posts.ID = $wpdb->term_relationships.object_id)
-		 LEFT JOIN $wpdb->term_taxonomy ON($wpdb->term_relationships.term_taxonomy_id = $wpdb->term_taxonomy.term_taxonomy_id)
-		 LEFT JOIN $wpdb->terms ON($wpdb->term_taxonomy.term_id = $wpdb->terms.term_id)
-		 WHERE $wpdb->posts.post_type = 'attachment' 
-		 " . $sql_mimetype 
-		   . $post_statuses . "
-		 AND $wpdb->term_taxonomy.taxonomy = '" . FILE_GALLERY_MEDIA_TAG_NAME . "'";
-		
-		$query .= sprintf("	AND ($wpdb->terms.name IN ('%s') OR $wpdb->terms.slug IN ('%s'))", $tags, $tags);
+		$query = array(
+			'post_status'		=> implode(',', $approved_attachment_post_statuses), 
+			'post_type'			=> 'attachment', 
+			'order'				=> $order, 
+			'orderby'			=> $orderby,
+			'posts_per_page'	=> $limit,
+			'post_mime_type'	=> $mimetype,
+			FILE_GALLERY_MEDIA_TAG_NAME => $tags
+		);
 		
 		if( 'current' == $tags_from )
-			$query .= sprintf(" AND $wpdb->posts.post_parent = '%d' ", $id);
+			$query['post_parent'] = $id;
 		
-		if( '' != $orderby )
-		{
-			if( 'rand' == $orderby )
-			{
-				$orderby = "RAND()";
-				$order   = '';
-			}
-			
-			$query .= sprintf(" ORDER BY %s %s", $orderby, $order); // beats array shuffle only if LIMIT isn't set
-		}
+		if( 0 < $offset )
+			$query['offset'] = $offset;
+
+		$file_gallery_query = new WP_Query( $query );
+		$attachments = $file_gallery_query->posts;
+		
+		unset($query);
 	}
 	elseif( '' != $attachment_ids )
 	{
@@ -676,10 +674,10 @@ function file_gallery_shortcode( $content = false, $attr = false )
 		$x = '';
 
 		if( $output_params )
-		{
+		{			
 			$plcai = array_intersect($autoqueueclasses, explode(' ', trim($linkclass)));
 
-			if( ! empty($plcai) && 'file' == $linkto )
+			if( ! empty($plcai) )
 			{
 				if( $attachment_is_image )
 				{
@@ -702,7 +700,7 @@ function file_gallery_shortcode( $content = false, $attr = false )
 						'imageclass' => $param['image_class']
 					);
 
-					if( true === $param['rel'] )
+					if( $param['rel'] )
 						$param['rel'] = apply_filters('file_gallery_lightbox_linkrel',    $param['rel'],         'linkrel',    $filter_args);
 					
 					$param['link_class']  = apply_filters('file_gallery_lightbox_linkclass',  $param['link_class'],  'linkclass',  $filter_args);
@@ -870,6 +868,7 @@ function file_gallery_do_pagination( $total = 0, $page = 0 )
 		else
 			$limit = $options['pagination_count'];
 
+		$c = 0;
 		$l = $limit;
 		$end = false;
 		$start = false;

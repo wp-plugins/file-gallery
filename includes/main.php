@@ -492,7 +492,7 @@ function file_gallery_main( $ajax = true )
 		
 		// attachment custom fields
 		$custom = get_post_custom($attachment_id);
-		$custom_fields = $_POST['custom_fields'];
+		$custom_fields = isset($_POST['custom_fields']) ? $_POST['custom_fields'] : '';
 		
 		if( ! empty($custom) && ! empty($custom_fields) )
 		{
@@ -528,6 +528,10 @@ function file_gallery_main( $ajax = true )
 			$tax_input = explode(", ", $tax_input);
 			
 			$media_tags_result = wp_set_object_terms( $attachment_id, $tax_input, FILE_GALLERY_MEDIA_TAG_NAME );
+		}
+		elseif( "" == $_POST['tax_input'] )
+		{
+			$media_tags_result = wp_set_object_terms( $attachment_id, NULL, FILE_GALLERY_MEDIA_TAG_NAME );
 		}
 		
 		// check if there were any changes

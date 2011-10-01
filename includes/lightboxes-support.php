@@ -16,6 +16,9 @@ function file_gallery_lightboxes_support( $value = '', $type = '', $args = array
 		),
 		'fancybox' => array(
 			'linkrel' => 'fancybox-' . $args['gallery_id']
+		),
+		'prettyPhoto' => array(
+			'linkrel' => 'prettyPhoto[' . $args['gallery_id'] . ']'
 		)
 	);
 
