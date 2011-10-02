@@ -88,6 +88,10 @@ It's included with the installation, but you can also view it online here:
 
 == Changelog ==
 
+= 1.7-RC10 =
+* October 2nd, 2011
+* two minor fixes
+
 = 1.7-RC9 =
 * October 1st, 2011
 * rtl direction file gallery metabox fixes

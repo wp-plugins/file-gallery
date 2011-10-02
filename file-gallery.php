@@ -2,7 +2,7 @@
 /*
 Plugin Name: File Gallery
 Plugin URI: http://skyphe.org/code/wordpress/file-gallery/
-Version: 1.7-RC9
+Version: 1.7-RC10
 Description: "File Gallery" extends WordPress' media (attachments) capabilities by adding a new gallery shortcode handler with templating support, a new interface for attachment handling when editing posts, and much more.
 Author: Bruno "Aesqe" Babic
 Author URI: http://skyphe.org
@@ -25,9 +25,6 @@ Author URI: http://skyphe.org
 ////////////////////////////////////////////////////////////////////////////
 
 */
-
-
-// $text_direction = 'rtl';
 
 
 /**
@@ -73,7 +70,7 @@ class File_Gallery
 	/**
 	 * Current version of this plugin
 	 */
-	var $version = '1.7-RC9';
+	var $version = '1.7-RC10';
 
 	/***/
 	function __construct()
@@ -507,12 +504,12 @@ function file_gallery_do_settings()
 			'media_tag_taxonomy_name' => array(
 				'default' => 'media_tag',
 				'display' => 'disabled',
-				'title' => __('Media tag taxonomy name', 'file-gallery'),
+				'title' => __('Media tags Taxonomy name', 'file-gallery'),
 				'type' => 'text',
 				'section' => 0,
 				'position' => 0
 			),
-			'media_tag_url_slug' => array(
+			'media_tag_taxonomy_slug' => array(
 				'default' => 'media-tag',
 				'display' => 'disabled',
 				'title' => __('Media tags URL slug', 'file-gallery'),
@@ -725,22 +722,22 @@ function file_gallery_add_textdomain_and_taxonomies()
 
 	load_plugin_textdomain('file-gallery', false, dirname(plugin_basename(__FILE__)) . '/languages');
 
-	if( isset($mediatags) && is_a($mediatags, 'MediaTags') && defined('MEDIA_TAGS_TAXONOMY') )
-		return;
-
-	$args = array(
-		'public'                => true,
-		'update_count_callback' => 'file_gallery_update_media_tag_term_count',
-		'rewrite'               => array(
-									'slug' => FILE_GALLERY_MEDIA_TAG_SLUG
-		),
-		'labels'                => array(
-									'name'           => __('Media tags', 'file-gallery'),
-									'singular_label' => __('Media tag', 'file-gallery')
-		)
-	);
-	
-	register_taxonomy( FILE_GALLERY_MEDIA_TAG_NAME, 'attachment', $args );
+	if( ! (isset($mediatags) && is_a($mediatags, 'MediaTags') && defined('MEDIA_TAGS_TAXONOMY')) )
+	{
+		$args = array(
+			'public'                => true,
+			'update_count_callback' => 'file_gallery_update_media_tag_term_count',
+			'rewrite'               => array(
+										'slug' => FILE_GALLERY_MEDIA_TAG_SLUG
+			),
+			'labels'                => array(
+										'name'           => __('Media tags', 'file-gallery'),
+										'singular_label' => __('Media tag', 'file-gallery')
+			)
+		);
+		
+		register_taxonomy( FILE_GALLERY_MEDIA_TAG_NAME, 'attachment', $args );
+	}
 
 	if( true == get_option('file_gallery_flush_rewrite_rules') )
 	{

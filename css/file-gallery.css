@@ -1035,8 +1035,8 @@ td.column-post_thumb img
 
 
 
-#media_tag_url_slug,
-#media_tag_taxonomy_name
+#media_tag_taxonomy_name,
+#media_tag_taxonomy_slug
 {
 	background: url(../images/file-gallery-logo.png) right center no-repeat;
 }
