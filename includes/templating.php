@@ -501,8 +501,6 @@ function file_gallery_shortcode( $content = false, $attr = false )
 	
 	$file_gallery->debug_add('pagination', compact('paginate', 'page'));
 
-	$file_gallery->debug_print();
-
 	if( '' != $include && '' == $attachment_ids )
 		$attachment_ids = $include;
 	
