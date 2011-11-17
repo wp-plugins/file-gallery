@@ -149,12 +149,47 @@ class File_Gallery
 
 		if( isset($_GET['file_gallery_debug']) )
 		{
-			echo '<pre>';
-			print_r($this->debug);
-			echo '</pre>';
+			$vars = get_object_vars($this);
+			
+			unset($vars['defaults']);
+			unset($vars['false_defaults']);
+			unset($vars['settings']);
+			
+			function block($a)
+			{
+				$out = '<ul>';
+				
+				foreach($a as $k => $v)
+				{
+					$out .= '<li>[' . $k . '] => ';
+					
+					if( is_array($v) )
+						$out .= block($v);
+					else
+						$out .= empty($v) ? '""' : $v;
+					
+					$out .= '</li>' . "\n";
+				}
+				
+				$out .= '</ul>' . "\n";
+				
+				return $out;
+			}
+			
+			return block($vars);
 		}
 	}
 };
+
+
+function file_gallery_debug_print( $content )
+{
+	global $file_gallery;
+	
+	return $content . $file_gallery->debug_print();
+}
+if( isset($_GET['file_gallery_debug']) )
+	add_action('the_content', 'file_gallery_debug_print', 100);
 
 
 // Begin
@@ -1287,7 +1322,7 @@ require_once('includes/attachments-custom-fields.php');
 if( 3.1 <= floatval(get_bloginfo('version')) )
 	require_once('includes/media-tags-list-table.class.php');
 
-/* DEBUG  */
+/* DEBUG
 function save_error(){
     update_option('plugin_error',  ob_get_contents());
 }
@@ -1295,5 +1330,5 @@ add_action('activated_plugin','save_error');
 echo get_option('plugin_error');
 
 // $text_direction = 'rtl';
-
+  */
 ?>
