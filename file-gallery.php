@@ -2,7 +2,7 @@
 /*
 Plugin Name: File Gallery
 Plugin URI: http://skyphe.org/code/wordpress/file-gallery/
-Version: 1.7-RC10
+Version: 1.7-RC11
 Description: "File Gallery" extends WordPress' media (attachments) capabilities by adding a new gallery shortcode handler with templating support, a new interface for attachment handling when editing posts, and much more.
 Author: Bruno "Aesqe" Babic
 Author URI: http://skyphe.org
@@ -28,6 +28,40 @@ Author URI: http://skyphe.org
 
 
 /**
+ * Setup the WordPress constants
+ */
+if ( ! defined( 'WP_CONTENT_URL' ) )
+	define( 'WP_CONTENT_URL', get_option('siteurl') . '/wp-content' );
+if ( ! defined( 'WP_CONTENT_DIR' ) )
+	define( 'WP_CONTENT_DIR', ABSPATH . 'wp-content' );
+if ( ! defined( 'WP_PLUGIN_URL' ) )
+	define( 'WP_PLUGIN_URL', WP_CONTENT_URL. '/plugins' );
+if ( ! defined( 'WP_PLUGIN_DIR' ) )
+	define( 'WP_PLUGIN_DIR', WP_CONTENT_DIR . '/plugins' );
+
+
+/**
+ * Setup default File Gallery options
+ */
+
+define('FILE_GALLERY_VERSION', '1.7-RC11');
+
+$file_gallery_abspath = WP_PLUGIN_DIR . '/' . basename(dirname(__FILE__));
+$file_gallery_abspath = str_replace('\\', '/', $file_gallery_abspath);
+$file_gallery_abspath = preg_replace('#/+#', '/', $file_gallery_abspath);
+
+// file gallery directories and template names
+define('FILE_GALLERY_URL', WP_PLUGIN_URL . '/' . basename( dirname(__FILE__) ));
+define('FILE_GALLERY_ABSPATH', $file_gallery_abspath);
+define('FILE_GALLERY_DEFAULT_TEMPLATES', serialize( array('default', 'file-gallery', 'list', 'simple') ) );
+
+$stylesheet_directory = get_stylesheet_directory();
+$file_gallery_theme_abspath = str_replace('\\', '/', $stylesheet_directory);
+$file_gallery_theme_abspath = preg_replace('#/+#', '/', $file_gallery_theme_abspath);
+define('FILE_GALLERY_THEME_ABSPATH', $file_gallery_theme_abspath);
+
+
+/**
  * Just a variables placeholder for now
  *
  * @since 1.6.5.1
@@ -44,6 +78,7 @@ class File_Gallery
 	var $settings = array();
 	var $defaults = array();
 	var $false_defaults = array();
+	var $debug = array();
 	
 	/**
 	 * Holds the ID number of current post's gallery
@@ -70,7 +105,7 @@ class File_Gallery
 	/**
 	 * Current version of this plugin
 	 */
-	var $version = '1.7-RC10';
+	var $version = FILE_GALLERY_VERSION;
 
 	/***/
 	function __construct()
@@ -88,37 +123,43 @@ class File_Gallery
 		if( defined('FORCE_SSL_ADMIN') && true === FORCE_SSL_ADMIN )
 			$this->ssl_admin = true;
 	}
+	
+	
+	function debug_add( $section, $vars )
+	{
+		if( ! FILE_GALLERY_DEBUG )
+			return;
+		
+		foreach( $vars as $k => $v )
+		{
+			$type = gettype($v);
+			
+			if( 'boolean' === $type )
+				$v = false === $v ? 'false' : 'true';
+			
+			$this->debug[$section][$k] = $type . ': ' . $v;
+		}
+	}
+	
+	
+	function debug_print()
+	{
+		if( ! FILE_GALLERY_DEBUG )
+			return;
+
+		if( isset($_GET['file_gallery_debug']) )
+		{
+			echo '<pre>';
+			print_r($this->debug);
+			echo '</pre>';
+		}
+	}
 };
 
 
 // Begin
-$file_gallery = new File_Gallery();
-
-
-/**
- * Setup the WordPress constants
- */
-if ( ! defined( 'WP_CONTENT_URL' ) )
-	define( 'WP_CONTENT_URL', get_option('siteurl') . '/wp-content' );
-if ( ! defined( 'WP_CONTENT_DIR' ) )
-	define( 'WP_CONTENT_DIR', ABSPATH . 'wp-content' );
-if ( ! defined( 'WP_PLUGIN_URL' ) )
-	define( 'WP_PLUGIN_URL', WP_CONTENT_URL. '/plugins' );
-if ( ! defined( 'WP_PLUGIN_DIR' ) )
-	define( 'WP_PLUGIN_DIR', WP_CONTENT_DIR . '/plugins' );
-
-
-/**
- * Setup default File Gallery options
- */
-$file_gallery_abspath = WP_PLUGIN_DIR . '/' . basename(dirname(__FILE__));
-$file_gallery_abspath = str_replace('\\', '/', $file_gallery_abspath);
-$file_gallery_abspath = preg_replace('#/+#', '/', $file_gallery_abspath);
-
-// file gallery directories and template names
-define('FILE_GALLERY_URL', WP_PLUGIN_URL . '/' . basename( dirname(__FILE__) ));
-define('FILE_GALLERY_ABSPATH', $file_gallery_abspath);
-define('FILE_GALLERY_DEFAULT_TEMPLATES', serialize( array('default', 'file-gallery', 'list', 'simple') ) );
+if( ! isset($file_gallery) || ! is_a($file_gallery, 'File_Gallery') )
+	$file_gallery = new File_Gallery();
 
 
 /**
@@ -128,6 +169,9 @@ define('FILE_GALLERY_DEFAULT_TEMPLATES', serialize( array('default', 'file-galle
 function file_gallery_do_settings()
 {
 	global $file_gallery;
+	
+	if( ! is_a($file_gallery, 'File_Gallery') )
+		$file_gallery = new File_Gallery();
 	
 	$file_gallery->settings = array(
 			'disable_shortcode_handler' => array(
@@ -478,7 +522,7 @@ function file_gallery_do_settings()
 			 * Disabled options
 			 */
 			'version' => array(
-				'default' => $file_gallery->version,
+				'default' => FILE_GALLERY_VERSION,
 				'display' => 'disabled',
 				'title' => __('File Gallery version', 'file-gallery'),
 				'type' => 'text',
@@ -565,8 +609,10 @@ function file_gallery_activate()
 {
 	global $file_gallery;
 
+	if( ! is_a($file_gallery, 'File_Gallery') )
+		$file_gallery = new File_Gallery();
+
 	file_gallery_plugins_support();
-	file_gallery_filtered_constants();
 	file_gallery_do_settings();
 	
 	$defaults = $file_gallery->defaults;
@@ -599,6 +645,7 @@ function file_gallery_activate()
 		$defaults = file_gallery_parse_args( $options, $defaults);
 		$defaults['folder']  = file_gallery_https( FILE_GALLERY_URL );
 		$defaults['abspath'] = FILE_GALLERY_ABSPATH;
+		$defaults['version'] = FILE_GALLERY_VERSION;
 	}
 	else // Fresh installation, show on posts and pages
 	{
@@ -663,38 +710,16 @@ add_action('plugins_loaded', 'file_gallery_plugins_support', 100);
  * @since 1.6.3
  */
 function file_gallery_filtered_constants()
-{
-	if( defined('FILE_GALLERY_THEME_ABSPATH') )
-		return;
-	
-	$stylesheet_directory = get_stylesheet_directory();
+{	
 	$file_gallery_crystal_url = get_bloginfo('wpurl') . '/' . WPINC . '/images/crystal';
-	$file_gallery_theme_abspath = str_replace('\\', '/', $stylesheet_directory);
-	$file_gallery_theme_abspath = preg_replace('#/+#', '/', $file_gallery_theme_abspath);
-	
-	// theme directories...
-	if( ! defined('FILE_GALLERY_THEME_ABSPATH') )
-		define('FILE_GALLERY_THEME_ABSPATH', $file_gallery_theme_abspath);
-	
-	if( ! defined('FILE_GALLERY_THEME_TEMPLATES_ABSPATH') )
-		define('FILE_GALLERY_THEME_TEMPLATES_ABSPATH', apply_filters('file_gallery_templates_folder_abspath', $file_gallery_theme_abspath . '/file-gallery-templates'));
-	
-	if( ! defined('FILE_GALLERY_THEME_TEMPLATES_URL') )
-		define('FILE_GALLERY_THEME_TEMPLATES_URL', apply_filters('file_gallery_templates_folder_url', get_bloginfo('stylesheet_directory') . '/file-gallery-templates'));
 	
 	// file icons directory
 	if( ! defined('FILE_GALLERY_CRYSTAL_URL') )
 		define('FILE_GALLERY_CRYSTAL_URL', apply_filters('file_gallery_crystal_url', $file_gallery_crystal_url));
-	
-	// default template name and directories...
-	if( ! defined('FILE_GALLERY_DEFAULT_TEMPLATE_NAME') )
-		define('FILE_GALLERY_DEFAULT_TEMPLATE_NAME', apply_filters('file_gallery_default_template_name', 'default'));
 
-	if( ! defined('FILE_GALLERY_DEFAULT_TEMPLATE_URL') )
-		define('FILE_GALLERY_DEFAULT_TEMPLATE_URL', apply_filters('file_gallery_default_template_url', FILE_GALLERY_URL . '/templates/default'));
-	
-	if( ! defined('FILE_GALLERY_DEFAULT_TEMPLATE_ABSPATH') )
-		define('FILE_GALLERY_DEFAULT_TEMPLATE_ABSPATH', apply_filters('file_gallery_default_template_abspath', FILE_GALLERY_ABSPATH . '/templates/default'));
+	// display debug information
+	if( ! defined('FILE_GALLERY_DEBUG') )
+		define('FILE_GALLERY_DEBUG', false);
 }
 add_action('after_setup_theme', 'file_gallery_filtered_constants');
 
@@ -778,7 +803,7 @@ function file_gallery_update_media_tag_term_count( $terms )
 	}
 	
 	// clear cache
-	file_gallery_clear_cache("mediatags_all");
+	file_gallery_clear_cache('mediatags_all');
 }
 
 
@@ -789,7 +814,7 @@ function file_gallery_media_submenu()
 {
 	global $mediatags;
 	
-	if( ! is_a($mediatags, 'MediaTags') )
+	if( ! (isset($mediatags) && is_a($mediatags, 'MediaTags') && defined('MEDIA_TAGS_TAXONOMY')) )
     	add_submenu_page('upload.php', __('Media tags', 'file-gallery'), __('Media tags', 'file-gallery'), 'upload_files', 'edit-tags.php?taxonomy=' . FILE_GALLERY_MEDIA_TAG_NAME);
 }
 add_action('admin_menu', 'file_gallery_media_submenu');
@@ -802,12 +827,12 @@ function file_gallery_get_intermediate_image_sizes()
 {
 	$sizes = array();
 
-	if( function_exists("get_intermediate_image_sizes") )
+	if( function_exists('get_intermediate_image_sizes') )
 		$sizes = get_intermediate_image_sizes();
 
-	$additional_intermediate_sizes = apply_filters("intermediate_image_sizes", $sizes);
+	$additional_intermediate_sizes = apply_filters('intermediate_image_sizes', $sizes);
 	
-	array_unshift($additional_intermediate_sizes, "thumbnail", "medium", "large", "full");
+	array_unshift($additional_intermediate_sizes, 'thumbnail', 'medium', 'large', 'full');
 	
 	return array_unique($additional_intermediate_sizes);
 }
@@ -820,7 +845,7 @@ function file_gallery_add_library_query_vars( $input )
 {
 	global $wpdb, $pagenow;
 
-	$options = get_option("file_gallery");
+	$options = get_option('file_gallery');
 
 	// affect the query only if we're on a certain page
 	if( "media-upload.php" == $pagenow && "library" == $_GET["tab"] && is_numeric($_GET['post_id']) )
@@ -847,6 +872,9 @@ add_filter('posts_where', 'file_gallery_add_library_query_vars');
 function file_gallery_js_admin()
 {
 	global $pagenow, $current_screen, $wp_version, $post_ID, $file_gallery;
+
+	if( ! is_a($file_gallery, 'File_Gallery') )
+		$file_gallery = new File_Gallery();
 	
 	$s = array('{"', '",', '"}', '\/', '"[', ']"');
 	$r = array("\n{\n\"", "\",\n", "\"\n}", '/', '[', ']');
@@ -920,9 +948,9 @@ function file_gallery_js_admin()
 		
 		$dependencies = array('jquery', 'jquery-ui-core', 'jquery-ui-draggable', 'jquery-ui-sortable', 'jquery-ui-dialog');
 		
-		wp_enqueue_script('file-gallery-main',  file_gallery_https( FILE_GALLERY_URL ) . '/js/file-gallery.js', $dependencies, $file_gallery->version);
-		wp_enqueue_script('file-gallery-clear_cache',  file_gallery_https( FILE_GALLERY_URL ) . '/js/file-gallery-clear_cache.js', false, $file_gallery->version);
-		wp_enqueue_script('acf-attachment-custom-fields', file_gallery_https( FILE_GALLERY_URL ) . '/js/file-gallery-attachment_custom_fields.js', false, $file_gallery->version);
+		wp_enqueue_script('file-gallery-main',  file_gallery_https( FILE_GALLERY_URL ) . '/js/file-gallery.js', $dependencies, FILE_GALLERY_VERSION);
+		wp_enqueue_script('file-gallery-clear_cache',  file_gallery_https( FILE_GALLERY_URL ) . '/js/file-gallery-clear_cache.js', false, FILE_GALLERY_VERSION);
+		wp_enqueue_script('acf-attachment-custom-fields', file_gallery_https( FILE_GALLERY_URL ) . '/js/file-gallery-attachment_custom_fields.js', false, FILE_GALLERY_VERSION);
 
 		echo '
 		<script type="text/javascript">
@@ -963,7 +991,7 @@ function file_gallery_js_admin()
 			'custom_fields' => '[' . $custom_fields . ']'
 		);
 
-		wp_enqueue_script('acf-attachment-custom-fields', file_gallery_https( FILE_GALLERY_URL ) . '/js/file-gallery-attachment_custom_fields.js', false, $file_gallery->version);
+		wp_enqueue_script('acf-attachment-custom-fields', file_gallery_https( FILE_GALLERY_URL ) . '/js/file-gallery-attachment_custom_fields.js', false, FILE_GALLERY_VERSION);
 		
 		echo '
 		<script type="text/javascript">
@@ -980,7 +1008,7 @@ function file_gallery_js_admin()
 			'include_current' => __("Include current post's attachments", "file-gallery")
 		);
 
-		wp_enqueue_script('file-gallery-attach', file_gallery_https( FILE_GALLERY_URL ) . '/js/file-gallery-attach.js', false, $file_gallery->version);
+		wp_enqueue_script('file-gallery-attach', file_gallery_https( FILE_GALLERY_URL ) . '/js/file-gallery-attach.js', false, FILE_GALLERY_VERSION);
 		
 		echo '
 		<style type="text/css">
@@ -1006,7 +1034,7 @@ function file_gallery_js_admin()
 		</script>
 		';
 
-		wp_enqueue_script('file-gallery-clear_cache', file_gallery_https( FILE_GALLERY_URL ) . '/js/file-gallery-clear_cache.js', false, $file_gallery->version);
+		wp_enqueue_script('file-gallery-clear_cache', file_gallery_https( FILE_GALLERY_URL ) . '/js/file-gallery-clear_cache.js', false, FILE_GALLERY_VERSION);
 	}
 	elseif( 'edit-tags.php' == $pagenow && FILE_GALLERY_MEDIA_TAG_NAME == $_GET['taxonomy'] && 3 > floatval($wp_version) )
 	{
@@ -1029,6 +1057,9 @@ add_action('admin_print_scripts', 'file_gallery_js_admin');
 function file_gallery_css_admin()
 {
 	global $pagenow, $current_screen, $file_gallery;
+
+	if( ! is_a($file_gallery, 'File_Gallery') )
+		$file_gallery = new File_Gallery();
 	
 	if(
 		   'post.php' 			== $pagenow
@@ -1043,10 +1074,10 @@ function file_gallery_css_admin()
 		|| (isset($current_screen->post_type) && 'post' == $current_screen->base)
 	  )
 	{
-		wp_enqueue_style('file_gallery_admin', apply_filters('file_gallery_admin_css_location', file_gallery_https( FILE_GALLERY_URL ) . '/css/file-gallery.css'), false, $file_gallery->version );
+		wp_enqueue_style('file_gallery_admin', apply_filters('file_gallery_admin_css_location', file_gallery_https( FILE_GALLERY_URL ) . '/css/file-gallery.css'), false, FILE_GALLERY_VERSION );
 		
 		if( 'rtl' == get_bloginfo('text_direction') )
-			wp_enqueue_style('file_gallery_admin_rtl', apply_filters('file_gallery_admin_rtl_css_location', file_gallery_https( FILE_GALLERY_URL ) . '/css/file-gallery-rtl.css'), false, $file_gallery->version );
+			wp_enqueue_style('file_gallery_admin_rtl', apply_filters('file_gallery_admin_rtl_css_location', file_gallery_https( FILE_GALLERY_URL ) . '/css/file-gallery-rtl.css'), false, FILE_GALLERY_VERSION );
 	}
 }
 add_action('admin_print_styles', 'file_gallery_css_admin');
@@ -1256,12 +1287,13 @@ require_once('includes/attachments-custom-fields.php');
 if( 3.1 <= floatval(get_bloginfo('version')) )
 	require_once('includes/media-tags-list-table.class.php');
 
-/* DEBUG 
+/* DEBUG  */
 function save_error(){
     update_option('plugin_error',  ob_get_contents());
 }
 add_action('activated_plugin','save_error');
 echo get_option('plugin_error');
-*/
+
+// $text_direction = 'rtl';
 
 ?>

@@ -15,6 +15,9 @@ function file_gallery_get_attachment_data()
 {
 	global $file_gallery;
 
+	if( ! is_a($file_gallery, 'File_Gallery') )
+		$file_gallery = new File_Gallery();
+
 	check_ajax_referer('file-gallery');
 
 	$attachment   = $_POST['attachment_id'];
@@ -41,9 +44,9 @@ function file_gallery_get_attachment_data()
 
 	$attachments = explode(',', $attachment);
 	
-	if( 1 < count($attachments) && '' != $linkclass )
+	if( 1 < count($attachments) && '' != $linkclass && ! in_array($linkto, array('attachment', 'parent_post', 'none')) )
 	{
-		if( !isset($file_gallery->gallery_id) )
+		if( ! isset($file_gallery->gallery_id) )
 			$file_gallery->gallery_id = 1;
 		else
 			$file_gallery->gallery_id++;
@@ -59,7 +62,7 @@ function file_gallery_get_attachment_data()
 		if( true === $caption  )
 			$caption = '' != $excerpt ? $excerpt : false;
 
-		if( 1 === count($attachments) )
+		if( (1 === count($attachments) || (1 < count($attachments) && '' == $linkclass)) && 'attachment' == $linkto )
 			$rel = ' rel="attachment wp-att-' . $attachment->ID . '"';
 		
 		if( false === $caption )

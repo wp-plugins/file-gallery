@@ -20,7 +20,6 @@
 
 #file_gallery .button-primary
 {
-	/*float: left !important;*/
 	background: #21759B url(../images/button-grad.png) repeat-x scroll right bottom;	
 	text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.3) !important;
 }
@@ -43,10 +42,9 @@
 	margin-left: 5px !important;	
 }
 
-
 .sortableitem .checker
 {
-	left: 0 !important;
+	left: 3px !important;
 	right:auto !important;
 }
 
@@ -118,6 +116,13 @@ a.img_edit
 	text-align: left !important;
 }
 
+#file_gallery_upload_media
+{
+	float: left;
+	margin-left: 0;
+	margin-right: 3px;
+}
+
 #file_gallery_attachment_edit_image
 {
 	float:right !important;
@@ -182,4 +187,17 @@ a.img_edit
 #file_gallery_hide_acf {
 	right:auto;
 	left:0;
+}
+
+#media_tag_taxonomy_name,
+#media_tag_taxonomy_slug
+{
+	background: url(../images/file-gallery-logo.png) left center no-repeat;
+}
+
+#poststuff #file_gallery h3.hndle span
+{
+	width: 100%;
+	display: block;
+	background:url(../images/file-gallery-logo.png) left center no-repeat;
 }

@@ -5,9 +5,6 @@
  */
 function file_gallery_get_templates()
 {
-	if( ! defined('FILE_GALLERY_THEME_TEMPLATES_ABSPATH') )
-		file_gallery_filtered_constants();
-	
 	$options = get_option('file_gallery');
 	
 	if( isset($options['cache']) && true == $options['cache'] )
@@ -19,15 +16,14 @@ function file_gallery_get_templates()
 			return $cache;
 	}
 	
-	if( ! defined('FILE_GALLERY_THEME_TEMPLATES_ABSPATH') )
-		define('FILE_GALLERY_THEME_TEMPLATES_ABSPATH', apply_filters('file_gallery_templates_folder_abspath', $file_gallery_theme_abspath . '/file-gallery-templates'));
+	$FILE_GALLERY_THEME_TEMPLATES_ABSPATH = apply_filters('file_gallery_templates_folder_abspath', FILE_GALLERY_THEME_ABSPATH . '/file-gallery-templates');
 	
 	$file_gallery_templates = array();
 	
 	// check if file gallery templates folder exists within theme folder
-	if( is_readable(FILE_GALLERY_THEME_TEMPLATES_ABSPATH) )
+	if( is_readable($FILE_GALLERY_THEME_TEMPLATES_ABSPATH) )
 	{
-		$opendir = opendir(FILE_GALLERY_THEME_TEMPLATES_ABSPATH);
+		$opendir = opendir($FILE_GALLERY_THEME_TEMPLATES_ABSPATH);
 		
 		while( false !== ($files = readdir($opendir)) )
 		{
@@ -43,7 +39,7 @@ function file_gallery_get_templates()
 	// check whether gallery.php and gallery.css exist within each template folder
 	foreach( $file_gallery_templates as $key => $file_gallery_template )
 	{
-		$tf = FILE_GALLERY_THEME_TEMPLATES_ABSPATH . '/' . $file_gallery_template;
+		$tf = $FILE_GALLERY_THEME_TEMPLATES_ABSPATH . '/' . $file_gallery_template;
 		
 		if( !( is_readable($tf . '/gallery.php') && is_readable($tf . '/gallery.css') ) )
 			unset($file_gallery_templates[$key]);
@@ -96,10 +92,10 @@ function file_gallery_mobile_css( $stylesheet_url )
 function file_gallery_css_front( $mobile = false )
 {
 	global $wp_query, $file_gallery;
-	
-	if( ! defined('FILE_GALLERY_THEME_TEMPLATES_ABSPATH') )
-		file_gallery_filtered_constants();
-	
+
+	if( ! is_a($file_gallery, 'File_Gallery') )
+		$file_gallery = new File_Gallery();;
+
 	$options = get_option('file_gallery');
 	
 	if( isset($options['disable_shortcode_handler']) && true == $options['disable_shortcode_handler'] )
@@ -108,12 +104,16 @@ function file_gallery_css_front( $mobile = false )
 	// if option to show galleries in excerpts is set to false
 	if( ! is_single() && ( ! isset($options['in_excerpt']) || true != $options['in_excerpt']) && false == $mobile )
 		return;
-	
+
 	$gallery_matches = 0;
+	$galleries = array();
 	$missing = array();
 	$mobiles = array();
 	$columns_required = false;
 	$default_templates = unserialize(FILE_GALLERY_DEFAULT_TEMPLATES);
+	
+	$FILE_GALLERY_THEME_TEMPLATES_ABSPATH = apply_filters('file_gallery_templates_folder_abspath', FILE_GALLERY_THEME_ABSPATH . '/file-gallery-templates');
+	$FILE_GALLERY_THEME_TEMPLATES_URL = apply_filters('file_gallery_templates_folder_url', get_bloginfo('stylesheet_directory') . '/file-gallery-templates');
 	
 	// check for gallery shortcode in all posts
 	if( ! empty($wp_query->posts) )
@@ -126,8 +126,9 @@ function file_gallery_css_front( $mobile = false )
 			if( false !== $m && 0 < $m )
 			{
 				$gallery_matches += $m;    // ...add the number of matches to global count...
-				$galleries        = $g[0]; // ...and add the match to galleries array
+				$galleries = array_merge($galleries, $g[1]); // ...and add the match to galleries array
 			}
+
 		}
 	}
 	
@@ -187,11 +188,13 @@ function file_gallery_css_front( $mobile = false )
 	
 	if( empty($templates) )
 	{
+		$FILE_GALLERY_DEFAULT_TEMPLATE_URL = apply_filters('file_gallery_default_template_url', FILE_GALLERY_URL . '/templates/default');
+
 		// enqueue only the default stylesheet if no template names are found
 		if( ! $mobile )
-			wp_enqueue_style('file_gallery_default', FILE_GALLERY_DEFAULT_TEMPLATE_URL . '/gallery.css', false, $file_gallery->version);
+			wp_enqueue_style('file_gallery_default', $FILE_GALLERY_DEFAULT_TEMPLATE_URL . '/gallery.css', false, FILE_GALLERY_VERSION);
 		else
-			$mobiles[] = FILE_GALLERY_DEFAULT_TEMPLATE_URL . '/gallery.css';
+			$mobiles[] = $FILE_GALLERY_DEFAULT_TEMPLATE_URL . '/gallery.css';
 	}
 	else
 	{
@@ -211,29 +214,29 @@ function file_gallery_css_front( $mobile = false )
 			$js_dependencies = isset($aq_linkclasses) ? $aq_linkclasses : array();
 
 			// check if file exists and enqueue it if it does
-			if( is_readable(FILE_GALLERY_THEME_TEMPLATES_ABSPATH . '/' . $template . '/gallery.css') )
+			if( is_readable($FILE_GALLERY_THEME_TEMPLATES_ABSPATH . '/' . $template . '/gallery.css') )
 			{
 				if( ! $mobile )
-					wp_enqueue_style('file_gallery_' . str_replace(' ', '-', $template), FILE_GALLERY_THEME_TEMPLATES_URL . '/' . str_replace(' ', '%20', $template) . '/gallery.css', false, $file_gallery->version);
+					wp_enqueue_style('file_gallery_' . str_replace(' ', '-', $template), $FILE_GALLERY_THEME_TEMPLATES_URL . '/' . str_replace(' ', '%20', $template) . '/gallery.css', false, FILE_GALLERY_VERSION);
 				else
-					$mobiles[] = FILE_GALLERY_THEME_TEMPLATES_URL . '/' . str_replace(' ', '%20', $template) . '/gallery.css';
+					$mobiles[] = $FILE_GALLERY_THEME_TEMPLATES_URL . '/' . str_replace(' ', '%20', $template) . '/gallery.css';
 				
-				if( is_readable(FILE_GALLERY_THEME_TEMPLATES_ABSPATH . '/' . $template . '/gallery.js') )
+				if( is_readable($FILE_GALLERY_THEME_TEMPLATES_ABSPATH . '/' . $template . '/gallery.js') )
 				{
 					$overriding = true;
 					ob_start();
-						include(FILE_GALLERY_THEME_TEMPLATES_ABSPATH . '/' . $template . '/gallery.php');					
+						include($FILE_GALLERY_THEME_TEMPLATES_ABSPATH . '/' . $template . '/gallery.php');					
 					ob_end_clean();
 					$overriding = false;
 
-					wp_enqueue_script('file_gallery_' . str_replace(' ', '-', $template), FILE_GALLERY_THEME_TEMPLATES_URL . '/' . str_replace(' ', '%20', $template) . '/gallery.js', $js_dependencies, $file_gallery->version, true);	
+					wp_enqueue_script('file_gallery_' . str_replace(' ', '-', $template), $FILE_GALLERY_THEME_TEMPLATES_URL . '/' . str_replace(' ', '%20', $template) . '/gallery.js', $js_dependencies, FILE_GALLERY_VERSION, true);	
 				}
 			}
 			// if it does not exist in theme folder, check default plugin templates
 			elseif( is_readable(FILE_GALLERY_ABSPATH . "/templates/" . $template . "/gallery.css") )
 			{				
 				if( ! $mobile )
-					wp_enqueue_style('file_gallery_' . $template, FILE_GALLERY_URL . '/templates/' . $template . '/gallery.css', false, $file_gallery->version);
+					wp_enqueue_style('file_gallery_' . $template, FILE_GALLERY_URL . '/templates/' . $template . '/gallery.css', false, FILE_GALLERY_VERSION);
 				else
 					$mobiles[] = FILE_GALLERY_URL . '/templates/' . $template . '/gallery.css';
 				
@@ -245,14 +248,14 @@ function file_gallery_css_front( $mobile = false )
 					ob_end_clean();
 					$overriding = false;
 
-					wp_enqueue_script('file_gallery_' . str_replace(' ', '-', $template), FILE_GALLERY_URL . '/templates/' . str_replace(' ', '%20', $template) . '/gallery.js', $js_dependencies, $file_gallery->version, true );
+					wp_enqueue_script('file_gallery_' . str_replace(' ', '-', $template), FILE_GALLERY_URL . '/templates/' . str_replace(' ', '%20', $template) . '/gallery.js', $js_dependencies, FILE_GALLERY_VERSION, true );
 				}
 			}
 			// template sdoes not exist, enqueue default one
 			else
 			{
 				$missing[] = $template;
-				wp_enqueue_style('file_gallery_default', FILE_GALLERY_URL . '/templates/default/gallery.css', false, $file_gallery->version);
+				wp_enqueue_style('file_gallery_default', FILE_GALLERY_URL . '/templates/default/gallery.css', false, FILE_GALLERY_VERSION);
 				
 				echo '<!-- ' . __('file does not exist:', 'file-gallery') . ' ' . $template . '/gallery.css - ' . __('using default style', 'file-gallery') . '-->\n';
 			}
@@ -262,7 +265,7 @@ function file_gallery_css_front( $mobile = false )
 	if( $columns_required )
 	{
 		if( ! $mobile )
-			wp_enqueue_style('file_gallery_columns', FILE_GALLERY_URL . '/templates/columns.css', false, $file_gallery->version);
+			wp_enqueue_style('file_gallery_columns', FILE_GALLERY_URL . '/templates/columns.css', false, FILE_GALLERY_VERSION);
 		else
 			$mobiles[] = FILE_GALLERY_URL . '/templates/columns.css';
 	}
@@ -326,6 +329,9 @@ add_action('wp_print_scripts', 'file_gallery_print_scripts');
 function file_gallery_overrides( $args )
 {
 	global $file_gallery;
+
+	if( ! is_a($file_gallery, 'File_Gallery') )
+		$file_gallery = new File_Gallery();
 	
 	if( is_string($args) )
 		$args = wp_parse_args($args);
@@ -342,6 +348,9 @@ function file_gallery_overrides( $args )
 function file_gallery_shortcode( $content = false, $attr = false )
 {
 	global $file_gallery, $wpdb, $post;
+
+	if( ! is_a($file_gallery, 'File_Gallery') )
+		$file_gallery = new File_Gallery();
 
 	// if the function is called directly, not via shortcode
 	if( false !== $content && false === $attr )
@@ -422,14 +431,14 @@ function file_gallery_shortcode( $content = false, $attr = false )
 
 	if( ! in_array($template, $default_templates) )
 	{
-		$template_file = FILE_GALLERY_THEME_TEMPLATES_ABSPATH . '/' . $template . '/gallery.php';
+		$template_file = $FILE_GALLERY_THEME_TEMPLATES_ABSPATH . '/' . $template . '/gallery.php';
 	}
 	else
 	{
 		if( 'default' == $template )
 		{
-			$template_file = FILE_GALLERY_DEFAULT_TEMPLATE_ABSPATH . '/gallery.php';
-			$template      = FILE_GALLERY_DEFAULT_TEMPLATE_NAME;
+			$template_file = apply_filters('file_gallery_default_template_abspath', FILE_GALLERY_ABSPATH . '/templates/default') . '/gallery.php';
+			$template      = apply_filters('file_gallery_default_template_name', 'default');
 		}
 		else
 		{
@@ -489,6 +498,10 @@ function file_gallery_shortcode( $content = false, $attr = false )
 		if( is_singular() && 1 < $page )
 			$offset = $limit * ($page - 1);
 	}
+	
+	$file_gallery->debug_add('pagination', compact('paginate', 'page'));
+
+	$file_gallery->debug_print();
 
 	if( '' != $include && '' == $attachment_ids )
 		$attachment_ids = $include;
