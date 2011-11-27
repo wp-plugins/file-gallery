@@ -2,7 +2,7 @@
 /*
 Plugin Name: File Gallery
 Plugin URI: http://skyphe.org/code/wordpress/file-gallery/
-Version: 1.7-RC11
+Version: 1.7-RC12
 Description: "File Gallery" extends WordPress' media (attachments) capabilities by adding a new gallery shortcode handler with templating support, a new interface for attachment handling when editing posts, and much more.
 Author: Bruno "Aesqe" Babic
 Author URI: http://skyphe.org
@@ -44,7 +44,7 @@ if ( ! defined( 'WP_PLUGIN_DIR' ) )
  * Setup default File Gallery options
  */
 
-define('FILE_GALLERY_VERSION', '1.7-RC11');
+define('FILE_GALLERY_VERSION', '1.7-RC12');
 
 $file_gallery_abspath = WP_PLUGIN_DIR . '/' . basename(dirname(__FILE__));
 $file_gallery_abspath = str_replace('\\', '/', $file_gallery_abspath);
@@ -272,7 +272,7 @@ function file_gallery_do_settings()
 			'default_image_size' => array(
 				'default' => 'thumbnail',
 				'display' => true,
-				'title' => '</th></tr><tr><td colspan="2"><strong style="display: block; margin-top: -15px; font-size: 115%; color: #21759B;">' . __('Some default values for when inserting a gallery into a post', 'file-gallery') . '...</strong></td></tr><tr valign="top"><th scope="row">' . __('size', 'file-gallery'),
+				'title' => '</th></tr><tr><td colspan="2"><strong style="display: block; margin-top: -15px; font-size: 115%; color: #21759B;">' . __('Some default values for when inserting a gallery into a post', 'file-gallery') . '...</strong></td></tr><tr><td colspan="2"><p id="file-gallery-media-settings-notice" style="margin: 0; background-color: #FFFFE8; border-color: #EEEED0; -moz-border-radius: 3px; -webkit-border-radius: 3px; border-radius: 3px; border-style: solid; border-width: 1px; padding: 0.6em;">' . sprintf(__('The following two blocks of options <strong>do not</strong> affect the output/display of your galleries - they are here only so you could set default values for File Gallery metabox on post editing screen. <a href="%s/help/index.html#settings_page" target="_blank">More information is available in the help file</a>.', "file-gallery"), FILE_GALLERY_URL) . '</p></td></tr><tr valign="top"><th scope="row">' . __('size', 'file-gallery'),
 				'type' => 'select',
 				'values' => file_gallery_dropdown( 'default_image_size', 'image_size' ),
 				'section' => 0,

@@ -1,7 +1,5 @@
-var file_gallery =
-{
-	L10n : file_gallery_L10n
-};
+if( "undefined" == typeof(file_gallery) )
+	var file_gallery = { L10n : file_gallery_L10n };
 
 jQuery(document).ready(function()
 {
@@ -18,15 +16,15 @@ jQuery(document).ready(function()
 	
 	// displays a link to include / exclude current post's attachments from media library listing
 	jQuery("#filter .subsubsub").append('<li> | <a href="' + fg_inex_href + '">' + fg_inex + '</a></li>');
-	
+
 	// adds a checkbox to each attachment not already attached to current post
-	jQuery('.media-item').each(function()
+	jQuery(".media-item").each(function()
 	{
-		var cbh = jQuery(this).find(":checkbox"); //short-hand
-		
-		if( cbh.length ) // thanks, alx359 :)
+		var cbh = jQuery(this).find(".bulk-media-tag-item"); // Media Tags plugin - thanks, alx359 :)
+
+		if( cbh.length )
 		{
-			cbh.addClass('file_gallery_attach_to_post');
+			cbh.addClass("file_gallery_attach_to_post");
 		}
 		else
 		{

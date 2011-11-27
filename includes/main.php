@@ -356,9 +356,9 @@ function file_gallery_list_tags( $args = array() )
 function file_gallery_main( $ajax = true )
 {
 	global $wpdb;
-	
+
 	check_ajax_referer('file-gallery');
-	
+
 	$post_id			  = isset($_POST['post_id']) ? $_POST['post_id'] : '';
 	$attachment_order	  = isset($_POST['attachment_order']) ? $_POST['attachment_order'] : '';
 	$attachment_orderby	  = isset($_POST['attachment_orderby']) ? $_POST['attachment_orderby'] : '';

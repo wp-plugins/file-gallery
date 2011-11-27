@@ -3,7 +3,7 @@ Contributors: aesqe, azizur
 Donate link: http://skyphe.org/donate/
 Tags: attachment, attachments, gallery, galleries, template, templates, shortcode, file, files, attach, detach, unattach, copy, media, tags, library, custom, custom fields, custom fields for attachments, attachment custom fields
 Requires at least: 3.1
-Tested up to: 3.3-beta2-19254
+Tested up to: 3.3-beta4
 Stable tag: 1.6.5.6
 
 File Gallery extends WordPress media (attachments) capabilities 
@@ -88,10 +88,22 @@ It's included with the installation, but you can also view it online here:
 
 == Changelog ==
 
+= 1.7-RC12 =
+* November 26th, 2011
+* fixed bug: on thickbox close, overlay would stay visible and 
+  file gallery would get stuck in "loading" loop
+* fixed bug: multiple single images insert, first image's caption 
+  would stick for all images
+* a few UI fixes
+* some javascript improvements
+* added a new notice on media settings screen
+* WordPress 3.3 compatible
+
 = 1.7-RC11 =
 * November 16th, 2011
 * fixed "Simple" template images stuck on loading animation bug in MSIE
-* rearranged the File Gallery metabox a bit, trying to reduce the visual footprint
+* rearranged the File Gallery metabox a bit, trying to reduce the 
+  visual footprint
 * a few minor fixes (single images insert)
 
 = 1.7-RC10 =
@@ -102,14 +114,17 @@ It's included with the installation, but you can also view it online here:
 * October 1st, 2011
 * rtl direction file gallery metabox fixes
 * full Media Tags plugin compatibility
-* ability to change media_tag taxonomy name and URL slug (WP Admin -> Settings -> Permalinks),
-  various media_tag taxonomy fixes
+* ability to change media_tag taxonomy name and URL slug 
+  (WP Admin -> Settings -> Permalinks),
+* various media_tag taxonomy fixes
 * rel attribute is now always available
-* "upload files" button with the file gallery metabox is always visible now
+* "upload files" button with the file gallery metabox is always 
+  visible now
 
 = 1.7-RC8 =
 * August 21st, 2011
-* when copying attachments, copy custom fields and media tags too [thanks joo-joo]
+* when copying attachments, copy custom fields and media tags 
+  too [thanks joo-joo]
 * disabling attachment custom fields now also affects library display
 * fixed some attachment custom fields related javascript bugs
 
@@ -145,7 +160,8 @@ It's included with the installation, but you can also view it online here:
 * improved lightbox support, more flexibility
 * improved pagination
 * new gallery option: gallery class
-* new metabox option: alternative color scheme (and still working on it)
+* new metabox option: alternative color scheme 
+  (and still working on it)
 * ability to copy attachments from WPML translations which aren't
   primary translations
 * added the pot file to languages directory
@@ -509,7 +525,8 @@ sooner:
 later:
 
 - phpdoc all the functions
-- more detailed description for file_gallery_shortcode function (what can be used in 'orderby', what do 'columns' mean) for beginner programmers
+- more detailed description for file_gallery_shortcode function 
+  (what can be used in 'orderby', what do 'columns' mean) for beginner programmers
 - yoxview lightbox http://www.yellow-llama.com/yoxview-gallery-wordpress-plugin/
 
 maybe:

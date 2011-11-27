@@ -431,6 +431,7 @@ function file_gallery_shortcode( $content = false, $attr = false )
 
 	if( ! in_array($template, $default_templates) )
 	{
+		$FILE_GALLERY_THEME_TEMPLATES_ABSPATH = apply_filters('file_gallery_templates_folder_abspath', FILE_GALLERY_THEME_ABSPATH . '/file-gallery-templates');
 		$template_file = $FILE_GALLERY_THEME_TEMPLATES_ABSPATH . '/' . $template . '/gallery.php';
 	}
 	else
@@ -842,7 +843,7 @@ function file_gallery_shortcode( $content = false, $attr = false )
 		{
 			$pagination_html = file_gallery_do_pagination( $file_gallery_query->max_num_pages, $page );
 		}
-		
+
 		$gallery_class = apply_filters('file_gallery_galleryclass', 'gallery ' . str_replace(' ', '-', $template) . $cols . $stc . ' ' . $galleryclass);
 		
 		$output = '<' . $starttag . ' id="gallery-' . $file_gallery->gallery_id . '" class="' . $gallery_class . '">' . "\n" . $gallery_items . "\n" . $pagination_html . "\n</" . $starttag . '>';

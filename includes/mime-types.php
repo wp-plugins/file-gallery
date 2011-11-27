@@ -79,9 +79,9 @@ function file_gallery_get_file_type($mime)
 		return "video";
 	}
 	elseif( false !== strpos($mime, "stuffit") || 
-			 false !== strpos($mime, "compressed") || 
-			 false !== strpos($mime, "x-tar") ||
-			 false !== strpos($mime, "zip"))
+			false !== strpos($mime, "compressed") || 
+			false !== strpos($mime, "x-tar") ||
+			false !== strpos($mime, "zip"))
 	{
 		return "archive";
 	}
@@ -89,10 +89,8 @@ function file_gallery_get_file_type($mime)
 	{
 		return "document";
 	}
-	else
-	{
-		return "default";
-	}
+
+	return "default";
 }
 
 ?>
