@@ -8,9 +8,6 @@ function file_gallery_https( $input )
 {
 	global $file_gallery;
 
-	if( ! is_a($file_gallery, 'File_Gallery') )
-		$file_gallery = new File_Gallery();
-	
 	if( $file_gallery->ssl_admin && 0 === strpos($input, 'http:') && 0 !== strpos($input, 'https:') )
 		$input = 'https' . substr($input, 4);
 	

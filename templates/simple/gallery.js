@@ -1,7 +1,7 @@
 jQuery(document).ready(function()
 {
 	var file_gallery_simple_gallery_counter = 1;
-	
+
 	if( 0 < jQuery(".gallery.simple").length && "" != file_gallery_simple_linkclass )
 	{
 		var file_gallery_doing_ajax = false;
@@ -40,9 +40,9 @@ jQuery(document).ready(function()
 					{
 						jQuery(".gallery_simple_current_image").wrap('<a href="' + current_image_href + '" title="' + strip_tags(current_caption) + '"></a>');
 
-						// check for lightbox scripts
-						lightbox = ("thickbox" == file_gallery_simple_linkclass) ? jQuery.isFunction(tb_init) : eval("jQuery.fn." + file_gallery_simple_linkclass);
-						
+						var lightbox = ("thickbox" == file_gallery_simple_linkclass && "function" === typeof(tb_init)) || jQuery.isFunction( jQuery.fn[file_gallery_simple_linkclass] ) ? true : false;
+
+						// check for lightbox scripts						
 						if( lightbox )
 						{
 							jQuery(id + " .gallery_simple_current a").addClass("colorbox" != file_gallery_simple_linkclass ? file_gallery_simple_linkclass : "cboxElement");

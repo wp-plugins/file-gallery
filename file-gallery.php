@@ -2,7 +2,7 @@
 /*
 Plugin Name: File Gallery
 Plugin URI: http://skyphe.org/code/wordpress/file-gallery/
-Version: 1.7-RC12
+Version: 1.7-RC13
 Description: "File Gallery" extends WordPress' media (attachments) capabilities by adding a new gallery shortcode handler with templating support, a new interface for attachment handling when editing posts, and much more.
 Author: Bruno "Aesqe" Babic
 Author URI: http://skyphe.org
@@ -28,37 +28,11 @@ Author URI: http://skyphe.org
 
 
 /**
- * Setup the WordPress constants
- */
-if ( ! defined( 'WP_CONTENT_URL' ) )
-	define( 'WP_CONTENT_URL', get_option('siteurl') . '/wp-content' );
-if ( ! defined( 'WP_CONTENT_DIR' ) )
-	define( 'WP_CONTENT_DIR', ABSPATH . 'wp-content' );
-if ( ! defined( 'WP_PLUGIN_URL' ) )
-	define( 'WP_PLUGIN_URL', WP_CONTENT_URL. '/plugins' );
-if ( ! defined( 'WP_PLUGIN_DIR' ) )
-	define( 'WP_PLUGIN_DIR', WP_CONTENT_DIR . '/plugins' );
-
-
-/**
  * Setup default File Gallery options
  */
 
-define('FILE_GALLERY_VERSION', '1.7-RC12');
-
-$file_gallery_abspath = WP_PLUGIN_DIR . '/' . basename(dirname(__FILE__));
-$file_gallery_abspath = str_replace('\\', '/', $file_gallery_abspath);
-$file_gallery_abspath = preg_replace('#/+#', '/', $file_gallery_abspath);
-
-// file gallery directories and template names
-define('FILE_GALLERY_URL', WP_PLUGIN_URL . '/' . basename( dirname(__FILE__) ));
-define('FILE_GALLERY_ABSPATH', $file_gallery_abspath);
+define('FILE_GALLERY_VERSION', '1.7-RC13');
 define('FILE_GALLERY_DEFAULT_TEMPLATES', serialize( array('default', 'file-gallery', 'list', 'simple') ) );
-
-$stylesheet_directory = get_stylesheet_directory();
-$file_gallery_theme_abspath = str_replace('\\', '/', $stylesheet_directory);
-$file_gallery_theme_abspath = preg_replace('#/+#', '/', $file_gallery_theme_abspath);
-define('FILE_GALLERY_THEME_ABSPATH', $file_gallery_theme_abspath);
 
 
 /**
@@ -204,10 +178,7 @@ if( ! isset($file_gallery) || ! is_a($file_gallery, 'File_Gallery') )
 function file_gallery_do_settings()
 {
 	global $file_gallery;
-	
-	if( ! is_a($file_gallery, 'File_Gallery') )
-		$file_gallery = new File_Gallery();
-	
+
 	$file_gallery->settings = array(
 			'disable_shortcode_handler' => array(
 				'default' => 0, 
@@ -644,10 +615,8 @@ function file_gallery_activate()
 {
 	global $file_gallery;
 
-	if( ! is_a($file_gallery, 'File_Gallery') )
-		$file_gallery = new File_Gallery();
-
-	file_gallery_plugins_support();
+	file_gallery_plugins_loaded();
+	file_gallery_after_setup_theme();
 	file_gallery_do_settings();
 	
 	$defaults = $file_gallery->defaults;
@@ -718,8 +687,16 @@ register_deactivation_hook( __FILE__, 'file_gallery_deactivate' );
  * - WordPress Mobile Edition
  * - Media Tags
  */
-function file_gallery_plugins_support()
+function file_gallery_plugins_loaded()
 {
+	$file_gallery_abspath = WP_PLUGIN_DIR . '/' . basename(dirname(__FILE__));
+	$file_gallery_abspath = str_replace('\\', '/', $file_gallery_abspath);
+	$file_gallery_abspath = preg_replace('#/+#', '/', $file_gallery_abspath);
+	
+	// file gallery directories and template names
+	define('FILE_GALLERY_URL', WP_PLUGIN_URL . '/' . basename( dirname(__FILE__) ));
+	define('FILE_GALLERY_ABSPATH', $file_gallery_abspath);
+	
 	$mobile = false;
 	$options = get_option('file_gallery');
 	
@@ -736,7 +713,7 @@ function file_gallery_plugins_support()
 	
 	file_gallery_media_tags_get_taxonomy_slug();
 }
-add_action('plugins_loaded', 'file_gallery_plugins_support', 100);
+add_action('plugins_loaded', 'file_gallery_plugins_loaded', 100);
 
 
 /*
@@ -744,33 +721,48 @@ add_action('plugins_loaded', 'file_gallery_plugins_support', 100);
  *
  * @since 1.6.3
  */
-function file_gallery_filtered_constants()
-{	
-	$file_gallery_crystal_url = get_bloginfo('wpurl') . '/' . WPINC . '/images/crystal';
+function file_gallery_after_setup_theme()
+{
+	$stylesheet_directory = get_stylesheet_directory();
+	$file_gallery_theme_abspath = str_replace('\\', '/', $stylesheet_directory);
+	$file_gallery_theme_abspath = preg_replace('#/+#', '/', $file_gallery_theme_abspath);
+
+	define( 'FILE_GALLERY_THEME_ABSPATH', $file_gallery_theme_abspath );
+	define( 'FILE_GALLERY_THEME_TEMPLATES_ABSPATH', apply_filters('file_gallery_templates_folder_abspath', FILE_GALLERY_THEME_ABSPATH . '/file-gallery-templates') ) ;
+	define( 'FILE_GALLERY_THEME_TEMPLATES_URL', apply_filters('file_gallery_templates_folder_url', get_bloginfo('stylesheet_directory') . '/file-gallery-templates') );
+	
+	define( 'FILE_GALLERY_CONTENT_TEMPLATES_ABSPATH', apply_filters('file_gallery_content_templates_folder_abspath', WP_CONTENT_DIR . '/file-gallery-templates') );
+	define( 'FILE_GALLERY_CONTENT_TEMPLATES_URL', apply_filters('file_gallery_content_templates_folder_url', WP_CONTENT_URL . '/file-gallery-templates') );
+	
+	define( 'FILE_GALLERY_DEFAULT_TEMPLATE_URL', apply_filters('file_gallery_default_template_url', FILE_GALLERY_URL . '/templates/default') );
+	define( 'FILE_GALLERY_DEFAULT_TEMPLATE_ABSPATH', apply_filters('file_gallery_default_template_abspath', FILE_GALLERY_ABSPATH . '/templates/default') . '/gallery.php' );
+	define( 'FILE_GALLERY_DEFAULT_TEMPLATE_NAME', apply_filters('file_gallery_default_template_name', 'default') );
 	
 	// file icons directory
-	if( ! defined('FILE_GALLERY_CRYSTAL_URL') )
-		define('FILE_GALLERY_CRYSTAL_URL', apply_filters('file_gallery_crystal_url', $file_gallery_crystal_url));
+	$file_gallery_crystal_url = get_bloginfo('wpurl') . '/' . WPINC . '/images/crystal';
+
+	if( ! defined( 'FILE_GALLERY_CRYSTAL_URL' ) )
+		define( 'FILE_GALLERY_CRYSTAL_URL', apply_filters('file_gallery_crystal_url', $file_gallery_crystal_url) );
 
 	// display debug information
-	if( ! defined('FILE_GALLERY_DEBUG') )
-		define('FILE_GALLERY_DEBUG', false);
+	if( ! defined( 'FILE_GALLERY_DEBUG' ) )
+		define( 'FILE_GALLERY_DEBUG', false );
 }
-add_action('after_setup_theme', 'file_gallery_filtered_constants');
+add_action('after_setup_theme', 'file_gallery_after_setup_theme');
 
 
 /**
- * Adds a link to plugin's settings page (shows up next to the 
+ * Adds a link to plugin's settings and help pages (shows up next to the 
  * deactivation link on the plugins management page)
  */
-function file_gallery_add_settings_link( $links )
+function file_gallery_plugin_action_links( $links )
 { 
 	array_unshift( $links, '<a href="options-media.php">' . __('Settings', 'file-gallery') . '</a>' );
 	array_unshift( $links, '<a href="' . FILE_GALLERY_URL . '/help/index.html" target="_blank">' . __('Help', 'file-gallery') . '</a>' );
 	
 	return $links; 
 }
-add_filter('plugin_action_links_' . plugin_basename(__FILE__), 'file_gallery_add_settings_link' );
+add_filter('plugin_action_links_' . plugin_basename(__FILE__), 'file_gallery_plugin_action_links' );
 
 
 /**
@@ -879,21 +871,24 @@ function file_gallery_get_intermediate_image_sizes()
 function file_gallery_add_library_query_vars( $input )
 {
 	global $wpdb, $pagenow;
-
-	$options = get_option('file_gallery');
-
-	// affect the query only if we're on a certain page
-	if( "media-upload.php" == $pagenow && "library" == $_GET["tab"] && is_numeric($_GET['post_id']) )
+	
+	if( is_admin() )
 	{
-		if( isset($_GET['exclude']) && "current" == $_GET['exclude'] )
-			$input .= " AND `post_parent` != " . (int) $_GET["post_id"] . " ";
-
-		if( isset($options["library_filter_duplicates"]) && true == $options["library_filter_duplicates"] )
+		$options = get_option('file_gallery');
+	
+		// affect the query only if we're on a certain page
+		if( "media-upload.php" == $pagenow && "library" == $_GET["tab"] && is_numeric($_GET['post_id']) )
+		{
+			if( isset($_GET['exclude']) && "current" == $_GET['exclude'] )
+				$input .= " AND `post_parent` != " . (int) $_GET["post_id"] . " ";
+	
+			if( isset($options["library_filter_duplicates"]) && true == $options["library_filter_duplicates"] )
+				$input .= " AND $wpdb->posts.ID NOT IN ( SELECT ID FROM $wpdb->posts AS ps INNER JOIN $wpdb->postmeta AS pm ON pm.post_id = ps.ID WHERE pm.meta_key = '_is_copy_of' ) ";
+		}
+		elseif( "upload.php" == $pagenow && isset($options["library_filter_duplicates"]) && true == $options["library_filter_duplicates"] )
+		{
 			$input .= " AND $wpdb->posts.ID NOT IN ( SELECT ID FROM $wpdb->posts AS ps INNER JOIN $wpdb->postmeta AS pm ON pm.post_id = ps.ID WHERE pm.meta_key = '_is_copy_of' ) ";
-	}
-	elseif( "upload.php" == $pagenow && isset($options["library_filter_duplicates"]) && true == $options["library_filter_duplicates"] )
-	{
-		$input .= " AND $wpdb->posts.ID NOT IN ( SELECT ID FROM $wpdb->posts AS ps INNER JOIN $wpdb->postmeta AS pm ON pm.post_id = ps.ID WHERE pm.meta_key = '_is_copy_of' ) ";
+		}
 	}
 
 	return $input;
@@ -908,8 +903,7 @@ function file_gallery_js_admin()
 {
 	global $pagenow, $current_screen, $wp_version, $post_ID, $file_gallery;
 
-	if( ! is_a($file_gallery, 'File_Gallery') )
-		$file_gallery = new File_Gallery();
+	
 	
 	$s = array('{"', '",', '"}', '\/', '"[', ']"');
 	$r = array("\n{\n\"", "\",\n", "\"\n}", '/', '[', ']');
@@ -1093,8 +1087,7 @@ function file_gallery_css_admin()
 {
 	global $pagenow, $current_screen, $file_gallery;
 
-	if( ! is_a($file_gallery, 'File_Gallery') )
-		$file_gallery = new File_Gallery();
+	
 	
 	if(
 		   'post.php' 			== $pagenow
@@ -1104,6 +1097,7 @@ function file_gallery_css_admin()
 		|| 'media.php' 			== $pagenow 
 		|| 'options-media.php'	== $pagenow 
 		|| 'media-upload.php'	== $pagenow 
+		|| 'upload.php'			== $pagenow 
 		|| 'edit.php'			== $pagenow 
 		|| 'options-permalink.php' == $pagenow
 		|| (isset($current_screen->post_type) && 'post' == $current_screen->base)
@@ -1322,13 +1316,4 @@ require_once('includes/attachments-custom-fields.php');
 if( 3.1 <= floatval(get_bloginfo('version')) )
 	require_once('includes/media-tags-list-table.class.php');
 
-/* DEBUG
-function save_error(){
-    update_option('plugin_error',  ob_get_contents());
-}
-add_action('activated_plugin','save_error');
-echo get_option('plugin_error');
-
-// $text_direction = 'rtl';
-  */
 ?>

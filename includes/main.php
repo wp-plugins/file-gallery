@@ -99,21 +99,25 @@ function file_gallery_list_attachments(&$count_attachments, $post_id, $attachmen
 			$large            = wp_get_attachment_image_src($attachment->ID, "large");
 
 			if( in_array($attachment->ID, $checked_attachments) )
+			{
 				$checked = ' checked="checked"';
+				$classes[] = 'selected';
+			}
 			
 			// if it's not an image...
 			if( "" == $attachment_thumb )
 			{
 				$attachment_thumb[0] = file_gallery_https( FILE_GALLERY_CRYSTAL_URL ). "/" . file_gallery_get_file_type($attachment->post_mime_type) . ".png";
-				$attachment_width    = "";
-				$attachment_height   = "";
-				$non_image           = " non_image";
+				$attachment_width    = '';
+				$attachment_height   = '';
+				$non_image           = ' non_image';
 				$_attachment_thumb_width = 55;
 				$image_width_style = '';
+				$classes[] = 'non-image';
 			}
 			else
 			{
-				$classes[] = "image";
+				$classes[] = 'image';
 				$_attachment_thumb_width = $attachment_thumb_width;
 				
 				if( 1 === $attachment_thumb_ratio && $attachment_thumb[2] > $attachment_thumb_width )
@@ -130,15 +134,17 @@ function file_gallery_list_attachments(&$count_attachments, $post_id, $attachmen
 				<img src="' . $attachment_thumb[0] . '" alt="' . $attachment->post_title . '" id="in-' . $attachment->ID . '" title="' . $attachment->post_title . '" class="fgtt' . $non_image . '" ' . $image_width_style . ' />';
 				
 				if( "" == $non_image ) :
-					$attached_files .= '<a href="' . $large[0] . '" id="in-' . $attachment->ID . '-zoom" class="img_zoom">
+					$attached_files .= '<a href="' . $large[0] . '" id="in-' . $attachment->ID . '-zoom" class="img_zoom action">
 						<img src="' . file_gallery_https( FILE_GALLERY_URL ) . '/images/famfamfam_silk/magnifier.png" alt="' . __("Zoom", "file-gallery") . '" title="' . __("Zoom", "file-gallery") . '" />
 					</a>';
 				endif;
 				
-				$attached_files .= '<a href="#" id="in-' . $attachment->ID . '-edit" class="img_edit">
+				$attached_files .= '<a href="#" id="in-' . $attachment->ID . '-edit" class="img_edit action">
 					<img src="' . file_gallery_https( FILE_GALLERY_URL ) . '/images/famfamfam_silk/pencil.png" alt="' . __("Edit", "file-gallery") . '" title="' . __("Edit", "file-gallery") . '" />
 				</a>
-				<input type="checkbox" id="att-chk-' . $attachment->ID . '" class="checker"' . $checked . ' title="' . __("Click to select", "file-gallery") . '" />';
+				<span class="checker_action action" title="' . __('Click to select, or click and drag to change position', 'file-gallery') . '">
+					<input type="checkbox" id="att-chk-' . $attachment->ID . '" class="checker"' . $checked . ' title="' . __("Click to select", "file-gallery") . '" />
+				</span>';
 		
 			if( current_user_can('edit_post', $attachment->ID) ) :
 				
@@ -149,7 +155,7 @@ function file_gallery_list_attachments(&$count_attachments, $post_id, $attachmen
 					else
 						$as_featured = __("Unset as featured image", "file-gallery");
 				
-					$attached_files .= '<a href="#" class="post_thumb_status" rel="' . $attachment->ID . '" title="' . $as_featured . '">
+					$attached_files .= '<a href="#" class="post_thumb_status action" rel="' . $attachment->ID . '" title="' . $as_featured . '">
 							<img src="' . file_gallery_https( FILE_GALLERY_URL ) . '/images/famfamfam_silk/star_' . $post_thumb_link . '.png" alt="' . $as_featured . '" />
 						</a>';
 					
@@ -169,7 +175,7 @@ function file_gallery_list_attachments(&$count_attachments, $post_id, $attachmen
 				
 				endif;
 
-				$attached_files .= '<a href="#" class="delete_or_detach_link" rel="' . $attachment->ID . '">
+				$attached_files .= '<a href="#" class="delete_or_detach_link action" rel="' . $attachment->ID . '">
 					<img src="' . file_gallery_https( FILE_GALLERY_URL ) . '/images/famfamfam_silk/delete.png" alt="' . __("Detach / Delete", "file-gallery") . '" title="' . __("Detach / Delete", "file-gallery") . '" />
 				</a>
 				<div id="detach_or_delete_'  . $attachment->ID . '" class="detach_or_delete">
@@ -402,16 +408,16 @@ function file_gallery_main( $ajax = true )
 	
 	if( 'file_gallery_main_delete' == $action )
 	{
-		if( !empty($copies) && !empty($originals) )
+		if( ! empty($copies) && ! empty($originals) )
 		{
 			$cpluso  = array_merge($copies, $originals);
 			$normals = array_xor((array)$attachment_ids, $cpluso);
 		}
-		elseif( !empty($copies) )
+		elseif( ! empty($copies) )
 		{
 			$normals = array_xor((array)$attachment_ids, $copies);
 		}
-		elseif( !empty($originals) )
+		elseif( ! empty($originals) )
 		{
 			$normals = array_xor((array)$attachment_ids, $originals);
 		}

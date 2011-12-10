@@ -28,7 +28,7 @@ function file_gallery_get_mime_type( $mimes )
 				'7zip' => 'application/x-7z-compressed'
 			);
 			
-			$mime_types = apply_filters("file_gallery_mime_types", $mime_types);
+			$mime_types = apply_filters('file_gallery_mime_types', $mime_types);
 			
 			if( isset($mime_types[$mime]) )
 				$mime = $mime_types[$mime];

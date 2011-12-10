@@ -1,5 +1,61 @@
 <?php
 
+function file_gallery_check_attachment_originality()
+{
+	global $wp_query, $wpdb;
+	
+	if( 'upload' == get_current_screen()->base && ! empty($wp_query->posts) )
+	{
+		$ids = array();
+		$copies = array();
+		$originals = array();
+
+		foreach( $wp_query->posts as $post )
+		{
+			$ids[] = $post->ID;
+		}
+		
+		if( ! empty($ids) && $results = $wpdb->get_results("SELECT post_id, meta_key FROM $wpdb->postmeta WHERE meta_key IN ('_has_copies', '_is_copy_of') AND post_id IN ('" . implode("', '", $ids) . "')") )
+		{
+			foreach( $results as $r )
+			{
+				if( '_has_copies' == $r->meta_key )
+					$originals[] = $r->post_id;
+				
+				if( '_is_copy_of' == $r->meta_key )
+					$copies[] = $r->post_id;
+			}
+		}
+		
+		if( ! empty($originals) || ! empty($copies) )
+		{
+			if( ! empty($originals) )
+				$originals = '"#post-' . implode(', #post-', $originals) . '"';
+			else
+				$originals = 'null';
+
+			if( ! empty($copies) )
+				$copies = '"#post-' . implode(', #post-', $copies) . '"';
+			else
+				$copies = 'null';
+			
+		?>
+			<script type="text/javascript">
+				var file_gallery_originals = <?php echo $originals; ?>,
+					file_gallery_copies = <?php echo $copies; ?>;
+
+				if( null !== file_gallery_originals)
+					jQuery(file_gallery_originals).addClass("attachment-original");
+				
+				if( null !== file_gallery_copies)
+					jQuery(file_gallery_copies).addClass("attachment-copy");
+			</script>
+		<?php
+		}
+	}
+}
+add_action( 'admin_footer', 'file_gallery_check_attachment_originality' );
+
 /**
  * Prepares attachment data to be sent to the WordPress text editor
  * 
@@ -14,9 +70,6 @@
 function file_gallery_get_attachment_data()
 {
 	global $file_gallery;
-
-	if( ! is_a($file_gallery, 'File_Gallery') )
-		$file_gallery = new File_Gallery();
 
 	check_ajax_referer('file-gallery');
 
@@ -419,8 +472,7 @@ function file_gallery_copy_attachment_to_post( $aid, $post_id )
 	unset($attachment->ID);
 	
 	// maybe include this as an option on media settings screen...?
-	$title_extension = apply_filters('file_gallery_attachment_copy_title_extension', '', $post_id);
-	$attachment->post_title .= $title_extension;
+	$attachment->post_title .= apply_filters('file_gallery_attachment_copy_title_extension', '', $post_id);
 	
 	// copy main attachment data
 	$attachment_id = wp_insert_attachment( $attachment, false, $post_id );
@@ -593,7 +645,7 @@ function file_gallery_delete_attachment( $post_id )
 function file_gallery_cancel_file_deletion_if_attachment_copies( $file )
 {
 	global $wpdb;
-	
+
 	if( defined('FILE_GALLERY_SKIP_DELETE_CANCEL') && true === FILE_GALLERY_SKIP_DELETE_CANCEL )
 		return $file;
 	

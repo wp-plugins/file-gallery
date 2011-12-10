@@ -67,14 +67,17 @@ jQuery(document).ready(function($)
 		/**
 		 * takes care of communication with tinyMCE
 		 */
-		tinymce : function()
+		tinymce : function( retry )
 		{			
 			// get editor instance
 			var ed = tinymce.EditorManager.get("content");
 			
 			if( ! ed )
 			{
-				setTimeout(function(){ file_gallery.tinymce(); }, 200);
+				if( retry )
+					return false;
+				
+				setTimeout(function(){ file_gallery.tinymce( true ); }, 500);
 				return false;
 			}
 			
@@ -87,10 +90,12 @@ jQuery(document).ready(function($)
 					file_gallery.tinymce_gallery( mouseEvent.target.title );
 					file_gallery.gallery_image_clicked = true;
 				}
+				/*
 				else if( "IMG" == mouseEvent.target.nodeName )
 				{
 					file_gallery.tinymce_single_image( mouseEvent.target );
 				}
+				*/
 				else
 				{
 					// uncheck all items and serialize()
@@ -134,21 +139,38 @@ jQuery(document).ready(function($)
 				file_gallery.tmp++;
 			}
 		},
-		
-		
+
+
+
+
+
+
+
+
+
+
 		/**
 		 * Handles single image attributes
 		 *  // work in progress
 		 */
 		tinymce_single_image : function( image )
 		{
-			var that = $(image),
-				image = that,
-				linked = that.parent().get(0).tagName || false;
-
-			if( linked && "A" != linked )
+			var image = $(image),
+				parentTag = image.parent().get(0).tagName,
 				linked = false;
+
+			if( parentTag && "A" == parentTag )
+				linked = true;
+			
+			//alert(linked);
 		},
+
+
+
+
+
+
+
 
 
 		/**
@@ -243,13 +265,11 @@ jQuery(document).ready(function($)
 				
 				$("#fg_container .sortableitem .checker").map(function()
 				{
-					if( "all" === attachment_ids )
+					if( "all" === attachment_ids || -1 < attachment_ids.indexOf($(this).attr("id").replace("att-chk-", "")) )
+					{
+						$(this).parents(".sortableitem").addClass("selected");
 						return this.checked = true;
-
-					id = $(this).attr("id").replace("att-chk-", "");
-			
-					if( -1 != attachment_ids.indexOf(id) )
-						return this.checked = true;
+					}
 				});
 				
 				file_gallery.serialize("tinymce_gallery");
@@ -1823,15 +1843,16 @@ jQuery(document).ready(function($)
 	/* thumbnails */
 	
 	// attachment thumbnail click
-	$("#fg_container .fgtt").live("click.file_gallery", function()
+	$("#fg_container .fgtt, #fg_container .checker_action").live("click.file_gallery", function()
 	{
-		var c = "#att-chk-" + $(this).parent("li:first").attr("id").replace("image-", "");
+		var p = $(this).parent(), c = "#att-chk-" + p.attr("id").replace("image-", "");
 		
+		p.toggleClass("selected");
 		$(c).prop("checked", $(c).prop("checked") ? false : true).change();
 	});
 	
 	// attachment thumbnail double click
-	$("#fg_container .fgtt").live("dblclick", function()
+	$("#fg_container .fgtt, #fg_container .checker_action").live("dblclick", function()
 	{
 		file_gallery.edit( $(this).parent("li:first").attr("id").replace("image-", "") );
 	});
@@ -1972,6 +1993,7 @@ jQuery(document).ready(function($)
 		{
 			$('#fg_container .sortableitem .checker').map(function()
 			{
+				$(this).parents(".sortableitem").addClass("selected");
 				return this.checked = true;
 			});
 			
@@ -1980,29 +2002,20 @@ jQuery(document).ready(function($)
 	});
 		
 	// uncheck all attachments button click
-	$("#file_gallery_uncheck_all").live("click", function(e)
+	$("#file_gallery_uncheck_all").live("click click_tinymce_gallery", function(e)
 	{
 		if( "" != $("#data_collector_checked").val() )
 		{
 			$('#fg_container .sortableitem .checker').map(function()
 			{
+				$(this).parents(".sortableitem").removeClass("selected");
 				return this.checked = false;
 			});
 		}
 		
-		file_gallery.serialize();
-	});
-	
-	// uncheck all without serialization when tinymce gallery placeholder is clicked
-	$("#file_gallery_uncheck_all").live("click_tinymce_gallery", function(e)
-	{
-		if( "" != $("#data_collector_checked").val() )
-		{
-			$('#fg_container .sortableitem .checker').map(function()
-			{
-				return this.checked = false;
-			});
-		}
+		// with serialization if tinymce gallery placeholder isn't clicked
+		if( "click" === e.type )
+			file_gallery.serialize();
 	});
 	
 

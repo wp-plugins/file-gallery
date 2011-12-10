@@ -8,9 +8,6 @@ function file_gallery_options_init()
 {
 	global $file_gallery;
 
-	if( ! is_a($file_gallery, 'File_Gallery') )
-		$file_gallery = new File_Gallery();
-
 	$so = get_option('file_gallery');
 	$file_gallery_sizes = file_gallery_get_intermediate_image_sizes();
 	
@@ -87,9 +84,6 @@ function file_gallery_save_media_settings( $options )
 {
 	global $file_gallery;
 
-	if( ! is_a($file_gallery, 'File_Gallery') )
-		$file_gallery = new File_Gallery();
-
 	$defaults = $file_gallery->false_defaults;
 	$defaults = file_gallery_parse_args( $options, $defaults); // $defaults = shortcode_atts( $defaults, $options );
 	$defaults['folder']  = file_gallery_https( FILE_GALLERY_URL );
@@ -136,7 +130,7 @@ function file_gallery_dropdown( $name, $type )
 		$keys['image_size'] = file_gallery_get_intermediate_image_sizes();
 	
 	if( 'template' == $type )
-		$keys['template'] = file_gallery_get_templates();
+		$keys['template'] = file_gallery_get_templates('file_gallery_dropdown');
 
 	$keys['align'] = array(
 		'none' => __('none', 'file-gallery'), 
@@ -261,9 +255,6 @@ function file_gallery_add_settings()
 {
 	global $file_gallery;
 
-	if( ! is_a($file_gallery, 'File_Gallery') )
-		$file_gallery = new File_Gallery();
-	
 	file_gallery_do_settings();
 	
 	$settings = $file_gallery->settings;

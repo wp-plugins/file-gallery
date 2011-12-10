@@ -149,7 +149,7 @@
 					<label for="file_gallery_template"><?php _e("template", "file-gallery"); ?>:</label>
 					<select name="file_gallery_template" id="file_gallery_template">
 						<?php
-							$file_gallery_templates = file_gallery_get_templates();
+							$file_gallery_templates = file_gallery_get_templates('main-form');
 					
 							foreach( $file_gallery_templates as $template_name )
 							{

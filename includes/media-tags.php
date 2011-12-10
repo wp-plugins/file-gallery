@@ -84,13 +84,10 @@ function file_gallery_media_tags_get_taxonomy_slug()
 {
 	global $wpdb, $mediatags, $file_gallery;
 
-	if( ! is_a($file_gallery, 'File_Gallery') )
-		$file_gallery = new File_Gallery();
-
 	if( defined('FILE_GALLERY_MEDIA_TAG_NAME') )
 		return FILE_GALLERY_MEDIA_TAG_NAME;
 
-	file_gallery_do_settings();
+	//file_gallery_do_settings();
 	
 	$options = get_option('file_gallery');
 
