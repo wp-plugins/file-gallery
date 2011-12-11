@@ -3,7 +3,7 @@ Contributors: aesqe, azizur
 Donate link: http://skyphe.org/donate/
 Tags: attachment, attachments, gallery, galleries, template, templates, shortcode, file, files, attach, detach, unattach, copy, media, tags, library, custom, custom fields, custom fields for attachments, attachment custom fields
 Requires at least: 3.1
-Tested up to: 3.3-RC2-19567
+Tested up to: 3.3-RC3
 Stable tag: 1.6.5.6
 
 File Gallery extends WordPress media (attachments) capabilities 
@@ -85,7 +85,7 @@ For additional information, please see the File Gallery help file.
 It's included with the installation, but you can also view it online here: 
 <a href="http://skyphe.org/wp-content/plugins/file-gallery/help/index.html">http://skyphe.org/wp-content/plugins/file-gallery/help/index.html</a>
 
-=== Full list of filters within File Gallery ===
+**Full list of filters within File Gallery**
 
 file_gallery_templates_folder_abspath
 file_gallery_templates_folder_url
@@ -118,6 +118,13 @@ file_gallery_output
 
 
 == Changelog ==
+
+= 1.7-RC14 =
+* December 11th, 2011
+* fixed a cut/paste mistake that was preventing 
+  'file_gallery_default_template_abspath' filter from 
+  working properly - thanks bedex78!
+* updated POT file
 
 = 1.7-RC13 =
 * December 10th, 2011
