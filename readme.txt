@@ -3,8 +3,8 @@ Contributors: aesqe, azizur
 Donate link: http://skyphe.org/donate/
 Tags: attachment, attachments, gallery, galleries, template, templates, shortcode, file, files, attach, detach, unattach, copy, media, tags, library, custom, custom fields, custom fields for attachments, attachment custom fields
 Requires at least: 3.1
-Tested up to: 3.3-RC3
-Stable tag: 1.6.5.6
+Tested up to: 3.3
+Stable tag: 1.7
 
 File Gallery extends WordPress media (attachments) capabilities 
 by adding a new gallery shortcode handler with templating support 
@@ -118,6 +118,10 @@ file_gallery_output
 
 
 == Changelog ==
+
+= 1.7 =
+* December 13th, 2011
+* public release for WordPress 3.3
 
 = 1.7-RC14 =
 * December 11th, 2011
