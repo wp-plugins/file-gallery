@@ -110,7 +110,8 @@ function file_gallery_media_tags_get_taxonomy_slug()
 		$options['media_tag_taxonomy_slug'] = $tax_slug;
 		update_option('file_gallery', $options);
 
-		file_gallery_media_tags_update_taxonomy_slug( $current_tax_name, $tax_name );
+		if( $tax_name != $current_tax_name )
+			file_gallery_media_tags_update_taxonomy_slug( $current_tax_name, $tax_name );
 	}
 
 	define('FILE_GALLERY_MEDIA_TAG_SLUG', $tax_slug);

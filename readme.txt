@@ -119,6 +119,11 @@ file_gallery_output
 
 == Changelog ==
 
+= 1.7.1 =
+* December 15th, 2011
+* fixed a nasty overlook concerning wp_rewrite->flush_rules()
+  (called too early) - so sorry about that :|
+
 = 1.7 =
 * December 13th, 2011
 * public release for WordPress 3.3
