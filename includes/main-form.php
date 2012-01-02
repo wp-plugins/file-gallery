@@ -313,8 +313,6 @@
 			
 		</fieldset>
 		
-		<iframe name="file_gallery_upload" id="file_gallery_upload_area" src="<?php echo admin_url('media-upload.php?file_gallery=true&post_id=' . $post_id); ?>" width="310" height="270" ondragenter="event.stopPropagation(); event.preventDefault();" ondragover="event.stopPropagation(); event.preventDefault();" ondrop="event.stopPropagation(); event.preventDefault();"></iframe>
-		
 		<fieldset id="file_gallery_tag_attachment_switcher">
 		
 			<input type="button" id="file_gallery_switch_to_tags" value="<?php _e("Switch to tags", "file-gallery"); ?>" class="button" />
