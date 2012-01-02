@@ -94,7 +94,7 @@ function file_gallery_get_file_type( $mime )
 		$type = "default";
 	}
 	
-	return apply_filters('file_gallery_get_file_type', $mime, $type);
+	return apply_filters('file_gallery_get_file_type', $type, $mime);
 }
 
 ?>
