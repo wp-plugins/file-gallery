@@ -163,8 +163,7 @@ function file_gallery_parse_attachment_data( $attachment, $size, $linkto, $linkc
 	}
 	else
 	{
-		$filetype        = file_gallery_get_file_type($attachment->post_mime_type);
-		$size_src        = FILE_GALLERY_CRYSTAL_URL . '/' . $filetype . '.png';
+		$size_src        = wp_mime_type_icon($attachment->ID);
 		$width           = '';
 		$height          = '';
 		$imageclass     .= ' non-image';
@@ -268,7 +267,7 @@ function file_gallery_edit_attachment()
 	else
 	{
 		$fullsize_src = wp_get_attachment_url( $attachment->ID );
-		$size_src     = file_gallery_https( FILE_GALLERY_CRYSTAL_URL ) . '/' . file_gallery_get_file_type($attachment->post_mime_type) . '.png';
+		$size_src     = file_gallery_https( wp_mime_type_icon($attachment->ID) );
 		
 		$type = 'document';
 	}

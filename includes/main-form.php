@@ -214,7 +214,6 @@
 							
 							echo '<option value="' . $i . '"' . $selected . '>' . $i . "</option>\n";
 						}
-						
 					?>
 					</select>
 				</p>
@@ -312,6 +311,10 @@
 			</div>
 			
 		</fieldset>
+		
+	<?php if( 3.3 <= floatval(get_bloginfo('version')) ) : ?>
+		<iframe name="file_gallery_upload" id="file_gallery_upload_area" src="<?php echo admin_url('media-upload.php?file_gallery=true&post_id=' . $post_id); ?>" ondragenter="event.stopPropagation(); event.preventDefault();" ondragover="event.stopPropagation(); event.preventDefault();" ondrop="event.stopPropagation(); event.preventDefault();"></iframe>
+	<?php endif; ?>
 		
 		<fieldset id="file_gallery_tag_attachment_switcher">
 		

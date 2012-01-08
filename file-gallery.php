@@ -2,7 +2,7 @@
 /*
 Plugin Name: File Gallery
 Plugin URI: http://skyphe.org/code/wordpress/file-gallery/
-Version: 1.7.3
+Version: 1.7.4-RC
 Description: "File Gallery" extends WordPress' media (attachments) capabilities by adding a new gallery shortcode handler with templating support, a new interface for attachment handling when editing posts, and much more.
 Author: Bruno "Aesqe" Babic
 Author URI: http://skyphe.org
@@ -31,7 +31,7 @@ Author URI: http://skyphe.org
  * Setup default File Gallery options
  */
 
-define('FILE_GALLERY_VERSION', '1.7.3');
+define('FILE_GALLERY_VERSION', '1.7.4-RC');
 define('FILE_GALLERY_DEFAULT_TEMPLATES', serialize( array('default', 'file-gallery', 'list', 'simple') ) );
 
 
@@ -747,12 +747,6 @@ function file_gallery_after_setup_theme()
 	define( 'FILE_GALLERY_DEFAULT_TEMPLATE_URL', apply_filters('file_gallery_default_template_url', FILE_GALLERY_URL . '/templates/default') );
 	define( 'FILE_GALLERY_DEFAULT_TEMPLATE_ABSPATH', apply_filters('file_gallery_default_template_abspath', FILE_GALLERY_ABSPATH . '/templates/default') );
 	define( 'FILE_GALLERY_DEFAULT_TEMPLATE_NAME', apply_filters('file_gallery_default_template_name', 'default') );
-	
-	// file icons directory
-	$file_gallery_crystal_url = get_bloginfo('wpurl') . '/' . WPINC . '/images/crystal';
-
-	if( ! defined( 'FILE_GALLERY_CRYSTAL_URL' ) )
-		define( 'FILE_GALLERY_CRYSTAL_URL', apply_filters('file_gallery_crystal_url', $file_gallery_crystal_url) );
 
 	// display debug information
 	if( ! defined( 'FILE_GALLERY_DEBUG' ) )
@@ -953,7 +947,8 @@ function file_gallery_js_admin()
 			"set_as_featured"			 => __("Set as featured image", "file-gallery"),
 			"unset_as_featured"			 => __("Unset as featured image", "file-gallery"),
 			'copy_from_is_nan_or_zero'   => __('Supplied ID (%d) is zero or not a number, please correct.', 'file-gallery'),
-			'regenerating'               => __('regenerating...', 'file-gallery')
+			'regenerating'               => __('regenerating...', 'file-gallery'),
+			'gallery_updated'            => __('Gallery contents updated', 'file-gallery')
 		);
 		
 		// file_gallery.options
@@ -1313,7 +1308,6 @@ add_filter('manage_media_columns', 'file_gallery_media_columns');
  */
 require_once('includes/media-tags.php');
 require_once('includes/media-settings.php');
-// require_once('includes/media-upload.php');
 require_once('includes/attachments.php');
 require_once('includes/miscellaneous.php');
 require_once('includes/mime-types.php');
@@ -1328,4 +1322,6 @@ require_once('includes/attachments-custom-fields.php');
 if( 3.1 <= floatval(get_bloginfo('version')) )
 	require_once('includes/media-tags-list-table.class.php');
 
+if( 3.3 <= floatval(get_bloginfo('version')) )
+	require_once('includes/media-upload.php');
 ?>

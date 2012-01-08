@@ -209,9 +209,8 @@
 #file_gallery_list .ui-selected
 {
 	float:left;
-	background-color: #EDEDED;
+	background-color: #FAFAFA;
 	position: relative;
-	/*padding: 3px 6px 23px 21px;*/
 	padding: 5px;
 	border: 2px solid #DFDFDF;
 	margin-left: 3px;
@@ -558,7 +557,7 @@
 	width: 30px;
 	margin-left: -35px;
 	position: relative;
-	z-index: 100;
+	z-index: 101;
 	background: none !important;
 }
 
@@ -1327,4 +1326,18 @@ td.column-post_thumb img
 .attachment-copy.alternate
 {
 	background-color: #e4eff4;
+}
+
+
+
+
+
+#file_gallery_upload_area
+{
+	background: #FFF;
+    position: absolute;
+    right: 18px;
+    top: 0;
+	z-index: 100;
+	top: -9999em;
 }
