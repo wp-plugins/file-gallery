@@ -44,7 +44,7 @@
 {
 	border: 1px solid #EFEFEF;
 	padding: 0;
-	margin: 0 0 10px 0;
+	margin: 5px 0 10px 0;
 	clear: both;
 	position: relative;
 	display: none;
@@ -571,6 +571,11 @@
 	width: 90px;
 }
 
+.no-attachments.uploader #fg_buttons
+{
+	width: 30px;
+}
+
 #fg_buttons input,
 #file_gallery_upload_media
 {
@@ -629,6 +634,11 @@
 	margin-top: 9px;
 	float: left;
 	margin-left: 3px;
+}
+
+.no-attachments.uploader #file_gallery_upload_media
+{
+	margin-top: 3px;
 }
 
 #fg_buttons input:hover,
@@ -708,12 +718,19 @@
 {
 	background-image: url(../images/famfamfam_silk/images.png);
 }
+
 .no-attachments #file_gallery_copy_all,
 .no-attachments #file_gallery_refresh
 {
 	float: left;
 	margin-left: 3px;
 	margin-top: 9px;
+}
+
+.no-attachments.uploader #file_gallery_copy_all,
+.no-attachments.uploader #file_gallery_refresh
+{
+	margin-top: 3px;
 }
 
 #file_gallery_clear_cache_manual

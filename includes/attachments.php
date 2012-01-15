@@ -652,12 +652,16 @@ function file_gallery_cancel_file_deletion_if_attachment_copies( $file )
 	$was_original = true;
 		
 	// get '_wp_attached_file' value based on upload path
-	if( false !== get_option('uploads_use_yearmonth_folders') )
+	if( false != get_option('uploads_use_yearmonth_folders') )
 	{
 		$_file = explode('/', $_file);
 		$c     = count($_file);
 		
 		$_file = $_file[$c-3] . '/' . $_file[$c-2] . '/' . $_file[$c-1];
+	}
+	else
+	{
+		$_file = basename($file);
 	}
 	
 	// find all attachments that share the same file

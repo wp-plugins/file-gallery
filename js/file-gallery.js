@@ -64,6 +64,9 @@ jQuery(document).ready(function($)
 		gallery_image_clicked : [],
 		tinymce_events_added : false,
 		refreshed : false,
+		upload_inside : false,
+		uploader_dragdrop : true,
+
 
 		
 		/**
@@ -130,11 +133,19 @@ jQuery(document).ready(function($)
 					ed.onEvent.add(function(ed, e)
 					{
 						if( 46 === e.keyCode && "keyup" == e.type && true === file_gallery.gallery_image_clicked[ed.id] )
-						{					
+						{
 							$("#file_gallery_uncheck_all").trigger("click");
 							file_gallery.gallery_image_clicked[ed.id] = false;
 						}
 					});
+
+					/*
+					// event fires
+					$(ed.contentDocument).bind("drop", function(e)
+					{
+						console.log(e);
+					});
+					*/
 				}
 			});
 
@@ -310,7 +321,7 @@ jQuery(document).ready(function($)
 
 			var ed = file_gallery.tinymce_get_editor();
 
-			if( false === file_gallery.gallery_image_clicked[ed.id] && false === force )
+			if( "undefined" !== ed || (ed.id && false === file_gallery.gallery_image_clicked[ed.id] && false === force) )
 				return;
 
 			if( force && 0 < $("#TB_overlay").length )
@@ -359,6 +370,9 @@ jQuery(document).ready(function($)
 				data = null,
 				attachment_order = $("#data_collector_full").val();
 			
+			$("#file_gallery").removeClass("uploader");
+			$("#fg_container").css({ minHeight: 0 });
+			
 			if( 0 === $("#file_gallery_response").length )
 				$("#file_gallery.postbox").prepend('<div id="file_gallery_response"></div>');
 			
@@ -374,6 +388,10 @@ jQuery(document).ready(function($)
 			{
 				file_gallery.refreshed = true;
 				attachment_order = $("#file_gallery_attachments_sort").val();
+			}
+			else if( "UploadComplete" == response_message )
+			{
+				file_gallery.refreshed = true;
 			}
 			
 			if( "undefined" == typeof(fieldsets) )
@@ -1753,30 +1771,74 @@ jQuery(document).ready(function($)
 	/* === BINDINGS === */
 
 
-
-	$("#fg_container").live("dragover", function(e)
+	
+	/**
+	 * thanks to http://stackoverflow.com/questions/7110353/html5-dragleave-fired-when-hovering-a-child-element
+	 */
+	$('#file_gallery').live(
 	{
-		if( 0 < $("#file_gallery_upload_area").length )
+		dragenter: function()
 		{
-			$("#file_gallery_upload_area").css({
-				top: "5px", 
-				width: $("#file-gallery-content").width() + "px", 
-				height: $("#file-gallery-content").height() + "px",
-				minHeight: "350px",
-				backgroundImage: $("#file_gallery").css("backgroundImage")
-			});
+			if( ! file_gallery.uploader_dragdrop )
+				return;
 			
-			$(this).css({
-				minHeight: "350px"
-			});
+			if( 0 < $("#file_gallery_upload_area").length && false === file_gallery.upload_inside )
+			{
+				$("#file_gallery").addClass("uploader");
+				$("#fg_container").css({ minHeight: "350px"	});
+
+				$("#file_gallery_upload_area").css({
+					top: "5px", 
+					width: $("#file-gallery-content").width() + "px", 
+					height: $("#file-gallery-content").height() + "px",
+					minHeight: "350px",
+					backgroundImage: $("#file_gallery").css("backgroundImage")
+				});
+
+				file_gallery.upload_inside = true;
+			}
+		},
+		
+		dragleave: function(e)
+		{
+			if( ! file_gallery.uploader_dragdrop )
+				return;
+			
+			var related = e.relatedTarget,
+				inside = false;
+		
+			if( null === related ) // webkit
+				related = e.target;
+			
+			if( related !== this )
+			{
+				if( related )
+					inside = jQuery.contains(this, related);
+			}
+			else
+			{
+				if( null === e.relatedTarget ) // webkit
+					inside = false;
+			}
+			
+			if( ! inside && 0 < $("#file_gallery_upload_area").length && true === file_gallery.upload_inside )
+				file_gallery.hide_upload();
 		}
 	});
-
-	$("#fg_container").live("dragleave drop", function(e)
+	
+	file_gallery.hide_upload = function()
 	{
-		if( 0 < $("#file_gallery_upload_area").length )
-			$("#file_gallery_upload_area").css({top: "-9999em"});
-	});
+		$("#file_gallery_upload_area").css({top: "-9999em"});
+		$("#fg_container").css({ minHeight: 0 });
+		$("#file_gallery").removeClass("uploader");
+		
+		file_gallery.upload_inside = false;
+	}
+	
+	file_gallery.upload_handle_error = function(error, uploader)
+	{
+		
+	}
 
 	$("#file_gallery_linkclass, #file_gallery_imageclass, #file_gallery_galleryclass, #file_gallery_mimetype, #file_gallery_limit, #file_gallery_offset, #file_gallery_external_url, #file_gallery_single_linkclass, #file_gallery_single_imageclass, #file_gallery_single_external_url, #fg_gallery_tags, #file_gallery_postid, #file_gallery_mimetype, #file_gallery_linkrel_custom").live('keypress keyup', function(e)
 	{
@@ -1993,8 +2055,8 @@ jQuery(document).ready(function($)
 	{
 		if( "click" == e.type )
 			file_gallery.send_to_editor( $(this).attr("id") );
-		else
-			file_gallery.tinymce_set_ie_bookmark();
+		/*else
+			file_gallery.tinymce_set_ie_bookmark();*/
 	});
 
 

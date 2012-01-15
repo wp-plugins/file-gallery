@@ -1,9 +1,9 @@
 === File Gallery ===
 Contributors: aesqe, azizur
 Donate link: http://skyphe.org/donate/
-Tags: attachment, attachments, gallery, galleries, template, templates, shortcode, file, files, attach, detach, unattach, copy, media, tags, library, custom, custom fields, custom fields for attachments, attachment custom fields
+Tags: attachment, attachments, gallery, galleries, template, templates, shortcode, file, files, attach, detach, unattach, copy, media, tags, library, custom, custom fields, custom fields for attachments, attachment custom fields, drag drop upload
 Requires at least: 3.1
-Tested up to: 3.4-alpha-19704
+Tested up to: 3.4-alpha-19719
 Stable tag: 1.7.3
 
 File Gallery extends WordPress media (attachments) capabilities 
@@ -118,6 +118,13 @@ file_gallery_get_file_type
 
 
 == Changelog ==
+
+= 1.7.4-RC2 =
+* January 14th, 2012
+* support for multiple editors
+* drag and drop upload by dragging files onto File Gallery interface
+* proper check for attachment copies on file deletion when not 
+  using year/month upload structure - thanks to Per Wiklander :)
 
 = 1.7.3 =
 * January 2nd, 2012

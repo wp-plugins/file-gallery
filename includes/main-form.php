@@ -92,6 +92,11 @@
 					</select>
 				</p>
 				
+				<p id="file_gallery_external_url_label">
+					<label for="file_gallery_external_url"><?php _e("external url", "file-gallery"); ?>:</label>
+					<input type="text" name="file_gallery_external_url" id="file_gallery_external_url" value="<?php echo $file_gallery_options["default_external_url"]; ?>" />
+				</p>
+				
 				<p id="file_gallery_linksize_label">
 					<label for="file_gallery_linksize"><?php _e("linked image size", "file-gallery"); ?>:</label>
 					<select name="file_gallery_linksize" id="file_gallery_linksize">
@@ -118,11 +123,6 @@
 						<label for="file_gallery_linkrel_custom"><?php _e("custom value", "file-gallery"); ?>:</label>
 						<input type="text" name="file_gallery_linkrel_custom" id="file_gallery_linkrel_custom" value="" />
 					</span>
-				</p>
-				
-				<p id="file_gallery_external_url_label">
-					<label for="file_gallery_external_url"><?php _e("external url", "file-gallery"); ?>:</label>
-					<input type="text" name="file_gallery_external_url" id="file_gallery_external_url" value="<?php echo $file_gallery_options["default_external_url"]; ?>" />
 				</p>
 				
 				<p id="file_gallery_linkclass_label">
