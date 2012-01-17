@@ -107,7 +107,7 @@ function file_gallery_list_attachments(&$count_attachments, $post_id, $attachmen
 			// if it's not an image...
 			if( "" == $attachment_thumb )
 			{
-				$attachment_thumb    = array( 0 => file_gallery_https( wp_mime_type_icon($attachment->ID) ) );
+				$attachment_thumb[0] = file_gallery_https( FILE_GALLERY_CRYSTAL_URL ). "/" . file_gallery_get_file_type($attachment->post_mime_type) . ".png";
 				$attachment_width    = '';
 				$attachment_height   = '';
 				$non_image           = ' non_image';
@@ -257,11 +257,10 @@ function file_gallery_list_tags( $args = array() )
 		
 		if( $cache )
 		{
-			if( ! $echo )
-				return $cache;
-
-			echo $cache;	
-			return;
+			if( $echo )
+				echo $cache;
+			else
+				return $cache;	
 		}
 	}
 
@@ -323,7 +322,7 @@ function file_gallery_list_tags( $args = array() )
 
 				foreach( $media_tags as $tag )
 				{						
-					$list[] = '<a href="' . file_gallery_https( get_bloginfo('url') ) . $fs . $media_tag_slug . $ss . $tag->slug . $ts . '" class="fg_insert_tag" name="' . $tag->slug . '">' . $tag->name . '</a>';
+					$list[] = '<a href="' . file_gallery_https( get_bloginfo("url") ) . $fs . $media_tag_slug . $ss . $tag->slug . $ts . '" class="fg_insert_tag" name="' . $tag->slug . '">' . $tag->name . '</a>';
 				}
 			}
 			else

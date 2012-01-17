@@ -5,7 +5,7 @@ var file_gallery =
 };
 
 // add access and prop for older versions of jQuery
-if( typeof(jQuery.access) !== "function" )
+if( typeof(jQuery.access) !== 'function' )
 {
 	jQuery.extend({
 		access: function( elems, key, value, exec, fn, pass ) {
@@ -37,12 +37,12 @@ if( typeof(jQuery.access) !== "function" )
 	});
 }
 	
-if( typeof(jQuery.fn.prop) !== "function" )
+if( typeof(jQuery.fn.prop) !== 'function' )
 {
 	jQuery.fn.extend({
 		prop: function( name, value ) {
 			
-			if( "checked" === name || "selected" === name || "disabled" === name || "readonly" === name )
+			if( 'checked' === name || 'selected' === name || 'disabled' === name || 'readonly' === name )
 			{
 				if( true === value )
 					value = name;
@@ -59,152 +59,93 @@ jQuery(document).ready(function($)
 {	
 	$.extend(file_gallery,
 	{
-		tmp : [],
-		last_clicked_gallery : [],
-		gallery_image_clicked : [],
-		tinymce_events_added : false,
+		gallery_image_clicked : false,
 		refreshed : false,
-		upload_inside : false,
-		uploader_dragdrop : true,
-
-
+		tmp : 1,
+		
 		
 		/**
-		 * takes care of communication with TinyMCE
+		 * takes care of communication with tinyMCE
 		 */
 		tinymce : function( retry )
 		{
-			/*if( file_gallery.tinymce_events_added )
-				return;*/
+			if( "undefined" === typeof(tinymce) )
+				return;
 			
-			$("#editorcontainer, .wp-editor-wrap").each( function()
+			// get editor instance
+			var ed = tinymce.EditorManager.get("content");
+			
+			if( ! ed )
 			{
-				var editor_id = "editorcontainer" == this.id ? "content" : this.id.replace(/^wp-/, "").replace(/-wrap$/, "");
+				if( retry )
+					return false;
 				
-				if( "replycontent" != editor_id )
+				setTimeout(function(){ file_gallery.tinymce( true ); }, 500);
+				return false;
+			}
+			
+			// trigger file_gallery.tinymce_gallery() if clicked-on image has a wpGallery class
+			ed.onClick.add( function(tinymce_object, mouseEvent)
+			{
+				if( mouseEvent.target.className.match(/wpGallery/) )
 				{
-					// get editor instance
-					var ed = tinymce.EditorManager.get( editor_id );
-					
-					if( ! ed )
-					{
-						if( retry )
-							return false;
-						
-						setTimeout(function(){ file_gallery.tinymce( true ); }, 500);
-						return false;
-					}
-					
-					file_gallery.tmp[ed.id] = 1;
-					file_gallery.gallery_image_clicked[ed.id] = false;
-					
-					// trigger file_gallery.tinymce_gallery() if clicked-on image has a wpGallery class
-					ed.onMouseDown.add( function(tinymce_object, mouseEvent)
-					{
-						wpActiveEditor = ed.id;
-						
-						if( mouseEvent.target.className.match(/wpGallery/) )
-						{
-							file_gallery.gallery_image_clicked[ed.id] = true;
-
-							if( "" == mouseEvent.target.id )
-							{
-								mouseEvent.target.id = "file_gallery_tmp_" + file_gallery.tmp[ed.id];
-								file_gallery.tmp[ed.id]++
-							}
-
-							file_gallery.last_clicked_gallery[ed.id] = mouseEvent.target.id;
-							
-							// call tinymce_gallery with image title as argument (title holds gallery options)
-							file_gallery.tinymce_gallery( mouseEvent.target.title );
-						}
-						else
-						{
-							// uncheck all items and serialize()
-							if( true === file_gallery.gallery_image_clicked[ed.id] )
-							{
-								file_gallery.gallery_image_clicked[ed.id] = false;
-								$("#file_gallery_uncheck_all").trigger("click");
-							}
-						}
-					});
-		
-					// clear options on gallery placeholder delete
-					ed.onEvent.add(function(ed, e)
-					{
-						if( 46 === e.keyCode && "keyup" == e.type && true === file_gallery.gallery_image_clicked[ed.id] )
-						{
-							$("#file_gallery_uncheck_all").trigger("click");
-							file_gallery.gallery_image_clicked[ed.id] = false;
-						}
-					});
-
-					/*
-					// event fires
-					$(ed.contentDocument).bind("drop", function(e)
-					{
-						console.log(e);
-					});
-					*/
+					// call tinymce_gallery with image title as argument (title holds gallery options)
+					file_gallery.tinymce_gallery( mouseEvent.target.title );
+					file_gallery.gallery_image_clicked = true;
+				}
+				/*
+				else if( "IMG" == mouseEvent.target.nodeName )
+				{
+					file_gallery.tinymce_single_image( mouseEvent.target );
+				}
+				*/
+				else
+				{
+					// uncheck all items and serialize()
+					$("#file_gallery_uncheck_all").trigger("click");
+					file_gallery.gallery_image_clicked = false;
 				}
 			});
 
-			file_gallery.tinymce_events_added = true;
-		},
-		
-		
-		tinymce_get_editor: function()
-		{
-			if( "undefined" === typeof(wpActiveEditor) )
-				wpActiveEditor = "content";
-			
-			return tinymce.EditorManager.get(wpActiveEditor);
+			// clear options on delete
+			ed.onEvent.add(function(ed, e)
+			{
+				if( 46 === e.keyCode && "keyup" == e.type && true === file_gallery.gallery_image_clicked )
+				{					
+					$("#file_gallery_uncheck_all").trigger("click");
+					file_gallery.gallery_image_clicked = false;
+				}
+			});
 		},
 
 
 		/**
 		 * updates the contents of [gallery] shortcode
 		 */
-		tinymce_maybe_update_gallery_data : function( serial )
+		tinymce_change_gallery_content : function( serial )
 		{
-			var ed = file_gallery.tinymce_get_editor();
-
-			// update tinymce gallery
-			if( ed && file_gallery.gallery_image_clicked[ed.id] )
+			if( "undefined" === typeof(tinymce) )
+				return;
+			
+			// skips setContent for webkit browsers if tinyMCE version is below 3.3.6
+			if( (! $.browser.webkit && ! $.browser.safari) || (3 <= parseFloat(tinymce.majorVersion) && 3.6 <= parseFloat(tinymce.minorVersion)) )
 			{
-				if( "" == ed.selection.getContent() )
-				{
-					ed.focus();
-					ed.selection.select( ed.getDoc().getElementById(file_gallery.last_clicked_gallery[ed.id]) ) ;
-					tinymce.execCommand("mceFocus", false, ed.id);
-				}
-
-				if( "" != ed.selection.getContent() )
-				{
-					// skips setContent for webkit browsers if tinyMCE version is below 3.3.6
-					if( (! $.browser.webkit && ! $.browser.safari) || (3 <= parseFloat(tinymce.majorVersion) && 3.6 <= parseFloat(tinymce.minorVersion)) )
+				var ed = tinymce.EditorManager.get("content"),
+					new_content = serial.replace(/\[gallery([^\]]*)\]/g, function(a,b)
 					{
-						var ed = file_gallery.tinymce_get_editor(),
-							new_gallery_id = "file_gallery_tmp_" + file_gallery.tmp[ed.id];
-							new_content = serial.replace(/\[gallery([^\]]*)\]/g, function(a,b)
-							{
-								return "<img src='" + tinymce.baseURL + "/plugins/wpgallery/img/t.gif' class='wpGallery mceItem' title='gallery" + tinymce.DOM.encode(b).replace(/\[/, '\[').replace(/\]/, '\]') + "' id='" + new_gallery_id + "' />";
-							});
-
-						ed.focus();
-						ed.selection.select( ed.getDoc().getElementById(file_gallery.last_clicked_gallery[ed.id]) );
-						ed.selection.setContent( new_content );
-						ed.selection.select( ed.getDoc().getElementById(new_gallery_id) );
-						tinymce.execCommand( "mceFocus", false, ed.id );
-						
-						file_gallery.last_clicked_gallery[ed.id] = new_gallery_id;
-						file_gallery.tmp[ed.id]++;
-					}
-					
-					$('#file_gallery_response').html(file_gallery.L10n.gallery_updated).show().fadeOut(1000);
-				}
+						return "<img src='" + tinymce.baseURL + "/plugins/wpgallery/img/t.gif' class='wpGallery mceItem' title='gallery" + tinymce.DOM.encode(b).replace(/\[/, '\[').replace(/\]/, '\]') + "' id='file_gallery_tmp_" + file_gallery.tmp + "' />";
+					});
+				
+				ed.focus();
+				ed.selection.setContent(new_content);
+				
+				ed.selection.select(ed.getDoc().getElementById("file_gallery_tmp_" + file_gallery.tmp));
+				tinyMCE.execCommand("mceFocus", false, "content");
+				
+				file_gallery.tmp++;
 			}
 		},
+
 
 
 		/**
@@ -316,13 +257,16 @@ jQuery(document).ready(function($)
 		 */
 		tinymce_deselect : function( force )
 		{
+			if( "undefined" === typeof(tinymce) )
+				return;
+			
 			if( "undefined" === typeof(force) )
 				force = false;
-
-			var ed = file_gallery.tinymce_get_editor();
-
-			if( "undefined" !== ed || (ed.id && false === file_gallery.gallery_image_clicked[ed.id] && false === force) )
+			
+			if( false === file_gallery.gallery_image_clicked && false === force )
 				return;
+
+			var ed = tinymce.EditorManager.get("content");
 
 			if( force && 0 < $("#TB_overlay").length )
 				return setTimeout( function(){ file_gallery.tinymce_deselect( force ); }, 100 );
@@ -332,8 +276,8 @@ jQuery(document).ready(function($)
 				if( ed.selection )
 					ed.selection.collapse(false);
 			
-				tinymce.execCommand("mceRepaint", false, ed.id);
-				tinymce.execCommand("mceFocus", false, ed.id);
+				tinyMCE.execCommand("mceRepaint", false, "content");
+				tinyMCE.execCommand("mceFocus", false, "content");
 			}
 		},
 
@@ -370,9 +314,6 @@ jQuery(document).ready(function($)
 				data = null,
 				attachment_order = $("#data_collector_full").val();
 			
-			$("#file_gallery").removeClass("uploader");
-			$("#fg_container").css({ minHeight: 0 });
-			
 			if( 0 === $("#file_gallery_response").length )
 				$("#file_gallery.postbox").prepend('<div id="file_gallery_response"></div>');
 			
@@ -388,10 +329,6 @@ jQuery(document).ready(function($)
 			{
 				file_gallery.refreshed = true;
 				attachment_order = $("#file_gallery_attachments_sort").val();
-			}
-			else if( "UploadComplete" == response_message )
-			{
-				file_gallery.refreshed = true;
 			}
 			
 			if( "undefined" == typeof(fieldsets) )
@@ -733,9 +670,12 @@ jQuery(document).ready(function($)
 			serial += id + size + linkto + linksize + linkclass + imageclass + galleryclass + mimetype + limit + order + orderby + template + columns + linkrel + "]\n";
 			
 			$("#data_collector").val(serial);
-
-			if( "normal" == internal_event )
-				file_gallery.tinymce_maybe_update_gallery_data(serial);
+			
+			if( "undefined" !== typeof(tinymce) && file_gallery.gallery_image_clicked && '' != tinymce.EditorManager.get('content').selection.getContent() && 'normal' == internal_event )
+			{
+				file_gallery.tinymce_change_gallery_content( serial );
+				$('#file_gallery_response').html("Gallery contents updated").show().fadeOut(1000);
+			}											 
 		},
 
 
@@ -1332,12 +1272,10 @@ jQuery(document).ready(function($)
 		
 		tinymce_set_ie_bookmark : function()
 		{
-			var ed = file_gallery.tinymce_get_editor();
-
-			if( "undefined" !== typeof(tinymce) && tinymce.isIE && ed && ! ed.isHidden() )
+			if( typeof tinyMCE != 'undefined' && tinymce.isIE && tinyMCE.activeEditor && ! tinyMCE.activeEditor.isHidden() )
 			{
-				ed.focus();
-				ed.windowManager.insertimagebookmark = ed.selection.getBookmark(1);
+				tinyMCE.activeEditor.focus();
+				tinyMCE.activeEditor.windowManager.insertimagebookmark = tinyMCE.activeEditor.selection.getBookmark();
 			}
 		},
 
@@ -1497,7 +1435,7 @@ jQuery(document).ready(function($)
 				data,
 				function(response)
 				{
-					$("#file_gallery_response").stop().html(response).show().css({opacity : 1}).fadeOut(7500);
+					$("#file_gallery_response").stop().html(response).show().css({opacity : 1}).fadeOut(7500); 
 					file_gallery.init("refreshed");
 				},
 				"html"
@@ -1771,75 +1709,6 @@ jQuery(document).ready(function($)
 	/* === BINDINGS === */
 
 
-	
-	/**
-	 * thanks to http://stackoverflow.com/questions/7110353/html5-dragleave-fired-when-hovering-a-child-element
-	 */
-	$('#file_gallery').live(
-	{
-		dragenter: function()
-		{
-			if( ! file_gallery.uploader_dragdrop )
-				return;
-			
-			if( 0 < $("#file_gallery_upload_area").length && false === file_gallery.upload_inside )
-			{
-				$("#file_gallery").addClass("uploader");
-				$("#fg_container").css({ minHeight: "350px"	});
-
-				$("#file_gallery_upload_area").css({
-					top: "5px", 
-					width: $("#file-gallery-content").width() + "px", 
-					height: $("#file-gallery-content").height() + "px",
-					minHeight: "350px",
-					backgroundImage: $("#file_gallery").css("backgroundImage")
-				});
-
-				file_gallery.upload_inside = true;
-			}
-		},
-		
-		dragleave: function(e)
-		{
-			if( ! file_gallery.uploader_dragdrop )
-				return;
-			
-			var related = e.relatedTarget,
-				inside = false;
-		
-			if( null === related ) // webkit
-				related = e.target;
-			
-			if( related !== this )
-			{
-				if( related )
-					inside = jQuery.contains(this, related);
-			}
-			else
-			{
-				if( null === e.relatedTarget ) // webkit
-					inside = false;
-			}
-			
-			if( ! inside && 0 < $("#file_gallery_upload_area").length && true === file_gallery.upload_inside )
-				file_gallery.hide_upload();
-		}
-	});
-	
-	file_gallery.hide_upload = function()
-	{
-		$("#file_gallery_upload_area").css({top: "-9999em"});
-		$("#fg_container").css({ minHeight: 0 });
-		$("#file_gallery").removeClass("uploader");
-		
-		file_gallery.upload_inside = false;
-	}
-	
-	file_gallery.upload_handle_error = function(error, uploader)
-	{
-		
-	}
-
 	$("#file_gallery_linkclass, #file_gallery_imageclass, #file_gallery_galleryclass, #file_gallery_mimetype, #file_gallery_limit, #file_gallery_offset, #file_gallery_external_url, #file_gallery_single_linkclass, #file_gallery_single_imageclass, #file_gallery_single_external_url, #fg_gallery_tags, #file_gallery_postid, #file_gallery_mimetype, #file_gallery_linkrel_custom").live('keypress keyup', function(e)
 	{
 		// on enter
@@ -2051,12 +1920,12 @@ jQuery(document).ready(function($)
 
 	/* send gallery or single image(s) to editor */
 	
-	$("#file_gallery_send_gallery_legend, #file_gallery_send_single_legend").live("click mouseenter", function(e)
+	$("#file_gallery_send_gallery_legend, #file_gallery_send_single_legend").live("click mouseover", function(e)
 	{
 		if( "click" == e.type )
 			file_gallery.send_to_editor( $(this).attr("id") );
-		/*else
-			file_gallery.tinymce_set_ie_bookmark();*/
+		else
+			file_gallery.tinymce_set_ie_bookmark();
 	});
 
 
@@ -2065,25 +1934,25 @@ jQuery(document).ready(function($)
 	// refresh attachments button click
 	$("#file_gallery_refresh").live("click", function()
 	{
-		 file_gallery.init( "refreshed" );
+		 file_gallery.init( 'refreshed' );
 	});
 	
 	// resort attachments button click
 	$("#file_gallery_attachments_sort_submit").live("click", function()
 	{
-		 file_gallery.init( "sorted" );
+		 file_gallery.init( 'sorted' );
 	});
 	
 	// delete checked attachments button click
 	$("#file_gallery_delete_checked").live("click", function()
 	{
-		file_gallery.delete_dialog( $("#data_collector_checked").val() );
+		file_gallery.delete_dialog( $('#data_collector_checked').val() );
 	});
 		
 	// detach checked attachments button click
 	$("#file_gallery_detach_checked").live("click", function()
 	{
-		file_gallery.detach_attachments($("#data_collector_checked").val(), file_gallery.L10n.sure_to_detach);
+		file_gallery.detach_attachments($('#data_collector_checked').val(), file_gallery.L10n.sure_to_detach);
 	});
 	
 	// save attachments menu order button click
@@ -2100,7 +1969,7 @@ jQuery(document).ready(function($)
 	{
 		if( $("#data_collector_checked").val() != $("#data_collector_full").val() )
 		{
-			$("#fg_container .sortableitem .checker").map(function()
+			$('#fg_container .sortableitem .checker').map(function()
 			{
 				$(this).parents(".sortableitem").addClass("selected");
 				return this.checked = true;
@@ -2115,7 +1984,7 @@ jQuery(document).ready(function($)
 	{
 		if( "" != $("#data_collector_checked").val() )
 		{
-			$("#fg_container .sortableitem .checker").map(function()
+			$('#fg_container .sortableitem .checker').map(function()
 			{
 				$(this).parents(".sortableitem").removeClass("selected");
 				return this.checked = false;

@@ -46,12 +46,9 @@ function file_gallery_get_mime_type( $mimes )
  * both in backend and frontend
  *
  * needs more options and maybe a different approach...
- * @deprecated since 1.7.4
  */
 function file_gallery_get_file_type( $mime )
 {
-	return wp_mime_type_icon($mime);
-
 	if( false !== strpos($mime, "text") || 
 		false !== strpos($mime, "xhtml"))
 	{

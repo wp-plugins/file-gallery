@@ -44,7 +44,7 @@
 {
 	border: 1px solid #EFEFEF;
 	padding: 0;
-	margin: 5px 0 10px 0;
+	margin: 0 0 10px 0;
 	clear: both;
 	position: relative;
 	display: none;
@@ -209,8 +209,9 @@
 #file_gallery_list .ui-selected
 {
 	float:left;
-	background-color: #FAFAFA;
+	background-color: #EDEDED;
 	position: relative;
+	/*padding: 3px 6px 23px 21px;*/
 	padding: 5px;
 	border: 2px solid #DFDFDF;
 	margin-left: 3px;
@@ -557,7 +558,7 @@
 	width: 30px;
 	margin-left: -35px;
 	position: relative;
-	z-index: 101;
+	z-index: 100;
 	background: none !important;
 }
 
@@ -569,11 +570,6 @@
 .no-attachments #fg_buttons
 {
 	width: 90px;
-}
-
-.no-attachments.uploader #fg_buttons
-{
-	width: 30px;
 }
 
 #fg_buttons input,
@@ -634,11 +630,6 @@
 	margin-top: 9px;
 	float: left;
 	margin-left: 3px;
-}
-
-.no-attachments.uploader #file_gallery_upload_media
-{
-	margin-top: 3px;
 }
 
 #fg_buttons input:hover,
@@ -718,19 +709,12 @@
 {
 	background-image: url(../images/famfamfam_silk/images.png);
 }
-
 .no-attachments #file_gallery_copy_all,
 .no-attachments #file_gallery_refresh
 {
 	float: left;
 	margin-left: 3px;
 	margin-top: 9px;
-}
-
-.no-attachments.uploader #file_gallery_copy_all,
-.no-attachments.uploader #file_gallery_refresh
-{
-	margin-top: 3px;
 }
 
 #file_gallery_clear_cache_manual
@@ -1343,18 +1327,4 @@ td.column-post_thumb img
 .attachment-copy.alternate
 {
 	background-color: #e4eff4;
-}
-
-
-
-
-
-#file_gallery_upload_area
-{
-	background: #FFF;
-    position: absolute;
-    right: 18px;
-    top: 0;
-	z-index: 100;
-	top: -9999em;
 }

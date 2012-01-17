@@ -163,7 +163,8 @@ function file_gallery_parse_attachment_data( $attachment, $size, $linkto, $linkc
 	}
 	else
 	{
-		$size_src        = wp_mime_type_icon($attachment->ID);
+		$filetype        = file_gallery_get_file_type($attachment->post_mime_type);
+		$size_src        = FILE_GALLERY_CRYSTAL_URL . '/' . $filetype . '.png';
 		$width           = '';
 		$height          = '';
 		$imageclass     .= ' non-image';
@@ -267,7 +268,7 @@ function file_gallery_edit_attachment()
 	else
 	{
 		$fullsize_src = wp_get_attachment_url( $attachment->ID );
-		$size_src     = file_gallery_https( wp_mime_type_icon($attachment->ID) );
+		$size_src     = file_gallery_https( FILE_GALLERY_CRYSTAL_URL ) . '/' . file_gallery_get_file_type($attachment->post_mime_type) . '.png';
 		
 		$type = 'document';
 	}
@@ -652,16 +653,12 @@ function file_gallery_cancel_file_deletion_if_attachment_copies( $file )
 	$was_original = true;
 		
 	// get '_wp_attached_file' value based on upload path
-	if( false != get_option('uploads_use_yearmonth_folders') )
+	if( false !== get_option('uploads_use_yearmonth_folders') )
 	{
 		$_file = explode('/', $_file);
 		$c     = count($_file);
 		
 		$_file = $_file[$c-3] . '/' . $_file[$c-2] . '/' . $_file[$c-1];
-	}
-	else
-	{
-		$_file = basename($file);
 	}
 	
 	// find all attachments that share the same file
