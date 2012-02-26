@@ -2,7 +2,7 @@
 /*
 Plugin Name: File Gallery
 Plugin URI: http://skyphe.org/code/wordpress/file-gallery/
-Version: 1.7.4.1
+Version: 1.7.5-beta-1
 Description: "File Gallery" extends WordPress' media (attachments) capabilities by adding a new gallery shortcode handler with templating support, a new interface for attachment handling when editing posts, and much more.
 Author: Bruno "Aesqe" Babic
 Author URI: http://skyphe.org
@@ -31,7 +31,7 @@ Author URI: http://skyphe.org
  * Setup default File Gallery options
  */
 
-define('FILE_GALLERY_VERSION', '1.7.4.1');
+define('FILE_GALLERY_VERSION', '1.7.5-beta-1');
 define('FILE_GALLERY_DEFAULT_TEMPLATES', serialize( array('default', 'file-gallery', 'list', 'simple') ) );
 
 
@@ -80,6 +80,9 @@ class File_Gallery
 	 * Current version of this plugin
 	 */
 	var $version = FILE_GALLERY_VERSION;
+	
+	
+	var $admin_thickbox_enqueued = false;
 
 	/***/
 	function __construct()
@@ -553,7 +556,7 @@ function file_gallery_do_settings()
 			'media_tag_taxonomy_name' => array(
 				'default' => 'media_tag',
 				'display' => 'disabled',
-				'title' => __('Media tags Taxonomy name', 'file-gallery'),
+				'title' => __('Media tags Taxonomy name', 'file-gallery') . ' <em>(<a href="' . admin_url('options-permalink.php') . '" style="text-transform: lowercase;">' . __('Edit') . '</a>)</em>',
 				'type' => 'text',
 				'section' => 0,
 				'position' => 0
@@ -561,7 +564,7 @@ function file_gallery_do_settings()
 			'media_tag_taxonomy_slug' => array(
 				'default' => 'media-tag',
 				'display' => 'disabled',
-				'title' => __('Media tags URL slug', 'file-gallery'),
+				'title' => __('Media tags URL slug', 'file-gallery') . ' <em>(<a href="' . admin_url('options-permalink.php') . '" style="text-transform: lowercase;">' . __('Edit') . '</a>)</em>',
 				'type' => 'text',
 				'section' => 0,
 				'position' => 0
@@ -671,7 +674,7 @@ function file_gallery_upgrade()
 {
 	$options = get_option('file_gallery');
 	
-	if( $options && version_compare( $options['version'], FILE_GALLERY_VERSION, '<') )
+	if( isset($options['version']) && version_compare( $options['version'], FILE_GALLERY_VERSION, '<') )
 		file_gallery_activate();
 }
 add_action( 'admin_init', 'file_gallery_upgrade' );
@@ -749,12 +752,6 @@ function file_gallery_after_setup_theme()
 	define( 'FILE_GALLERY_DEFAULT_TEMPLATE_URL', apply_filters('file_gallery_default_template_url', FILE_GALLERY_URL . '/templates/default') );
 	define( 'FILE_GALLERY_DEFAULT_TEMPLATE_ABSPATH', apply_filters('file_gallery_default_template_abspath', FILE_GALLERY_ABSPATH . '/templates/default') );
 	define( 'FILE_GALLERY_DEFAULT_TEMPLATE_NAME', apply_filters('file_gallery_default_template_name', 'default') );
-	
-	// file icons directory
-	$file_gallery_crystal_url = get_bloginfo('wpurl') . '/' . WPINC . '/images/crystal';
-
-	if( ! defined( 'FILE_GALLERY_CRYSTAL_URL' ) )
-		define( 'FILE_GALLERY_CRYSTAL_URL', apply_filters('file_gallery_crystal_url', $file_gallery_crystal_url) );
 
 	// display debug information
 	if( ! defined( 'FILE_GALLERY_DEBUG' ) )
@@ -775,6 +772,18 @@ function file_gallery_plugin_action_links( $links )
 	return $links; 
 }
 add_filter('plugin_action_links_' . plugin_basename(__FILE__), 'file_gallery_plugin_action_links' );
+
+
+function file_gallery_filter_plugin_row_meta( $plugin_meta, $plugin_file, $plugin_data, $status )
+{
+	if( 'File Gallery' == $plugin_data['Name'] && is_plugin_active($plugin_file))
+	{
+		array_push($plugin_meta, '<span style="padding: 2px 4px; background: #FFFFEE; color: #777777; border: 1px solid #EEDDCC; border-radius: 3px; border-radius: 3px; -moz-border-radius: 3px; -webkit-border-radius: 3px; -ms-border-radius: 3px; -o-border-radius: 3px;">Visit <a href="http://wordpress.org/plugins/file-gallery/">plugin page</a> or <a href="http://wordpress.org/tags/file-gallery">plugin support forums</a> on WordPress.org</a></span>');
+	}
+	
+	return $plugin_meta;
+}
+add_filter( 'plugin_row_meta', 'file_gallery_filter_plugin_row_meta', 10, 4 );
 
 
 /**
@@ -952,7 +961,8 @@ function file_gallery_js_admin()
 			"set_as_featured"			 => __("Set as featured image", "file-gallery"),
 			"unset_as_featured"			 => __("Unset as featured image", "file-gallery"),
 			'copy_from_is_nan_or_zero'   => __('Supplied ID (%d) is zero or not a number, please correct.', 'file-gallery'),
-			'regenerating'               => __('regenerating...', 'file-gallery')
+			'regenerating'               => __('regenerating...', 'file-gallery'),
+			'gallery_updated'            => __('Gallery contents updated', 'file-gallery')
 		);
 		
 		// file_gallery.options
@@ -1206,7 +1216,7 @@ add_action('admin_menu', 'file_gallery');
  */
 function file_gallery_posts_custom_column($column_name, $post_id)
 {
-	global $wpdb;
+	global $wpdb, $file_gallery;
 	
 	$options = get_option('file_gallery');
 
@@ -1220,8 +1230,14 @@ function file_gallery_posts_custom_column($column_name, $post_id)
 	{
 		if( $thumb_id = get_post_meta( $post_id, '_thumbnail_id', true ) )
 		{
-			$thumb_src = wp_get_attachment_image_src( $thumb_id, 'thumbnail', false );
-			$content   = '<img src="' . $thumb_src[0] .'" alt="Post thumb" />';
+			$content = str_replace('<a ', '<a class="thickbox" rel="file-gallery-post-list" ', wp_get_attachment_link($thumb_id, 'thumbnail', false ));
+			
+			if( false === $file_gallery->admin_thickbox_enqueued )
+			{
+				wp_enqueue_style('thickbox');
+				wp_enqueue_script('thickbox');
+				$file_gallery->admin_thickbox_enqueued = true;
+			}
 			
 			echo apply_filters('file_gallery_post_thumb_content', $content, $post_id, $thumb_id);
 		}
@@ -1246,8 +1262,11 @@ function file_gallery_posts_columns( $columns )
 		$columns['attachment_count'] = __('No. of attachments', 'file-gallery');
 		
 	if( isset($options['e_display_post_thumb']) && true == $options['e_display_post_thumb'] )
-		$columns = array('post_thumb' => __('Post thumb', 'file-gallery')) + $columns; // $columns['post_thumb'] = 'Post thumb';
-	
+	{
+		$new = array(key($columns) => array_shift($columns), 'post_thumb' => '');
+		$columns = $new + $columns;
+	}
+
 	return $columns;
 }
 add_filter('manage_posts_columns', 'file_gallery_posts_columns');
@@ -1330,7 +1349,6 @@ add_filter('manage_media_columns', 'file_gallery_media_columns');
  */
 require_once('includes/media-tags.php');
 require_once('includes/media-settings.php');
-// require_once('includes/media-upload.php');
 require_once('includes/attachments.php');
 require_once('includes/miscellaneous.php');
 require_once('includes/mime-types.php');
@@ -1341,8 +1359,11 @@ require_once('includes/functions.php');
 require_once('includes/cache.php');
 require_once('includes/regenerate-images.php');
 require_once('includes/attachments-custom-fields.php');
+require_once('includes/tinymce.php');
 
 if( 3.1 <= floatval(get_bloginfo('version')) )
 	require_once('includes/media-tags-list-table.class.php');
 
+if( 3.3 <= floatval(get_bloginfo('version')) )
+	require_once('includes/media-upload.php');
 ?>

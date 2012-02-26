@@ -61,7 +61,7 @@
 	
 		<fieldset id="file_gallery_gallery_options"<?php if( false == $file_gallery_options["display_gallery_fieldset"] ){ echo ' class="hidden"'; } ?>>
 		
-			<legend class="button-primary" id="file_gallery_send_gallery_legend"><?php _e("Insert a gallery", "file-gallery"); ?>:</legend>
+			<legend class="button-primary" id="file_gallery_send_gallery_legend" title="<?php _e("Insert a gallery", "file-gallery"); ?>"><?php _e("Insert a gallery", "file-gallery"); ?>:</legend>
 			<input type="button" id="file_gallery_hide_gallery_options" class="<?php if( false == $gallery_state ){ echo 'closed'; }else{ echo 'open'; } ?>" title="<?php _e("show/hide this fieldset", "file-gallery"); ?>" />
 	
 			<div id="file_gallery_toggler"<?php if( false == $gallery_state ){ echo ' style="display: none;"'; } ?>>
@@ -92,6 +92,11 @@
 					</select>
 				</p>
 				
+				<p id="file_gallery_external_url_label">
+					<label for="file_gallery_external_url"><?php _e("external url", "file-gallery"); ?>:</label>
+					<input type="text" name="file_gallery_external_url" id="file_gallery_external_url" value="<?php echo $file_gallery_options["default_external_url"]; ?>" />
+				</p>
+				
 				<p id="file_gallery_linksize_label">
 					<label for="file_gallery_linksize"><?php _e("linked image size", "file-gallery"); ?>:</label>
 					<select name="file_gallery_linksize" id="file_gallery_linksize">
@@ -118,11 +123,6 @@
 						<label for="file_gallery_linkrel_custom"><?php _e("custom value", "file-gallery"); ?>:</label>
 						<input type="text" name="file_gallery_linkrel_custom" id="file_gallery_linkrel_custom" value="" />
 					</span>
-				</p>
-				
-				<p id="file_gallery_external_url_label">
-					<label for="file_gallery_external_url"><?php _e("external url", "file-gallery"); ?>:</label>
-					<input type="text" name="file_gallery_external_url" id="file_gallery_external_url" value="<?php echo $file_gallery_options["default_external_url"]; ?>" />
 				</p>
 				
 				<p id="file_gallery_linkclass_label">
@@ -214,7 +214,6 @@
 							
 							echo '<option value="' . $i . '"' . $selected . '>' . $i . "</option>\n";
 						}
-						
 					?>
 					</select>
 				</p>
@@ -252,7 +251,7 @@
 	
 		<fieldset id="file_gallery_single_options"<?php if( false == $file_gallery_options["display_single_fieldset"] ){ echo ' class="hidden"'; } ?>>
 		
-			<legend class="button-primary" id="file_gallery_send_single_legend"><?php _e("Insert single files", "file-gallery"); ?>:</legend>
+			<legend class="button-primary" id="file_gallery_send_single_legend" title="<?php _e("Insert single files", "file-gallery"); ?>"><?php _e("Insert single files", "file-gallery"); ?>:</legend>
 			<input type="button" id="file_gallery_hide_single_options" class="<?php if( false == $single_state ){ echo 'closed'; }else{ echo 'open'; } ?>" title="<?php _e("show/hide this fieldset", "file-gallery"); ?>" />
 	
 			<div id="file_gallery_single_toggler"<?php if( false == $single_state ){ echo ' style="display: none;"'; } ?>>
@@ -313,6 +312,10 @@
 			
 		</fieldset>
 		
+	<?php if( 3.3 <= floatval(get_bloginfo('version')) ) : ?>
+		<iframe name="file_gallery_upload_iframe" id="file_gallery_upload_area" src="<?php echo admin_url('media-upload.php?file_gallery=true&post_id=' . $post_id); ?>" ondragenter="event.stopPropagation(); event.preventDefault();" ondragover="event.stopPropagation(); event.preventDefault();" ondrop="event.stopPropagation(); event.preventDefault();"></iframe>
+	<?php endif; ?>
+		
 		<fieldset id="file_gallery_tag_attachment_switcher">
 		
 			<input type="button" id="file_gallery_switch_to_tags" value="<?php _e("Switch to tags", "file-gallery"); ?>" class="button" />
@@ -347,6 +350,7 @@
 			<a href="#" id="file_gallery_save_menu_order_link" class="button button-secondary"><?php _e("Save attachment order", "file-gallery"); ?></a>
 		
 			<?php echo file_gallery_list_attachments($count_attachments, $post_id, $attachment_order, $checked_attachments, $attachment_orderby); ?>
+		
 		</div>
 		
 		<div id="file_gallery_tag_list">

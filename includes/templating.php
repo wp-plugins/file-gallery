@@ -98,7 +98,6 @@ function file_gallery_mobile_css( $stylesheet_url )
 }
 
 
-
 /**
  * Enqueues stylesheets for each gallery template
  */
@@ -300,7 +299,6 @@ add_action('wp_print_styles',  'file_gallery_css_front');
 add_action('wp_print_scripts', 'file_gallery_css_front');
 
 
-
 /**
  * prints scripts and styles for auto enqueued linkclasses
  */
@@ -371,7 +369,7 @@ function file_gallery_shortcode( $content = false, $attr = false )
 
 	// if the function is called directly, not via shortcode
 	if( false !== $content && false === $attr )
-		$attr = $content;
+		$attr = wp_parse_args($content);
 		
 	if( ! isset($file_gallery->gallery_id) )
 		$file_gallery->gallery_id = 1;
@@ -788,7 +786,7 @@ function file_gallery_shortcode( $content = false, $attr = false )
 			}
 			else
 			{
-				$param['thumb_link']   = file_gallery_https( FILE_GALLERY_CRYSTAL_URL ) . '/' . file_gallery_get_file_type($attachment->post_mime_type) . '.png';
+				$param['thumb_link']   = wp_mime_type_icon($attachment->ID);
 				$param['thumb_link']   = apply_filters('file_gallery_non_image_thumb_link', $param['thumb_link'], $attachment->post_mime_type, $attachment->ID);
 				$param['thumb_width']  = '46';
 				$param['thumb_height'] = '60';

@@ -1,9 +1,9 @@
 === File Gallery ===
 Contributors: aesqe, azizur
 Donate link: http://skyphe.org/donate/
-Tags: attachment, attachments, gallery, galleries, template, templates, shortcode, file, files, attach, detach, unattach, copy, media, tags, library, custom, custom fields, custom fields for attachments, attachment custom fields
+Tags: attachment, attachments, gallery, galleries, template, templates, shortcode, file, files, attach, detach, unattach, copy, media, tags, library, custom, custom fields, custom fields for attachments, attachment custom fields, drag drop upload
 Requires at least: 3.1
-Tested up to: 3.4-alpha-19931
+Tested up to: 3.4-alpha-19989
 Stable tag: 1.7.4.1
 
 File Gallery extends WordPress media (attachments) capabilities 
@@ -119,6 +119,19 @@ file_gallery_get_file_type
 
 == Changelog ==
 
+= 1.7.5-beta-1 =
+* February 26th, 2012
+* added "change" links to media tags name and slug on 
+  media settings page
+* post thumb on post listing screen now opens a thickbox 
+  with the bigger image when clicked
+* ability tp insert a tag gallery without any files 
+  attached to a post
+* tweaked drag and drop upload to file gallery box a bit
+* bugfix: internet explorer insert content position
+  (adds a bookmark on mouse up)
+* added Arabic translation by Wassem Mansour (thanks!)
+
 = 1.7.4.1 =
 * February 16th, 2012
 * bugfix: reduce server stress and page load time by disabling 
@@ -130,6 +143,14 @@ file_gallery_get_file_type
 * bugfix: check if tinymce is defined before calling it
  (thanks jrstaatsiii)
 * take care of a few php notices (thanks Hubert)
+
+= 1.7.4-RC2 =
+* January 14th, 2012
+* support for multiple editors
+* drag and drop upload by dragging files onto File Gallery interface
+* proper check for attachment copies on file deletion when not 
+  using year/month upload structure - thanks to Per Wiklander :)
+* NOTICE: this version has been renamed to 1.7.5-beta-1
 
 = 1.7.3 =
 * January 2nd, 2012
@@ -156,6 +177,17 @@ file_gallery_get_file_type
 = 1.7 =
 * December 13th, 2011
 * public release for WordPress 3.3
+* all below RC* fixes plus:
+* reworked the settings system so it's easier to add new options
+* improved lightbox support, more flexibility
+* improved pagination
+* new gallery option: gallery class
+* new metabox option: alternative color scheme 
+  (and still working on it)
+* ability to copy attachments from WPML translations which aren't
+  primary translations
+* added the pot file to languages directory
+* bugfixes, bugfixes, bugfixes
 
 = 1.7-RC14 =
 * December 11th, 2011
@@ -237,19 +269,6 @@ file_gallery_get_file_type
 * July 10th, 2011
 * WordPress 3.2 compatible
 * minor Media Tags plugin compatibility fix
-
-= 1.7 =
-* May XX, 2011
-* reworked the settings system so it's easier to add new options
-* improved lightbox support, more flexibility
-* improved pagination
-* new gallery option: gallery class
-* new metabox option: alternative color scheme 
-  (and still working on it)
-* ability to copy attachments from WPML translations which aren't
-  primary translations
-* added the pot file to languages directory
-* bugfixes, bugfixes, bugfixes
 
 = 1.6.5.6 =
 * August 4th, 2011
@@ -589,6 +608,7 @@ Help file is included, you'll find it in the "help" subfolder :)
 * **Maor Barazany**     - Hebrew  - http://www.maorb.info/
 * **Jean-Michel Meyer** - French  - http://www.li-an.fr/wpplugins/
 * **Pietro Palli**      - Italian - http://ppal.li/
+* **Wassem Mansour**    - Arabic  - http://www.sanapix.com 
 
 
 

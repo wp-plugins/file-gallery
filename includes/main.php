@@ -63,11 +63,8 @@ function file_gallery_list_attachments(&$count_attachments, $post_id, $attachmen
 			$ats_width  = get_option($attachment_thumb_size . '_size_w');
 			$ats_height = get_option($attachment_thumb_size . '_size_h');
 		}
-		
-		if( 0 < (int) $ats_width && 0 < (int) $ats_height )
-			$attachment_thumb_ratio = $ats_width / $ats_height;
-		else
-			$attachment_thumb_ratio = 1;
+
+		$attachment_thumb_ratio = 0 < (int) $ats_width && 0 < (int) $ats_height ? $ats_width / $ats_height : 1;
 			
 		if( '' == strval($attachment_thumb_ratio) )
 			$attachment_thumb_ratio = 1;
@@ -76,27 +73,33 @@ function file_gallery_list_attachments(&$count_attachments, $post_id, $attachmen
 		
 		foreach( $attachments as $attachment )
 		{
-			$classes         = array("sortableitem");
-			$post_thumb_link = "set";
-			$non_image       = "";
-			$checked         = "";
+			$classes = array('sortableitem');
+			$post_thumb_link = 'set';
+			$non_image = '';
+			$checked = '';
+			$file_type = '';
 			
-			$original_id = get_post_meta($attachment->ID, "_is_copy_of", true);
-			$copies 	 = get_post_meta($attachment->ID, "_has_copies", true);
+			if ( preg_match( '/^.*?\.(\w+)$/', get_attached_file( $attachment->ID ), $matches ) )
+				$file_type = esc_html( strtoupper( $matches[1] ) );
+			else
+				$file_type = strtoupper( str_replace( 'image/', '', $attachment->post_mime_type ) );
 			
-			if( "" != strval($original_id) )
-				$classes[] = "copy copy-of-" . $original_id;
-			elseif( "" != strval($copies) )
-				$classes[] = "has_copies copies-" . implode("-", $copies);
+			$original_id = get_post_meta($attachment->ID, '_is_copy_of', true);
+			$copies 	 = get_post_meta($attachment->ID, '_has_copies', true);
+			
+			if( '' != strval($original_id) )
+				$classes[] = 'copy copy-of-' . $original_id;
+			elseif( '' != strval($copies) )
+				$classes[] = 'has_copies copies-' . implode('-', $copies);
 			
 			if( (int) $thumb_id === (int) $attachment->ID )
 			{
-				$classes[]       = "post_thumb";
-				$post_thumb_link = "unset";
+				$classes[]       = 'post_thumb';
+				$post_thumb_link = 'unset';
 			}
 			
 			$attachment_thumb = wp_get_attachment_image_src($attachment->ID, $attachment_thumb_size);
-			$large            = wp_get_attachment_image_src($attachment->ID, "large");
+			$large            = wp_get_attachment_image_src($attachment->ID, 'large');
 
 			if( in_array($attachment->ID, $checked_attachments) )
 			{
@@ -107,7 +110,7 @@ function file_gallery_list_attachments(&$count_attachments, $post_id, $attachmen
 			// if it's not an image...
 			if( "" == $attachment_thumb )
 			{
-				$attachment_thumb[0] = file_gallery_https( FILE_GALLERY_CRYSTAL_URL ). "/" . file_gallery_get_file_type($attachment->post_mime_type) . ".png";
+				$attachment_thumb    = array( 0 => file_gallery_https( wp_mime_type_icon($attachment->ID) ) );
 				$attachment_width    = '';
 				$attachment_height   = '';
 				$non_image           = ' non_image';
@@ -117,19 +120,18 @@ function file_gallery_list_attachments(&$count_attachments, $post_id, $attachmen
 			}
 			else
 			{
+				$forced_height = '';
 				$classes[] = 'image';
 				$_attachment_thumb_width = $attachment_thumb_width;
 				
 				if( 1 === $attachment_thumb_ratio && $attachment_thumb[2] > $attachment_thumb_width )
 					$forced_height = 'height: ' . $attachment_thumb_height . 'px';
-				else
-					$forced_height = '';
-				
+
 				$image_width_style = 'style="width: ' . $_attachment_thumb_width . 'px; ' . $forced_height . '"';
 			}
 			
 			$attached_files .= '
-			<li id="image-' . $attachment->ID . '" class="' . implode(" ", $classes) . '" style="width: ' . $_attachment_thumb_width . 'px; height: ' . $attachment_thumb_height . 'px">
+            <li id="image-' . $attachment->ID . '" class="' . implode(' ', $classes) . '" style="width: ' . $_attachment_thumb_width . 'px; height: ' . $attachment_thumb_height . 'px" title="[' . $attachment->ID . '] ' . $attachment->post_title . ' [' . $file_type . ']">
 				
 				<img src="' . $attachment_thumb[0] . '" alt="' . $attachment->post_title . '" id="in-' . $attachment->ID . '" title="' . $attachment->post_title . '" class="fgtt' . $non_image . '" ' . $image_width_style . ' />';
 				
@@ -148,15 +150,12 @@ function file_gallery_list_attachments(&$count_attachments, $post_id, $attachmen
 		
 			if( current_user_can('edit_post', $attachment->ID) ) :
 				
-				if( "" == $non_image && function_exists('current_theme_supports') && current_theme_supports('post-thumbnails') ) :
+				if( '' == $non_image && function_exists('current_theme_supports') && current_theme_supports('post-thumbnails') ) :
+
+					$as_featured = "set" == $post_thumb_link ? __("Set as featured image", "file-gallery") : __("Unset as featured image", "file-gallery");
 				
-					if( "set" == $post_thumb_link )
-						$as_featured = __("Set as featured image", "file-gallery");
-					else
-						$as_featured = __("Unset as featured image", "file-gallery");
-				
-					$attached_files .= '<a href="#" class="post_thumb_status action" rel="' . $attachment->ID . '" title="' . $as_featured . '">
-							<img src="' . file_gallery_https( FILE_GALLERY_URL ) . '/images/famfamfam_silk/star_' . $post_thumb_link . '.png" alt="' . $as_featured . '" />
+					$attached_files .= '<a href="#" class="post_thumb_status action" rel="' . $attachment->ID . '">
+							<img src="' . file_gallery_https( FILE_GALLERY_URL ) . '/images/famfamfam_silk/star_' . $post_thumb_link . '.png" alt="' . $as_featured . '" title="' . $as_featured . '" />
 						</a>';
 					
 					$attached_files .= '<div id="post_thumb_setter_' . $attachment->ID . '" class="post_thumb_setter">
@@ -257,10 +256,11 @@ function file_gallery_list_tags( $args = array() )
 		
 		if( $cache )
 		{
-			if( $echo )
-				echo $cache;
-			else
-				return $cache;	
+			if( ! $echo )
+				return $cache;
+
+			echo $cache;	
+			return;
 		}
 	}
 
@@ -322,7 +322,7 @@ function file_gallery_list_tags( $args = array() )
 
 				foreach( $media_tags as $tag )
 				{						
-					$list[] = '<a href="' . file_gallery_https( get_bloginfo("url") ) . $fs . $media_tag_slug . $ss . $tag->slug . $ts . '" class="fg_insert_tag" name="' . $tag->slug . '">' . $tag->name . '</a>';
+					$list[] = '<a href="' . file_gallery_https( get_bloginfo('url') ) . $fs . $media_tag_slug . $ss . $tag->slug . $ts . '" class="fg_insert_tag" name="' . $tag->slug . '">' . $tag->name . '</a>';
 				}
 			}
 			else

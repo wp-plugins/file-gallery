@@ -9,7 +9,7 @@ function file_gallery_admin_head( $class )
 			html,
 			#media-upload
 			{
-				background: transparent !important;
+				background: #FFF !important;
 			}
 			
 			#media-upload
@@ -80,7 +80,13 @@ function file_gallery_post_upload_ui()
 	{
 		?>
 		<script type="text/javascript">
-			var topWin = window.dialogArguments || opener || parent || top, file_gallery_upload_error = false;
+			var topWin = window.dialogArguments || opener || parent || top, file_gallery_upload_error = false, inside_tinymce = false;
+
+			if( "undefined" === typeof(topWin.file_gallery) && "undefined" !== typeof(topWin.top.file_gallery) )
+			{
+				topWin.file_gallery = topWin.top.file_gallery;
+				inside_tinymce = true;
+			}
 
 			jQuery(document).ready(function()
 			{
@@ -94,6 +100,10 @@ function file_gallery_post_upload_ui()
 				{
 					e.preventDefault();
 					topWin.file_gallery.init( "UploadComplete" );
+					
+					if( inside_tinymce )
+						topWin.file_gallery.tinymce_remove_upload_iframe();
+
 					return false;
 				});
 				
@@ -114,10 +124,26 @@ function file_gallery_post_upload_ui()
 				
 				uploader.bind("UploadComplete", function(up, files)
 				{
+					if( "undefined" === typeof(topWin) )
+						var topWin = window.dialogArguments || opener || parent || top;
+					
+					if( "undefined" === typeof(topWin.file_gallery) && "undefined" !== typeof(topWin.top.file_gallery) )
+					{
+						topWin.file_gallery = topWin.top.file_gallery;
+						inside_tinymce = true;
+					}
+					
 					if( false === file_gallery_upload_error )
+					{
 						topWin.file_gallery.init( "UploadComplete" );
+
+						if( inside_tinymce )
+							topWin.file_gallery.tinymce_remove_upload_iframe();
+					}
 					else
+					{
 						jQuery("#media-items").after('<a href="#" id="file_gallery_continue"><?php _e('Continue', 'file-gallery'); ?></a>')
+					}
 
 					topWin.file_gallery.upload_inside = false;
 					file_gallery_upload_error = false;

@@ -44,7 +44,7 @@
 {
 	border: 1px solid #EFEFEF;
 	padding: 0;
-	margin: 0 0 10px 0;
+	margin: 5px 0 10px 0;
 	clear: both;
 	position: relative;
 	display: none;
@@ -195,7 +195,7 @@
 	float: none;
 	margin-bottom: 7px;
 	position: relative;
-	z-index: 100;
+	z-index: 98;
 }
 
 #file_gallery input#file_gallery_send_gallery_legend.button-primary,
@@ -205,13 +205,14 @@
 	margin-top: 2px;
 }
 
+
+
 #file_gallery_list .sortableitem,
 #file_gallery_list .ui-selected
 {
 	float:left;
-	background-color: #EDEDED;
+	background-color: #FAFAFA;
 	position: relative;
-	/*padding: 3px 6px 23px 21px;*/
 	padding: 5px;
 	border: 2px solid #DFDFDF;
 	margin-left: 3px;
@@ -354,7 +355,7 @@
 	margin-bottom: -1px;
 	margin-right: -1px;
 	padding: 0;
-	z-index: 200;
+	z-index: 99;
 	
 	border-radius: 5px;
 	-moz-border-radius: 5px;
@@ -381,7 +382,7 @@
 	right: -1px;
 	position: absolute;
 	text-decoration: none;
-	z-index: 100;
+	z-index: 98;
 }
 
 #file_gallery_list .delete_or_detach_link img
@@ -396,7 +397,7 @@
 	right: -1px;
 	position: absolute;
 	text-decoration: none;
-	z-index: 100;
+	z-index: 98;
 }
 
 #file_gallery_list .post_thumb_status img
@@ -418,11 +419,11 @@
 	padding: 0;
 	display: none;
 	text-align: center;
-	z-index: 100;
+	z-index: 98;
 	margin: 0;
 	bottom: 0;
 	right: 0;
-	z-index: 201;
+	z-index: 100;
 }
 
 #file_gallery_list a.img_zoom
@@ -433,7 +434,7 @@
 	left: -1px;
 	bottom: -1px;
 	width: 16px;
-	z-index: 100;
+	z-index: 98;
 }
 
 #file_gallery_list .img_zoom img
@@ -450,7 +451,7 @@
 	left: -1px;
 	top: -1px;
 	width:16px;
-	z-index: 100;
+	z-index: 98;
 }
 
 #file_gallery_list .img_edit img
@@ -544,12 +545,7 @@
 	float: left;
 	width: 35%;
 	display: none;
-}
-
-.no-attachments #fg_info
-{
-	display: block;
-	margin-left: 75px !important;
+	min-width: 250px;
 }
 
 #fg_buttons
@@ -567,10 +563,9 @@
 	margin-left: -30px;
 }
 
-.no-attachments #fg_buttons
-{
-	width: 90px;
-}
+
+
+
 
 #fg_buttons input,
 #file_gallery_upload_media
@@ -598,21 +593,10 @@
 	-o-box-shadow: 0 0 1px rgba(0, 0, 0, 0.2);
 }
 
-.no-attachments #fg_buttons .basic,
-.no-attachments #fg_buttons .additional
-{
-	display: none;
-}
-
 #file-gallery-content
 {
 	float: left;
 	width: 100%;
-}
-
-.no-attachments #file-gallery-content
-{
-	margin-left: -60px;
 }
 
 #file_gallery_upload_media
@@ -625,12 +609,7 @@
 	height: 20px;
 }
 
-.no-attachments #file_gallery_upload_media
-{
-	margin-top: 9px;
-	float: left;
-	margin-left: 3px;
-}
+
 
 #fg_buttons input:hover,
 #file_gallery_upload_media:hover
@@ -708,13 +687,6 @@
 #file_gallery_copy_all:hover
 {
 	background-image: url(../images/famfamfam_silk/images.png);
-}
-.no-attachments #file_gallery_copy_all,
-.no-attachments #file_gallery_refresh
-{
-	float: left;
-	margin-left: 3px;
-	margin-top: 9px;
 }
 
 #file_gallery_clear_cache_manual
@@ -795,11 +767,6 @@
 #file_gallery_attachment_list
 {
 	width: 100%;
-}
-
-.no-attachments #file_gallery_attachment_list
-{
-	display: none !important;
 }
 
 #file_gallery_tag_list
@@ -1112,7 +1079,7 @@ textarea, input, select
 	position: absolute;
 	top: 5px;
 	right: 5px;
-	z-index: 1000;
+	z-index: 98;
 	display: none;
 	border: 0px solid #333333;
 
@@ -1169,12 +1136,6 @@ textarea, input, select
 
 /* edit.php - posts/pages listing */
 
-th.column-post_thumb,
-th.column-attachment_count
-{
-	max-width: 100px !important;
-}
-
 td.column-post_thumb,
 td.column-attachment_count
 {
@@ -1184,9 +1145,18 @@ td.column-attachment_count
 
 td.column-post_thumb img
 {
+	height: auto;
 	margin: 3px 0 !important;
 	max-height: 60px !important;
-	max-width: 80px !important;
+	max-width: 100% !important;
+	width: auto;
+}
+
+td.column-post_thumb .no-post-thumbnail
+{
+	color: #BBB;
+	font-size: 8px;
+	font-weight: bold;
 }
 
 
@@ -1327,4 +1297,34 @@ td.column-post_thumb img
 .attachment-copy.alternate
 {
 	background-color: #e4eff4;
+}
+
+
+
+
+
+#file_gallery_upload_area
+{
+	background: #FFF;
+    position: absolute;
+    right: 18px;
+    top: 0;
+	z-index: 98;
+	top: -9999em;
+}
+
+
+
+/* no attachments */
+
+.no-attachments #fg_info
+{
+	float: right;
+	min-width: 0;
+	width: auto;
+}
+
+.no-attachments #fg_buttons .basic
+{
+	display: none;
 }
