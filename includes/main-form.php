@@ -322,6 +322,13 @@
 			<input type="hidden" id="files_or_tags" value="<?php echo $files_or_tags; ?>" />
 		
 		</fieldset>
+		
+		<fieldset id="file_gallery_textual_switcher">
+		
+			<input type="button" id="file_gallery_toggle_textual" value="<?php _e('Toggle \'textual\' mode', 'file-gallery'); ?>" class="button" />
+			<input type="hidden" id="textual" value="<?php echo $files_or_tags; ?>" />
+		
+		</fieldset>
 	
 	<?php if( false == $file_gallery_options["display_single_fieldset"] && true == $file_gallery_options['insert_single_button'] ) : ?>
 		<input type="button" class="button-primary" id="file_gallery_send_single_legend" value="<?php _e("Insert single files", "file-gallery"); ?>" />

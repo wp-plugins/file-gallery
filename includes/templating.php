@@ -279,7 +279,7 @@ function file_gallery_css_front( $mobile = false )
 				$missing[] = $template;
 				wp_enqueue_style('file_gallery_default', FILE_GALLERY_URL . '/templates/default/gallery.css', false, FILE_GALLERY_VERSION);
 				
-				echo '<!-- ' . __('file does not exist:', 'file-gallery') . ' ' . $template . '/gallery.css - ' . __('using default style', 'file-gallery') . '-->\n';
+				echo "\n<!-- " . __('file does not exist:', 'file-gallery') . ' ' . $template . '/gallery.css - ' . __('using default style', 'file-gallery') . "-->\n";
 			}
 		}
 	}

@@ -3,7 +3,7 @@
 /**
  * Returns current post's attachments
  */
-function file_gallery_list_attachments(&$count_attachments, $post_id, $attachment_order, $checked_attachments, $attachment_orderby = 'menu_order')
+function file_gallery_list_attachments(&$count_attachments, $post_id, $attachment_order, $checked_attachments, $attachment_orderby = 'menu_order' )
 {
 	global $wpdb, $_wp_additional_image_sizes;
 	
@@ -46,7 +46,7 @@ function file_gallery_list_attachments(&$count_attachments, $post_id, $attachmen
 		$thumb_id = get_post_meta( $post_id, '_thumbnail_id', true );
 		
 		// start the list...
-		$attached_files = '<ul class="ui-sortable" id="file_gallery_list">' . "\n";
+		$attached_files = '<ul class="ui-sortable' . (($options['textual_mode']) ? ' textual' : '') . '" id="file_gallery_list">' . "\n";
 		
 		$count_attachments = count($attachments);
 		
@@ -129,11 +129,14 @@ function file_gallery_list_attachments(&$count_attachments, $post_id, $attachmen
 
 				$image_width_style = 'style="width: ' . $_attachment_thumb_width . 'px; ' . $forced_height . '"';
 			}
+
 			
 			$attached_files .= '
-            <li id="image-' . $attachment->ID . '" class="' . implode(' ', $classes) . '" style="width: ' . $_attachment_thumb_width . 'px; height: ' . $attachment_thumb_height . 'px" title="[' . $attachment->ID . '] ' . $attachment->post_title . ' [' . $file_type . ']">
-				
-				<img src="' . $attachment_thumb[0] . '" alt="' . $attachment->post_title . '" id="in-' . $attachment->ID . '" title="' . $attachment->post_title . '" class="fgtt' . $non_image . '" ' . $image_width_style . ' />';
+			<li id="image-' . $attachment->ID . '" class="' . implode(' ', $classes) . '" style="width: ' . $_attachment_thumb_width . 'px; height: ' . $attachment_thumb_height . 'px" title="[' . $attachment->ID . '] ' . $attachment->post_title . ' [' . $file_type . ']">';
+			
+			$attached_files .= '<img src="' . $attachment_thumb[0] . '" alt="' . $attachment->post_title . '" id="in-' . $attachment->ID . '" title="' . $attachment->post_title . '" class="fgtt' . $non_image . '" ' . $image_width_style . ' />';
+			
+			$attached_files .= '<span class="attachment-title">' . $attachment->post_title . '</span>';
 				
 				if( "" == $non_image ) :
 					$attached_files .= '<a href="' . $large[0] . '" id="in-' . $attachment->ID . '-zoom" class="img_zoom action">
@@ -212,7 +215,7 @@ function file_gallery_list_attachments(&$count_attachments, $post_id, $attachmen
 			endif;
 			
 			$attached_files .= '</li>
-			' . "\n";
+				' . "\n";
 		}
 		
 		//end the list...

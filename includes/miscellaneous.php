@@ -201,6 +201,9 @@ function file_gallery_save_toggle_state()
 		case 'file_gallery_save_acf_toggle_state' :
 			$opt = 'acf_state';
 			break;
+		case 'file_gallery_toggle_textual' :
+			$opt = 'textual_mode';
+			break;
 		default : 
 			break;
 	}
@@ -214,6 +217,7 @@ function file_gallery_save_toggle_state()
 add_action('wp_ajax_file_gallery_save_toggle_state', 'file_gallery_save_toggle_state');
 add_action('wp_ajax_file_gallery_save_single_toggle_state', 'file_gallery_save_toggle_state');
 add_action('wp_ajax_file_gallery_save_acf_toggle_state', 'file_gallery_save_toggle_state');
+add_action('wp_ajax_file_gallery_toggle_textual', 'file_gallery_save_toggle_state');
 
 
 /**

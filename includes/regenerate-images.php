@@ -1,5 +1,15 @@
 <?php
 
+function file_gallery_add_media_actions( $actions, $post )
+{
+	if( ! isset($actions['sis-regenerate']) && ! isset($action['regenerate_thumbnails']) && file_is_displayable_image(get_attached_file($post->ID)) )
+		$actions['file_gallery_regenerate'] = '<a href="#" id="file_gallery_regenerate-' . $post->ID . '" class="file_gallery_regenerate">' . __('Regenerate', 'file-gallery') . '</a>';
+	
+	return $actions;
+}
+add_filter( 'media_row_actions', 'file_gallery_add_media_actions', 1000, 2 );
+
+
 function file_gallery_regenerate_thumbnails( $attachment_ids = NULL )
 {
 	$data = array('errors' => array(), 'success' => array(), 'message' => 'aye');

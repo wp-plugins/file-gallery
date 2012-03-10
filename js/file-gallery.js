@@ -1379,16 +1379,14 @@ jQuery(document).ready(function($)
 
 			$("#" + togglee).toggle();
 			
-			var data = {
-				'action'		: action,
-				'state'			: state,
-				'_ajax_nonce'	: file_gallery.options.file_gallery_nonce
-			};
-			
 			$.post
 			(
 				ajaxurl, 
-				data
+				{
+					'action'		: action,
+					'state'			: state,
+					'_ajax_nonce'	: file_gallery.options.file_gallery_nonce
+				}
 			);
 		},
 
@@ -1510,22 +1508,23 @@ jQuery(document).ready(function($)
 		{
 			if( 800 > $(window).width() )
 			{
-				$("#post_thumb, #attachment_count").css({fontSize: 0, width: "20px"});
+				$("th.column-post_thumb, th.column-attachment_count").css({fontSize: 0, width: "20px"});
 				$("td.column-post_thumb, td.column-attachment_count").css({padding: 0});
 			}
 			else
 			{
-				$("#post_thumb, #attachment_count").css({fontSize: "inherit", width: ""});
+				$("th.column-post_thumb, th.column-attachment_count").css({fontSize: "inherit", width: ""});
 				
 				if( 70 < $("#post_thumb").width() )
-					$("#post_thumb").width(70);
+					$("th.column-post_thumb").width(70);
 				
 				if( 150 < $("#attachment_count").width() )
-					$("#attachment_count").width(150);
+					$("th.column-attachment_count").width(150);
 				
 				$("td.column-post_thumb, td.column-attachment_count").css({padding: "inherit"});
 			}
 		},
+		
 		
 		get_attachment_custom_fields : function()
 		{
@@ -1542,12 +1541,16 @@ jQuery(document).ready(function($)
 			return output;
 		},
 		
+		
 		regenerate_thumbnails : function( attachment_ids )
 		{
-			var el = "#file_gallery_attachment_edit_image a.file_gallery_regenerate",
+			var el = 1 < attachment_ids.length ? "a.file_gallery_regenerate" : "#file_gallery_regenerate-" + attachment_ids[0],
 				text = $(el).html();
 			
-			$(el).html('<img src="' + file_gallery.options.file_gallery_url + '/images/ajax-loader.gif" alt="' + file_gallery.L10n.regenerating + '" />' + file_gallery.L10n.regenerating);
+			if( 0 < $("#file_gallery_response").length )
+				$(el).html('<img src="' + file_gallery.options.file_gallery_url + '/images/ajax-loader.gif" alt="' + file_gallery.L10n.regenerating + '" />' + file_gallery.L10n.regenerating);
+			else
+				$(el).html(file_gallery.L10n.regenerating);
 
 			$.post
 			(
@@ -1558,9 +1561,16 @@ jQuery(document).ready(function($)
 				},
 				function(response)
 				{
-					$("#file_gallery_response").stop().html(response.message).show().css({opacity : 1}).fadeOut(7500);
-					$("#fg_loading_on_thumb").fadeOut(250).remove();
-					$(el).html(text);
+					if( 0 < $("#file_gallery_response").length )
+					{
+						$("#file_gallery_response").stop().html(response.message).show().css({opacity : 1}).fadeOut(7500);
+						$("#fg_loading_on_thumb").fadeOut(250).remove();
+						$(el).html(text);
+					}
+					else
+					{
+						$(el).html(response.message).fadeTo(2000, 1, function(){ $(el).html(text); });
+					}
 				},
 				"json"
 			);
@@ -1572,19 +1582,7 @@ jQuery(document).ready(function($)
 
 	
 	if( "undefined" !== typeof(init_file_gallery) && true === init_file_gallery )
-	{
-		
-		// regenerate thumbnails
-		$("#file_gallery_attachment_edit_image a.file_gallery_regenerate").live("click", function(e)
-		{
-			var id = $(this).attr("id").replace(/\]/, '').replace(/regenerate\[/, '');
-			
-			file_gallery.regenerate_thumbnails( [id] );
-			
-			e.preventDefault();
-		});
-	
-	
+	{	
 		// WPML
 		if( $("#icl_div").length > 0 )
 		{
@@ -1658,8 +1656,8 @@ jQuery(document).ready(function($)
 	
 	
 		/* === BINDINGS === */
-	
-	
+		
+
 		
 	/**
 	 * uploader
@@ -2050,6 +2048,32 @@ jQuery(document).ready(function($)
 			return file_gallery.add_remove_tags( this );
 		});
 		
+		
+		
+		// alternative display mode, with smaller thumbs and attachment titles
+		$("#file_gallery_toggle_textual").live("click", function()
+		{
+			var label = $(this).val();
+			$("#file_gallery_list").toggleClass("textual");
+			
+			$(this).prop("disabled", true).val("...");
+			
+			$.post
+			(
+				ajaxurl, 
+				{
+					"action" : "file_gallery_toggle_textual",
+					"state" : $("#file_gallery_list").hasClass("textual") ? 1 : 0,
+					"_ajax_nonce" : file_gallery.options.file_gallery_nonce
+				},
+				function( response )
+				{
+					$("#file_gallery_toggle_textual").prop("disabled", false).val(label);
+				}
+			);
+		});
+		
+		
 		// thickbox window closed
 		// WP >= 3.3
 		if( "function" === typeof(jQuery.fn.on) )
@@ -2078,6 +2102,17 @@ jQuery(document).ready(function($)
 			file_gallery.post_edit_screen_adjust();
 		});
 	}
+	
+	// regenerate thumbnails
+	$("a.file_gallery_regenerate").live("click", function(e)
+	{
+		var id = $(this).attr("id").split(/-/).pop();
+		
+		file_gallery.regenerate_thumbnails( [id] );
+		
+		e.preventDefault();
+		return false;
+	});
 });
 
 

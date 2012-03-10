@@ -2,7 +2,7 @@
 /*
 Plugin Name: File Gallery
 Plugin URI: http://skyphe.org/code/wordpress/file-gallery/
-Version: 1.7.5-beta-1
+Version: 1.7.5-beta-2
 Description: "File Gallery" extends WordPress' media (attachments) capabilities by adding a new gallery shortcode handler with templating support, a new interface for attachment handling when editing posts, and much more.
 Author: Bruno "Aesqe" Babic
 Author URI: http://skyphe.org
@@ -31,7 +31,7 @@ Author URI: http://skyphe.org
  * Setup default File Gallery options
  */
 
-define('FILE_GALLERY_VERSION', '1.7.5-beta-1');
+define('FILE_GALLERY_VERSION', '1.7.5-beta-2');
 define('FILE_GALLERY_DEFAULT_TEMPLATES', serialize( array('default', 'file-gallery', 'list', 'simple') ) );
 
 
@@ -597,6 +597,14 @@ function file_gallery_do_settings()
 				'type' => 'checkbox',
 				'section' => 0,
 				'position' => 0
+			),
+			'textual_mode' => array(
+				'default' => 0, 
+				'display' => true,
+				'title' => __('"Textual" mode', 'file-gallery'),
+				'type' => 'checkbox',
+				'section' => 0,
+				'position' => 0
 			)
 		);
 	
@@ -1010,7 +1018,7 @@ function file_gallery_js_admin()
 		</script>
 		';
 	}
-	elseif( "edit.php" == $pagenow  )
+	elseif( "edit.php" == $pagenow || "upload.php" == $pagenow  )
 	{
 		$file_gallery_options = array( 
 			"file_gallery_url"   => file_gallery_https( FILE_GALLERY_URL ),
@@ -1021,7 +1029,7 @@ function file_gallery_js_admin()
 		
 		echo '
 		<script type="text/javascript">
-			var file_gallery_L10n = {},
+			var file_gallery_L10n = {regenerating: "' . __('regenerating...', 'file-gallery') . '"},
 				file_gallery_options = ' . str_replace($s, $r, json_encode($file_gallery_options)) . ',
 				init_file_gallery = false;
 		</script>

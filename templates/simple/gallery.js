@@ -2,7 +2,7 @@ jQuery(document).ready(function()
 {
 	var file_gallery_simple_gallery_counter = 1;
 
-	if( 0 < jQuery(".gallery.simple").length && "" != file_gallery_simple_linkclass )
+	if( 0 < jQuery(".gallery.simple").length )
 	{
 		var file_gallery_doing_ajax = false;
 
@@ -25,7 +25,7 @@ jQuery(document).ready(function()
 				{										
 					var current_anchor = jQuery(this).find("a:first"),
 						diff = jQuery(this).find("span.diff:first").text().split(file_gallery_simple_diff_sep),
-						ext_regex = new RegExp('\.' + diff[1]), // .jpg or .png...
+						ext_regex = new RegExp("\." + diff[1] + "$"), // .jpg or .png...
 						current_image_href = current_anchor.attr("href"),
 						current_image_src = current_image_href.replace(ext_regex, diff[0] + '.' + diff[1]),
 						current_caption = decodeURIComponent((current_anchor.attr("title") || "").replace(/\+/g, ' '));
@@ -78,8 +78,8 @@ jQuery(document).ready(function()
 			file_gallery_doing_ajax = true;
 			
 			var id = "#" + jQuery(this).parents(".gallery").attr("id"),
-				diff = jQuery(this).find("span.diff:first").text().split(file_gallery_simple_diff_sep),
-				ext_regex = new RegExp('\.' + diff[1]), // .jpg or .png...
+				diff = jQuery(this).parent().find("span.diff:first").text().split(file_gallery_simple_diff_sep),
+				ext_regex = new RegExp("\." + diff[1] + "$"), // .jpg or .png...
 				new_href = jQuery(this).attr("href"),
 				new_src = new_href.replace(ext_regex, diff[0] + '.' + diff[1]),
 				new_caption = decodeURIComponent((jQuery(this).attr("title") || "").replace(/\+/g, ' ')),

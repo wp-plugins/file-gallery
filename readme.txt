@@ -1,9 +1,9 @@
 === File Gallery ===
-Contributors: aesqe, azizur
+Contributors: aesqe
 Donate link: http://skyphe.org/donate/
 Tags: attachment, attachments, gallery, galleries, template, templates, shortcode, file, files, attach, detach, unattach, copy, media, tags, library, custom, custom fields, custom fields for attachments, attachment custom fields, drag drop upload
 Requires at least: 3.1
-Tested up to: 3.4-alpha-19989
+Tested up to: 3.4-alpha-20150
 Stable tag: 1.7.4.1
 
 File Gallery extends WordPress media (attachments) capabilities 
@@ -118,6 +118,18 @@ file_gallery_get_file_type
 
 
 == Changelog ==
+
+= 1.7.5-beta-2 =
+* March 10th, 2012
+* bugfix: internet explorer - tinymce focus on insert
+* moved tinymce-related code into a tinymce pugin
+* media listings page - regenerate single image link
+* drag and drop upload to file gallery box
+* insert a tag gallery without any files attached to a post
+* post thumb on post listing screen - on click open thickbox 
+  with bigger image
+* add "change" link to media tags name and slug on media 
+  settings page
 
 = 1.7.5-beta-1 =
 * February 26th, 2012

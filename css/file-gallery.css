@@ -238,6 +238,62 @@
 	-o-box-shadow: 0 0 1px rgba(0, 0, 0, 0.2);
 }
 
+#file_gallery_textual_switcher
+{
+	border: none;
+	clear: none !important;
+	display: block;
+	float: left;
+	width: auto;
+}
+
+#file_gallery_list.textual .sortableitem,
+#file_gallery_list.textual .ui-selected
+{
+	min-width: 70px;
+	max-width: 200px;
+	height: 32px !important;
+	width: auto !important;
+	min-height: 32px;
+	padding: 0;
+	overflow: visible;
+}
+
+#file_gallery_list.textual .attachment-title,
+#file_gallery_list.textual .sortableitem img.fgtt
+{
+	float: left;
+}
+
+#file_gallery_list .attachment-title
+{
+	display: none;
+}
+
+#file_gallery_list.textual .attachment-title
+{
+	display: block;
+	font-size: 11px;
+	line-height: 9px;
+	max-width: 155px;
+	overflow: hidden;
+	padding: 2px 5px;
+	white-space: normal;
+	
+	-ms-text-overflow: ellipsis;
+	text-overflow: ellipsis;
+}
+
+#file_gallery_list.textual .sortableitem img.fgtt
+{
+	height: auto;
+	max-height: 32px;
+	max-width: 32px;
+	width: auto;
+	border: none;
+	margin: 1px;
+}
+
 #file_gallery_list .sortableitem.copy
 {
 	background-color: #C0E0F0;
@@ -414,7 +470,7 @@
 {
 	position: absolute;
 	background: #FAFAF0;
-	height: 100%;
+	min-height: 100%;
 	width: 100%;
 	padding: 0;
 	display: none;
@@ -1100,6 +1156,11 @@ textarea, input, select
 
 .file_gallery_regenerate
 {
+	text-transform: capitalize;
+}
+
+#file_gallery_attachment_edit_image .file_gallery_regenerate
+{
 	display: block;
 	text-decoration: none;
 	padding: 3px 3px 3px 20px;
@@ -1107,7 +1168,7 @@ textarea, input, select
 	background: url(../images/famfamfam_silk/arrow_refresh_small.png) left center no-repeat;
 }
 
-.file_gallery_regenerate img
+#file_gallery_attachment_edit_image .file_gallery_regenerate img
 {
 	height: 1em;
 	width: 110px;
