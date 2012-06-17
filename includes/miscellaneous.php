@@ -8,7 +8,7 @@ function file_gallery_https( $input )
 {
 	global $file_gallery;
 
-	if( $file_gallery->ssl_admin && 0 === strpos($input, 'http:') && 0 !== strpos($input, 'https:') )
+	if( defined('FORCE_SSL_ADMIN') && true === FORCE_SSL_ADMIN && 0 === strpos($input, 'http:') && 0 !== strpos($input, 'https:') )
 		$input = 'https' . substr($input, 4);
 	
 	return $input;
@@ -245,4 +245,3 @@ function file_gallery_write_log( $data = "" )
 	@fclose($file);
 }
 
-?>

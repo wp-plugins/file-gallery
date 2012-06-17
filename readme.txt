@@ -3,7 +3,7 @@ Contributors: aesqe
 Donate link: http://skyphe.org/donate/
 Tags: attachment, attachments, gallery, galleries, template, templates, shortcode, file, files, attach, detach, unattach, copy, media, tags, library, custom, custom fields, custom fields for attachments, attachment custom fields, drag drop upload
 Requires at least: 3.1
-Tested up to: 3.4-alpha-20150
+Tested up to: 3.4
 Stable tag: 1.7.4.1
 
 File Gallery extends WordPress media (attachments) capabilities 
@@ -117,12 +117,63 @@ file_gallery_get_file_type
 
 
 
+== More info ==
+
+This plugin uses icons from the awesome famfamfam Silk icon set by 
+Mark James :)
+
+"Silk" can be found at: http://famfamfam.com/lab/icons/silk/
+
+Plugin settings are integrated into media settings page.
+
+Help file is included, you'll find it in the "help" subfolder :)
+
+
+
+== Translation Credits ==
+
+Hebrew:
+	* **Maor Barazany** - http://www.maorb.info/
+
+French:
+* **Jean-Michel Meyer** - http://www.li-an.fr/wpplugins/
+
+Italian:
+* **Pietro Palli** - http://ppal.li/
+* **Francesco Canovi**  - 
+
+Arabic:
+* **Wassem Mansour** - http://www.sanapix.com
+
+Lithuanian:
+* **Vincent G** - http://www.Host1Free.com
+
+
+
+== Thanks goes out to... ==
+
+* All the translators, and people leaving comments, bug reports and 
+  suggestions on the official page and in the WordPress.org forums
+
+
+
 == Changelog ==
+
+= 1.7.5 =
+* June 17th, 2012
+* bugfix: php error because of referenced variables (thanks kraterdesign!)
+* bugfix: php error on media settings page when a value
+  contains a single quote (thanks crmart, grollaz, amandajoonline!)
+* Advanced Custom Fields compatibility fix (thanks serdominik!)
+* some new and some improved translations
+* moved debug info to Debug Bar plugin
+* minor adjustments in default and simple templates
+* bunch of minor fixes, as always
 
 = 1.7.5-beta-2 =
 * March 10th, 2012
 * bugfix: internet explorer - tinymce focus on insert
-* moved tinymce-related code into a tinymce pugin
+* moved tinymce-related code into a tinymce plugin
 * media listings page - regenerate single image link
 * drag and drop upload to file gallery box
 * insert a tag gallery without any files attached to a post
@@ -599,39 +650,9 @@ file_gallery_get_file_type
 = 1.1 =
 * December 12th, 2009
 * Rewritten a lot of stuff for better WordPress compliance :)
-
-
-
-== More info ==
-
-This plugin uses icons from the awesome famfamfam Silk icon set by 
-Mark James :)
-
-"Silk" can be found at: http://famfamfam.com/lab/icons/silk/
-
-Plugin settings are integrated into media settings page.
-
-Help file is included, you'll find it in the "help" subfolder :)
-
-
-
-== Translation Credits ==
-
-* **Maor Barazany**     - Hebrew  - http://www.maorb.info/
-* **Jean-Michel Meyer** - French  - http://www.li-an.fr/wpplugins/
-* **Pietro Palli**      - Italian - http://ppal.li/
-* **Wassem Mansour**    - Arabic  - http://www.sanapix.com 
-
-
-
-== Thanks goes out to... ==
-
-* All the translators, and people leaving comments, bug reports and 
-  suggestions on the official page and in the WordPress.org forums
-
   
   
-== Plans for the next version? ==
+== Plans for the next versions ==
 
 sooner:
 

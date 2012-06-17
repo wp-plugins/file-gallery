@@ -439,7 +439,8 @@ function file_gallery_shortcode( $content = false, $attr = false )
 				'limit' 			=> -1,
 				'offset'			=> -1,
 				'paginate'			=> 0,
-				'link_size'			=> 'full'
+				'link_size'			=> 'full',
+				'include_meta'		=> false
 			)
 		, $attr)
 	);
@@ -549,7 +550,7 @@ function file_gallery_shortcode( $content = false, $attr = false )
 	if( '' != $tags )
 	{
 		if( '' == $orderby || 'file_gallery' == $orderby )
-			$orderby = "menu_order ID";
+			$orderby = "$wpdb->posts.menu_order, $wpdb->posts.ID";
 
 		$query = array(
 			'post_status'		=> implode(',', $approved_attachment_post_statuses), 
@@ -588,7 +589,7 @@ function file_gallery_shortcode( $content = false, $attr = false )
 
 		if( '' == $orderby || 'rand' == $orderby )
 		{
-			$orderby = sprintf("FIELD(ID,'%s')", str_replace(",", "','", $attachment_ids));
+			$orderby = sprintf("FIELD($wpdb->posts.ID, '%s')", str_replace(",", "','", $attachment_ids));
 			$order   = '';
 		}
 		elseif( 'title' == $orderby )
@@ -612,7 +613,7 @@ function file_gallery_shortcode( $content = false, $attr = false )
 	else
 	{
 		if( '' == $orderby )
-			$orderby = "menu_order ID";
+			$orderby = "$wpdb->posts.menu_order, $wpdb->posts.ID";
 
 		$query = array(
 			'post_parent'		=> $id,
@@ -702,6 +703,7 @@ function file_gallery_shortcode( $content = false, $attr = false )
 
 		$attachment_file = get_attached_file($attachment->ID);
 		$attachment_is_image = file_gallery_file_is_displayable_image($attachment_file);
+		$startcol = '';
 		$endcol = '';
 		$x = '';
 
@@ -800,11 +802,17 @@ function file_gallery_shortcode( $content = false, $attr = false )
 		
 		$param = array_map('trim', $param);
 		
+		if( $include_meta )
+			$meta = get_post_custom($attachment->ID);
+		
 		if( 'object' == $output_type )
 		{
 			if( $output_params )
 				$attachment->params = (object) $param;
 			
+			if( $include_meta )
+				$attachment->meta = (object) $meta;
+
 			$gallery_items[] = $attachment;
 		}
 		elseif( 'array' == $output_type || 'json' == $output_type)
@@ -812,13 +820,20 @@ function file_gallery_shortcode( $content = false, $attr = false )
 			if( $output_params )
 				$attachment->params = $param;
 			
+			if( $include_meta )
+				$attachment->meta = $meta;
+			
 			$gallery_items[] = get_object_vars($attachment);
 		}
 		else
 		{
-			// add the column break class and append a line break...
-			if ( $columns > 0 && ++$i % $columns == 0 )
-				$endcol = ' gallery-endcol';
+			if( $columns > 0 )
+			{
+				if( 0 === $i || 0 === $i % $columns )
+					$startcol = ' gallery-startcol';
+				elseif( ($i+1) % $columns == 0 )// add the column break class
+					$endcol = ' gallery-endcol';
+			}
 
 			// parse template
 			ob_start();
@@ -829,10 +844,12 @@ function file_gallery_shortcode( $content = false, $attr = false )
 			
 			$file_gallery_this_template_counter++;
 			
-			if ( $columns > 0 && $i % $columns == 0 )
+			if ( $columns > 0 && $i+1 % $columns == 0 )
 				$x .= $cleartag;
 			
 			$gallery_items .= $x;
+			
+			$i++;
 		}
 	}
 
@@ -982,4 +999,3 @@ function file_gallery_register_shortcode_handler()
 }
 add_action('init', 'file_gallery_register_shortcode_handler');
 
-?>

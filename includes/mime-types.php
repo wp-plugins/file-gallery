@@ -100,4 +100,3 @@ function file_gallery_get_file_type( $mime )
 	return apply_filters('file_gallery_get_file_type', $type, $mime);
 }
 
-?>

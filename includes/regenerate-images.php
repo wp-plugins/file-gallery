@@ -68,4 +68,3 @@ function file_gallery_regenerate_thumbnails( $attachment_ids = NULL )
 }
 add_action('wp_ajax_file_gallery_regenerate_thumbnails', 'file_gallery_regenerate_thumbnails');
 
-?>

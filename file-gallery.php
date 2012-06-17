@@ -2,7 +2,7 @@
 /*
 Plugin Name: File Gallery
 Plugin URI: http://skyphe.org/code/wordpress/file-gallery/
-Version: 1.7.5-beta-2
+Version: 1.7.5
 Description: "File Gallery" extends WordPress' media (attachments) capabilities by adding a new gallery shortcode handler with templating support, a new interface for attachment handling when editing posts, and much more.
 Author: Bruno "Aesqe" Babic
 Author URI: http://skyphe.org
@@ -31,7 +31,7 @@ Author URI: http://skyphe.org
  * Setup default File Gallery options
  */
 
-define('FILE_GALLERY_VERSION', '1.7.5-beta-2');
+define('FILE_GALLERY_VERSION', '1.7.5');
 define('FILE_GALLERY_DEFAULT_TEMPLATES', serialize( array('default', 'file-gallery', 'list', 'simple') ) );
 
 
@@ -81,7 +81,7 @@ class File_Gallery
 	 */
 	var $version = FILE_GALLERY_VERSION;
 	
-	
+	/***/
 	var $admin_thickbox_enqueued = false;
 
 	/***/
@@ -96,13 +96,10 @@ class File_Gallery
 		// Checks if Attachment custom fields plugin is installed (not released yet)
 		if( false !== strpos(serialize(get_option('active_plugins')), 'attachment-custom-fields.php') )
 			$this->acf = true;
-		
-		if( defined('FORCE_SSL_ADMIN') && true === FORCE_SSL_ADMIN )
-			$this->ssl_admin = true;
 	}
 	
 	
-	function debug_add( $section, $vars )
+	function debug_add( $section = 'default', $vars )
 	{
 		if( ! FILE_GALLERY_DEBUG )
 			return;
@@ -131,42 +128,53 @@ class File_Gallery
 			unset($vars['defaults']);
 			unset($vars['false_defaults']);
 			unset($vars['settings']);
-			
+			unset($vars['acf']);
+			unset($vars['ssl_admin']);
+			unset($vars['admin_thickbox_enqueued']);
+
 			function block($a)
 			{
 				$out = '<ul>';
-				
 				foreach($a as $k => $v)
 				{
-					$out .= '<li>[' . $k . '] => ';
-					
-					if( is_array($v) )
-						$out .= block($v);
-					else
-						$out .= empty($v) ? '""' : $v;
-					
+					$out .= '<li><strong>' . $k . '</strong> => ';
+					$out .= is_array($v) ? block($v) : (empty($v) ? '""' : $v);
 					$out .= '</li>' . "\n";
 				}
-				
 				$out .= '</ul>' . "\n";
 				
 				return $out;
 			}
 			
-			return block($vars);
+			return '<h3 style="font-family: georgia,times,serif; font-size: 22px; margin: 15px 10px 15px 0;">File Gallery debug</h3>' . block($vars);
 		}
 	}
 };
 
 
-function file_gallery_debug_print( $content )
+
+function file_gallery_debug_print( $panels )
 {
-	global $file_gallery;
+	class Debug_Bar_File_Gallery extends Debug_Bar_Panel
+	{
+		function init()
+		{
+			$this->title( __('File Gallery', 'debug-bar') );
+		}
 	
-	return $content . $file_gallery->debug_print();
+		function render()
+		{
+			global $file_gallery;
+			echo $file_gallery->debug_print();
+		}
+	}
+
+	$panels[] = new Debug_Bar_File_Gallery();
+	
+	return $panels;
 }
-if( isset($_GET['file_gallery_debug']) )
-	add_action('the_content', 'file_gallery_debug_print', 100);
+add_action('debug_bar_panels', 'file_gallery_debug_print');
+
 
 
 // Begin
@@ -180,6 +188,9 @@ $file_gallery = new File_Gallery();
 function file_gallery_do_settings()
 {
 	global $file_gallery;
+	
+	if( ! isset($file_gallery) )
+		$file_gallery = new File_Gallery();
 
 	$file_gallery->settings = array(
 			'disable_shortcode_handler' => array(
@@ -211,7 +222,7 @@ function file_gallery_do_settings()
 				'default' => 9, 
 				'display' => true,
 				'title' => __('How many page links should be shown in pagination?', 'file-gallery'),
-				'type' => 'text',
+				'type' => 'number',
 				'section' => 0,
 				'position' => 0
 			),
@@ -236,7 +247,7 @@ function file_gallery_do_settings()
 				'default' => 75, 
 				'display' => true,
 				'title' => __('Default width (in pixels) for thumbnails in File Gallery metabox on post editing screens?', 'file-gallery'),
-				'type' => 'text',
+				'type' => 'number',
 				'section' => 0,
 				'position' => 0
 			),
@@ -412,7 +423,7 @@ function file_gallery_do_settings()
 				'default' => 3600, // == 1 hour 
 				'display' => true,
 				'title' => __("Cache expires after how many seconds? (leave as is if you don't know what it means)", 'file-gallery'),
-				'type' => 'text',
+				'type' => 'number',
 				'section' => 0,
 				'position' => 0
 			),
@@ -1012,9 +1023,9 @@ function file_gallery_js_admin()
 		<script type="text/javascript">
 			var file_gallery_L10n = ' . str_replace($s, $r, json_encode($file_gallery_localize)) . ',
 				file_gallery_options = ' . str_replace($s, $r, json_encode($file_gallery_options)) . ',
-				acf_L10n = ' . str_replace($s, $r, json_encode($acf_localize)) . ',
+				file_gallery_acf_L10n = ' . str_replace($s, $r, json_encode($acf_localize)) . ',
 				init_file_gallery = true,
-				acf_options = ' . str_replace($s, $r, json_encode($acf_options)) . ';
+				file_gallery_acf_options = ' . str_replace($s, $r, json_encode($acf_options)) . ';
 		</script>
 		';
 	}
@@ -1069,8 +1080,8 @@ function file_gallery_js_admin()
 		
 		echo '
 		<script type="text/javascript">
-			var acf_L10n = ' . str_replace($s, $r, json_encode($acf_localize)) . ',
-				acf_options = ' . str_replace($s, $r, json_encode($acf_options)) . ';
+			var file_gallery_acf_L10n = ' . str_replace($s, $r, json_encode($acf_localize)) . ',
+				file_gallery_acf_options = ' . str_replace($s, $r, json_encode($acf_options)) . ';
 		</script>
 		';
 	}
@@ -1374,4 +1385,14 @@ if( 3.1 <= floatval(get_bloginfo('version')) )
 
 if( 3.3 <= floatval(get_bloginfo('version')) )
 	require_once('includes/media-upload.php');
-?>
+
+/* DEBUG 
+function save_error()
+{
+    update_option('plugin_error', ob_get_contents());
+}
+add_action('activated_plugin','save_error');
+echo get_option('plugin_error');
+delete_option('plugin_error');
+*/
+

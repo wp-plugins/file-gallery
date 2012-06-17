@@ -44,10 +44,10 @@ function file_gallery_check_attachment_originality()
 				var file_gallery_originals = <?php echo $originals; ?>,
 					file_gallery_copies = <?php echo $copies; ?>;
 
-				if( null !== file_gallery_originals)
+				if( null !== file_gallery_originals )
 					jQuery(file_gallery_originals).addClass("attachment-original");
 				
-				if( null !== file_gallery_copies)
+				if( null !== file_gallery_copies )
 					jQuery(file_gallery_copies).addClass("attachment-copy");
 			</script>
 		<?php
@@ -481,6 +481,9 @@ function file_gallery_copy_attachment_to_post( $aid, $post_id )
 	
 	foreach( $acf as $key => $val )
 	{
+		if( in_array($key, array('_is_copy_of', '_has_copies')) )
+			continue;
+
 		foreach( $val as $v )
 		{
 			add_post_meta($attachment_id, $key, $v);
@@ -500,7 +503,7 @@ function file_gallery_copy_attachment_to_post( $aid, $post_id )
 	update_post_meta($attachment_id, '_is_copy_of', $aid);
 	
 	// meta for the original attachment (array holding ids of its copies)
-	$has_copies   = get_post_meta($aid, '_has_copies', true);
+	$has_copies = get_post_meta($aid, '_has_copies', true);
 	$has_copies[] = $attachment_id;
 	$has_copies = array_unique($has_copies);
 	
@@ -508,16 +511,19 @@ function file_gallery_copy_attachment_to_post( $aid, $post_id )
 	
 	/*  / copies and originals */
 
-	// copy media tags
-	$media_tags = wp_get_object_terms(array($aid), FILE_GALLERY_MEDIA_TAG_NAME);
-	$tags = array();
-	
-	foreach( $media_tags as $mt )
+	if( defined('FILE_GALLERY_MEDIA_TAG_NAME') )
 	{
-		$tags[] = $mt->name;
+		// copy media tags
+		$media_tags = wp_get_object_terms(array($aid), FILE_GALLERY_MEDIA_TAG_NAME);
+		$tags = array();
+		
+		foreach( $media_tags as $mt )
+		{
+			$tags[] = $mt->name;
+		}
+		
+		wp_set_object_terms($attachment_id, $tags, FILE_GALLERY_MEDIA_TAG_NAME);
 	}
-	
-	wp_set_object_terms($attachment_id, $tags, FILE_GALLERY_MEDIA_TAG_NAME);
 	
 	return $attachment_id;
 }
@@ -710,7 +716,7 @@ function file_gallery_delete_all_attachment_copies( $attachment_id )
 	
 	if( is_array($copies) && ! empty($copies) )
 	{
-		do_action('file_gallery_delete_all_attachment_copies', $attachment_id, &$copies);
+		do_action('file_gallery_delete_all_attachment_copies', $attachment_id, array(&$copies));
 		
 		foreach( $copies as $copy )
 		{
@@ -761,7 +767,7 @@ function file_gallery_promote_first_attachment_copy( $attachment_id, $copies = f
 	if( is_array($copies) && ! empty($copies) )
 	{
 		$promoted_id = array_shift($copies);
-		do_action('file_gallery_promote_first_attachment_copy', $attachment_id, &$promoted_id);
+		do_action('file_gallery_promote_first_attachment_copy', $attachment_id, array(&$promoted_id));
 		delete_post_meta($promoted_id, '_is_copy_of');
 
 		if( ! empty($copies) )
@@ -783,4 +789,3 @@ function file_gallery_promote_first_attachment_copy( $attachment_id, $copies = f
 	return false;
 }
 
-?>

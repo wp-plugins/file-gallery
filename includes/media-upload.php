@@ -2,7 +2,7 @@
 
 function file_gallery_admin_head( $class )
 {
-	if( isset($_GET['file_gallery']) || false !== strpos($_SERVER['HTTP_REFERER'], 'file_gallery=true') )
+	if( isset($_GET['file_gallery']) || ( isset($_SERVER['HTTP_REFERER']) && false !== strpos($_SERVER['HTTP_REFERER'], 'file_gallery=true')) )
 	{
 		?>
 		<style type="text/css">
@@ -17,27 +17,11 @@ function file_gallery_admin_head( $class )
 				min-width: 0;
 				height: auto;
 			}
-			
-			#media-upload.started .max-upload-size,
-			#media-upload.started .after-file-upload
-			{
-				display: none;
-			}
-			
+
 			#media-items
 			{
 				margin-top: 1px;
 				width: 99%;
-			}
-			
-			#media-upload-header,
-			.savebutton,
-			h3.media-title,
-			.toggle,
-			.media-item.error a.dismiss,
-			.media-item.error .progress
-			{
-				display: none !important;
 			}
 			
 			.media-item img
@@ -68,6 +52,18 @@ function file_gallery_admin_head( $class )
 				margin-top: 20px;
 				color: #D54E21;
 			}
+			
+			.toggle,
+			.savebutton,
+			h3.media-title,
+			#media-upload-header,
+			.media-item.error a.dismiss,
+			.media-item.error .progress,
+			#media-upload.started .max-upload-size,
+			#media-upload.started .after-file-upload
+			{
+				display: none !important;
+			}
 		</style>
 		<?php
 	}
@@ -80,7 +76,9 @@ function file_gallery_post_upload_ui()
 	{
 		?>
 		<script type="text/javascript">
-			var topWin = window.dialogArguments || opener || parent || top, file_gallery_upload_error = false, inside_tinymce = false;
+			var topWin = window.dialogArguments || opener || parent || top,
+				file_gallery_upload_error = false,
+				inside_tinymce = false;
 
 			if( "undefined" === typeof(topWin.file_gallery) && "undefined" !== typeof(topWin.top.file_gallery) )
 			{
@@ -161,4 +159,3 @@ function file_gallery_post_upload_ui()
 }
 add_action( 'post-upload-ui', 'file_gallery_post_upload_ui' );
 
-?>

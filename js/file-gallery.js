@@ -378,10 +378,7 @@ jQuery(document).ready(function($)
 
 			file_gallery.options.num_attachments = $("#fg_container #file_gallery_list li").length;
 			
-			//if( 0 < file_gallery.options.num_attachments )
-				$("#file_gallery_copy_all").appendTo("#fg_buttons .advanced");
-			//else
-				//$("#file_gallery_copy_all").appendTo("#fg_buttons");
+			$("#file_gallery_copy_all").appendTo("#fg_buttons .advanced");
 
 			container.css({height : "auto"});
 			$("#file_gallery_switch_to_tags").show();
@@ -1213,9 +1210,6 @@ jQuery(document).ready(function($)
 		{
 			var ed = file_gallery.tinymce_get_editor();
 			
-			//if( tinymce && tinymce.isIE && ed && ! ed.isHidden() && ed.windowManager.insertimagebookmark )
-				//ed.selection.moveToBookmark(ed.windowManager.insertimagebookmark);
-			
 			if( "file_gallery_send_gallery_legend" == id )
 			{
 				var gallery_data = $('#data_collector').val();
@@ -1307,7 +1301,6 @@ jQuery(document).ready(function($)
 		zoom : function( element )
 		{
 			var image = new Image();
-			image.src = $(element).attr("href");
 		
 			$("#file_gallery_image_dialog")
 				.html('<p class="loading_image"><img src="' + file_gallery.options.file_gallery_url + '/images/ajax-loader.gif" alt="' + file_gallery.L10n.loading + '" />	</p>')
@@ -1340,24 +1333,28 @@ jQuery(document).ready(function($)
 					.dialog( 'option', 'position', 'center');
 			});
 			
+			image.src = $(element).attr("href");
+			
 			return false;
 		},
 		
 
 		fieldset_toggle : function( toggler )
 		{
-			var	state = 0,
-				togglee = "file_gallery_toggler",
-				action = "file_gallery_save_toggle_state";
-			
 			if( "undefined" == typeof( toggler ) )
 				return;
 			
+			var	state = 0,
+				togglee = "file_gallery_toggler",
+				action = "file_gallery_save_toggle_state",
+				fieldset = "file_gallery_gallery_options";
+
 			switch( toggler )
 			{
 				case "file_gallery_hide_single_options" : 
 					togglee = "file_gallery_single_toggler";
 					action = "file_gallery_save_single_toggle_state";
+					fieldset = "file_gallery_single_options"
 					break;
 				case "file_gallery_hide_acf" : 
 					togglee = "fieldset_attachment_custom_fields #media-single-form";
@@ -1369,11 +1366,11 @@ jQuery(document).ready(function($)
 
 			if( $("#" + toggler).hasClass("open") )
 			{
-				$("#" + toggler).removeClass("open").addClass("closed");
+				$("#" + toggler + ", #" + fieldset).removeClass("open").addClass("closed");
 			}
 			else
 			{
-				$("#" + toggler).removeClass("closed").addClass("open");
+				$("#" + toggler + ", #" + fieldset).removeClass("closed").addClass("open");
 				state = 1;
 			}
 
@@ -1745,7 +1742,6 @@ jQuery(document).ready(function($)
 						$("#file_gallery_paginate_label").hide();
 				}
 				
-				
 				return false;
 			}
 		});
@@ -1844,7 +1840,8 @@ jQuery(document).ready(function($)
 		// attachment thumbnail click
 		$("#fg_container .fgtt, #fg_container .checker_action").live("click.file_gallery", function()
 		{
-			var p = $(this).parent(), c = "#att-chk-" + p.attr("id").replace("image-", "");
+			var p = $(this).parent(),
+				c = "#att-chk-" + p.attr("id").replace("image-", "");
 			
 			p.toggleClass("selected");
 			$(c).prop("checked", $(c).prop("checked") ? false : true).change();
@@ -1931,10 +1928,7 @@ jQuery(document).ready(function($)
 		// delete / detach single attachment link cancel
 		$("#fg_container .delete_cancel, #fg_container .detach_cancel").live("click", function()
 		{
-			 $(this)
-				.parent("div")
-					.fadeOut(250);
-					
+			 $(this).parent("div").fadeOut(250);
 			 return false;
 		});
 	
@@ -1943,8 +1937,7 @@ jQuery(document).ready(function($)
 		
 		$("#file_gallery_send_gallery_legend, #file_gallery_send_single_legend").live("click", function(e)
 		{
-			if( "click" == e.type )
-				file_gallery.send_to_editor( $(this).attr("id") );
+			file_gallery.send_to_editor( $(this).attr("id") );
 		});
 	
 	
@@ -2054,9 +2047,9 @@ jQuery(document).ready(function($)
 		$("#file_gallery_toggle_textual").live("click", function()
 		{
 			var label = $(this).val();
-			$("#file_gallery_list").toggleClass("textual");
 			
-			$(this).prop("disabled", true).val("...");
+			$("#file_gallery_list").toggleClass("textual");
+			$(this).prop("disabled", true);
 			
 			$.post
 			(
@@ -2068,7 +2061,7 @@ jQuery(document).ready(function($)
 				},
 				function( response )
 				{
-					$("#file_gallery_toggle_textual").prop("disabled", false).val(label);
+					$("#file_gallery_toggle_textual").prop("disabled", false);
 				}
 			);
 		});

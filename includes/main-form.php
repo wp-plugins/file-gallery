@@ -59,7 +59,7 @@
 		</p>
 	<?php endif; ?>
 	
-		<fieldset id="file_gallery_gallery_options"<?php if( false == $file_gallery_options["display_gallery_fieldset"] ){ echo ' class="hidden"'; } ?>>
+		<fieldset id="file_gallery_gallery_options"<?php if( false == $file_gallery_options["display_gallery_fieldset"] ){ echo ' class="hidden"'; }elseif( false == $gallery_state ){ echo ' class="closed"'; } ?>>
 		
 			<legend class="button-primary" id="file_gallery_send_gallery_legend" title="<?php _e("Insert a gallery", "file-gallery"); ?>"><?php _e("Insert a gallery", "file-gallery"); ?>:</legend>
 			<input type="button" id="file_gallery_hide_gallery_options" class="<?php if( false == $gallery_state ){ echo 'closed'; }else{ echo 'open'; } ?>" title="<?php _e("show/hide this fieldset", "file-gallery"); ?>" />
@@ -249,7 +249,7 @@
 		
 		<!-- SINGLE IMAGE OPTIONS -->
 	
-		<fieldset id="file_gallery_single_options"<?php if( false == $file_gallery_options["display_single_fieldset"] ){ echo ' class="hidden"'; } ?>>
+		<fieldset id="file_gallery_single_options"<?php if( false == $file_gallery_options["display_single_fieldset"] ){ echo ' class="hidden"'; }elseif( false == $single_state ){ echo ' class="closed"'; } ?>>
 		
 			<legend class="button-primary" id="file_gallery_send_single_legend" title="<?php _e("Insert single files", "file-gallery"); ?>"><?php _e("Insert single files", "file-gallery"); ?>:</legend>
 			<input type="button" id="file_gallery_hide_single_options" class="<?php if( false == $single_state ){ echo 'closed'; }else{ echo 'open'; } ?>" title="<?php _e("show/hide this fieldset", "file-gallery"); ?>" />
@@ -351,7 +351,7 @@
 					<option value="DESC"<?php if( 'DESC' == $attachment_order){ echo ' selected="selected"'; } ?>><?php _e('DESC', 'file-gallery'); ?></option>
 				</select>
 				
-				<input type="button" id="file_gallery_attachments_sort_submit" class="button" value="<?php _e('Go', 'file-gallery'); ?>" />
+				<input type="button" id="file_gallery_attachments_sort_submit" class="button button-primary" value="<?php _e('Go', 'file-gallery'); ?>" />
 			</p>
 			
 			<a href="#" id="file_gallery_save_menu_order_link" class="button button-secondary"><?php _e("Save attachment order", "file-gallery"); ?></a>
@@ -384,4 +384,3 @@ echo '<script type="text/javascript">
 			
 		jQuery("#file_gallery .hndle").html("<span>' . sprintf($print_attachment_count, $count_attachments) . '</span>");
 	  </script>';
-?>

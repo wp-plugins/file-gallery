@@ -23,11 +23,11 @@ function file_gallery_tinymce_add_plugin( $plugin_array )
 	return $plugin_array;
 }
 
-/*
+
 function file_gallery_tinymce_register_button( $buttons )
 {
 	array_push($buttons, 'separator', 'file_gallery');
 	
 	return $buttons;
 }
-*/
+
