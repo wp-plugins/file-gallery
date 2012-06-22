@@ -13,7 +13,11 @@ jQuery(document).ready(function()
 		jQuery(".gallery.simple").each(function()
 		{
 			var file_gallery_simple_current_image = 1,
-				id = "#" + jQuery(this).attr("id");
+				id = "#" + jQuery(this).attr("id"),
+				linkrel = jQuery(id + " .gallery-item a:first").attr("rel");
+			
+			if( linkrel )
+				linkrel = ' rel="' + linkrel + '"';
 			
 			// and each item in gallery
 			jQuery(id + " .gallery-item").each(function()
@@ -38,7 +42,7 @@ jQuery(document).ready(function()
 					
 					if( "" != file_gallery_simple_link )
 					{
-						jQuery(".gallery_simple_current_image").wrap('<a href="' + current_image_href + '" title="' + strip_tags(current_caption) + '"></a>');
+						jQuery(".gallery_simple_current_image").wrap('<a href="' + current_image_href + '" title="' + strip_tags(current_caption) + '"' + linkrel +'></a>');
 
 						var lightbox = ("thickbox" == file_gallery_simple_linkclass && "function" === typeof(tb_init)) || jQuery.isFunction( jQuery.fn[file_gallery_simple_linkclass] ) ? true : false;
 
@@ -66,7 +70,7 @@ jQuery(document).ready(function()
 			file_gallery_simple_gallery_counter++;
 		});
 
-		jQuery(".gallery_simple_thumbnails a").removeClass(file_gallery_simple_linkclass);
+		jQuery(".gallery_simple_thumbnails a").attr("rel", "").removeClass(file_gallery_simple_linkclass);
 
 		// bind a function to each thumbnail link to replace the bigger image on the left
 		jQuery(".gallery.simple .gallery-item a").live("click", function(e)
