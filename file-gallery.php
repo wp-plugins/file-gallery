@@ -2,7 +2,7 @@
 /*
 Plugin Name: File Gallery
 Plugin URI: http://skyphe.org/code/wordpress/file-gallery/
-Version: 1.7.5.1
+Version: 1.7.5.3
 Description: "File Gallery" extends WordPress' media (attachments) capabilities by adding a new gallery shortcode handler with templating support, a new interface for attachment handling when editing posts, and much more.
 Author: Bruno "Aesqe" Babic
 Author URI: http://skyphe.org
@@ -31,7 +31,7 @@ Author URI: http://skyphe.org
  * Setup default File Gallery options
  */
 
-define('FILE_GALLERY_VERSION', '1.7.5.1');
+define('FILE_GALLERY_VERSION', '1.7.5.3');
 define('FILE_GALLERY_DEFAULT_TEMPLATES', serialize( array('default', 'file-gallery', 'list', 'simple') ) );
 
 
@@ -111,7 +111,7 @@ class File_Gallery
 			if( 'boolean' === $type )
 				$v = false === $v ? 'false' : 'true';
 			
-			$this->debug[$section][$k] = $type . ': ' . $v;
+			$this->debug[$section][$k] = $v;
 		}
 	}
 	
@@ -121,33 +121,38 @@ class File_Gallery
 		if( ! FILE_GALLERY_DEBUG )
 			return;
 
-		if( isset($_GET['file_gallery_debug']) )
-		{
-			$vars = get_object_vars($this);
-			
-			unset($vars['defaults']);
-			unset($vars['false_defaults']);
-			unset($vars['settings']);
-			unset($vars['acf']);
-			unset($vars['ssl_admin']);
-			unset($vars['admin_thickbox_enqueued']);
+		$vars = get_object_vars($this);
+		
+		unset($vars['defaults']);
+		unset($vars['false_defaults']);
+		unset($vars['settings']);
+		unset($vars['acf']);
+		unset($vars['ssl_admin']);
+		unset($vars['admin_thickbox_enqueued']);
 
-			function block($a)
+		function block($a)
+		{
+			$out = '<ul>';
+			foreach($a as $k => $v)
 			{
-				$out = '<ul>';
-				foreach($a as $k => $v)
-				{
-					$out .= '<li><strong>' . $k . '</strong> => ';
-					$out .= is_array($v) ? block($v) : (empty($v) ? '""' : $v);
-					$out .= '</li>' . "\n";
-				}
-				$out .= '</ul>' . "\n";
-				
-				return $out;
+				$out .= '<li><strong>' . $k . '</strong> => ';
+				$out .= is_array($v) || is_object($v) ? block($v) : (empty($v) ? '""' : $v);
+				$out .= '</li>' . "\n";
 			}
+			$out .= '</ul>' . "\n";
 			
-			return '<h3 style="font-family: georgia,times,serif; font-size: 22px; margin: 15px 10px 15px 0;">File Gallery debug</h3>' . block($vars);
+			return $out;
 		}
+		
+		return '
+		<style scoped="scoped">
+			#querylist ul ul
+			{
+				margin-left: 30px;
+			}
+		</style>
+		<h3 style="font-family: georgia,times,serif; font-size: 22px; margin: 15px 10px 15px 0;">File Gallery debug</h3>
+		' . block($vars);
 	}
 };
 
@@ -797,7 +802,7 @@ function file_gallery_filter_plugin_row_meta( $plugin_meta, $plugin_file, $plugi
 {
 	if( 'File Gallery' == $plugin_data['Name'] && is_plugin_active($plugin_file))
 	{
-		array_push($plugin_meta, '<span style="padding: 2px 4px; background: #FFFFEE; color: #777777; border: 1px solid #EEDDCC; border-radius: 3px; border-radius: 3px; -moz-border-radius: 3px; -webkit-border-radius: 3px; -ms-border-radius: 3px; -o-border-radius: 3px;">Visit <a href="http://wordpress.org/plugins/file-gallery/">plugin page</a> or <a href="http://wordpress.org/tags/file-gallery">plugin support forums</a> on WordPress.org</a></span>');
+		array_push($plugin_meta, '<span style="padding: 2px 4px; background: #FFFFEE; color: #777777; border: 1px solid #EEDDCC; border-radius: 3px; border-radius: 3px; -moz-border-radius: 3px; -webkit-border-radius: 3px; -ms-border-radius: 3px; -o-border-radius: 3px;">Visit <a href="http://wordpress.org/extend/plugins/file-gallery/">plugin page</a> or <a href="http://wordpress.org/support/plugin/file-gallery">plugin support forums</a> on WordPress.org</a></span>');
 	}
 	
 	return $plugin_meta;

@@ -3,8 +3,8 @@ Contributors: aesqe
 Donate link: http://skyphe.org/donate/
 Tags: attachment, attachments, gallery, galleries, template, templates, shortcode, file, files, attach, detach, unattach, copy, media, tags, library, custom, custom fields, custom fields for attachments, attachment custom fields, drag drop upload
 Requires at least: 3.1
-Tested up to: 3.4
-Stable tag: 1.7.5.1
+Tested up to: 3.5-alpha-21419
+Stable tag: 1.7.5.3
 
 File Gallery extends WordPress media (attachments) capabilities 
 by adding a new gallery shortcode handler with templating support 
@@ -133,14 +133,14 @@ Help file is included, you'll find it in the "help" subfolder :)
 == Translation Credits ==
 
 Hebrew:
-	* **Maor Barazany** - http://www.maorb.info/
+* **Maor Barazany** - http://www.maorb.info/
 
 French:
 * **Jean-Michel Meyer** - http://www.li-an.fr/wpplugins/
 
 Italian:
 * **Pietro Palli** - http://ppal.li/
-* **Francesco Canovi**  - 
+* **Francesco Canovi**  - http://www.blackstudio.it/
 
 Arabic:
 * **Wassem Mansour** - http://www.sanapix.com
@@ -158,6 +158,11 @@ Lithuanian:
 
 
 == Changelog ==
+
+= 1.7.5.3 =
+* August 4th, 2012
+* bugfix: attachment ordering ignored in galleries and File Gallery metabox
+* bugfix: class names appended ad infinitum when inserting multiple single images
 
 = 1.7.5.1 =
 * June 22nd, 2012

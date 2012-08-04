@@ -13,12 +13,10 @@ function file_gallery_list_attachments(&$count_attachments, $post_id, $attachmen
 	
 	if( '' != $attachment_order && false !== strpos($attachment_order, ',') )
 	{
-		$attachment_ids = str_replace(',', "','", trim($attachment_order, ',') );
-		
 		$query = "SELECT * FROM $wpdb->posts 
-			 WHERE $wpdb->posts.post_parent = " . $post_id . "
-			 AND $wpdb->posts.post_type = 'attachment' 
-			 ORDER BY FIELD(ID, '" . $attachment_ids . "') ";
+			 WHERE post_parent = " . $post_id . "
+			 AND post_type = 'attachment' 
+			 ORDER BY FIELD(ID, " . $attachment_order . ") ";
 
 		$attachments = $wpdb->get_results( $query );
 	}
@@ -34,7 +32,7 @@ function file_gallery_list_attachments(&$count_attachments, $post_id, $attachmen
 			  'post_parent' => $post_id, 
 			  'post_type' => 'attachment', 
 			  'order' => $attachment_order, 
-			  'orderby' => $wpdb->posts . '.' . $attachment_orderby,
+			  'orderby' => $attachment_orderby,
 			  'post_status' => 'inherit'
 		);
 		

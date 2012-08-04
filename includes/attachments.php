@@ -79,6 +79,7 @@ function file_gallery_get_attachment_data()
 	$external_url = $_POST['external_url'];
 	$linkclass 	  = $_POST['linkclass'];
 	$imageclass   = $_POST['imageclass'];
+	$_imageclass = '';
 	$align        = $_POST['align'];
 	$rel          = '';
 	$_caption      = ('true' == $_POST['caption'] || '1' == $_POST['caption']) ? true : false;
@@ -109,6 +110,7 @@ function file_gallery_get_attachment_data()
 
 	foreach( $attachments as $attachment_id )
 	{
+		$_imageclass = '';
 		$caption = $_caption;
 		$attachment = get_post($attachment_id);
 		$excerpt = trim($attachment->post_excerpt);
@@ -117,14 +119,14 @@ function file_gallery_get_attachment_data()
 			$caption = '' != $excerpt ? $excerpt : false;
 		
 		if( false === $caption )
-			$imageclass .= ' align' . $align;
+			$_imageclass = $imageclass . ' align' . $align;
 
-		$imageclass .= ' size-' . $size;
+		$_imageclass .= ' size-' . $size;
 		
 		if( (1 === count($attachments) || (1 < count($attachments) && '' == $linkclass)) && 'attachment' == $linkto )
 			$rel = ' rel="attachment wp-att-' . $attachment->ID . '"';
 
-		echo file_gallery_parse_attachment_data( $attachment, $size, $linkto, $linkclass, $imageclass, $rel, $caption, $align );
+		echo file_gallery_parse_attachment_data( $attachment, $size, $linkto, $linkclass, $_imageclass, $rel, $caption, $align );
 	}
 	
 	exit();

@@ -162,7 +162,7 @@ function file_gallery_save_menu()
 
 	foreach($order as $mo => $ID)
 	{
-		$updates .= sprintf(" WHEN '%d' THEN '%d' ", $ID, $mo);
+		$updates .= sprintf(" WHEN %d THEN %d ", $ID, $mo);
 	}
 	
 	if( false !== $wpdb->query("UPDATE $wpdb->posts SET `menu_order` = CASE `ID` " . $updates . " ELSE `menu_order` END") )

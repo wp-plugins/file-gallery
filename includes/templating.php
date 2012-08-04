@@ -411,10 +411,6 @@ function file_gallery_shortcode( $content = false, $attr = false )
 		shortcode_atts(
 			array(
 				/* default values: */
-			//  'itemtag'    => 'dl',
-			//  'icontag'    => 'dt',
-			//  'captiontag' => 'dd',
-	
 				'order'				=> 'ASC',
 				'orderby'			=> '',
 				'id'				=> $post->ID,
@@ -538,9 +534,9 @@ function file_gallery_shortcode( $content = false, $attr = false )
 	$ignored_attachment_post_statuses  = apply_filters('file_gallery_ignored_attachment_post_statuses', array('trash', 'private', 'pending', 'future'));
 	
 	if( ! empty($approved_attachment_post_statuses) )
-		$post_statuses = " AND ($wpdb->posts.post_status IN ('" . implode("', '", $approved_attachment_post_statuses) . "') ) ";
+		$post_statuses = " AND (post_status IN ('" . implode("', '", $approved_attachment_post_statuses) . "') ) ";
 	elseif( ! empty($ignored_attachment_post_statuses) )
-		$post_statuses = " AND ($wpdb->posts.post_status NOT IN ('" . implode("', '", $ignored_attachment_post_statuses) . "') ) ";
+		$post_statuses = " AND (post_status NOT IN ('" . implode("', '", $ignored_attachment_post_statuses) . "') ) ";
 	else
 		$post_statuses = "";
 	
@@ -550,7 +546,7 @@ function file_gallery_shortcode( $content = false, $attr = false )
 	if( '' != $tags )
 	{
 		if( '' == $orderby || 'file_gallery' == $orderby )
-			$orderby = "$wpdb->posts.menu_order, $wpdb->posts.ID";
+			$orderby = "menu_order ID";
 
 		$query = array(
 			'post_status'		=> implode(',', $approved_attachment_post_statuses), 
@@ -573,7 +569,7 @@ function file_gallery_shortcode( $content = false, $attr = false )
 
 		$file_gallery_query = new WP_Query( $query );
 		$attachments = $file_gallery_query->posts;
-		
+
 		unset($query);
 	}
 	elseif( '' != $attachment_ids )
@@ -589,18 +585,18 @@ function file_gallery_shortcode( $content = false, $attr = false )
 
 		if( '' == $orderby || 'rand' == $orderby )
 		{
-			$orderby = sprintf("FIELD($wpdb->posts.ID, '%s')", str_replace(",", "','", $attachment_ids));
+			$orderby = sprintf("FIELD(ID, %s)", $attachment_ids);
 			$order   = '';
 		}
 		elseif( 'title' == $orderby )
 		{
-			$orderby = "$wpdb->posts.post_title";
+			$orderby = "post_title";
 		}
 		
 		$query = sprintf(
 			"SELECT " . $found_rows . " * FROM $wpdb->posts 
-			 WHERE $wpdb->posts.ID IN (%s) 
-			 AND $wpdb->posts.post_type = 'attachment' 
+			 WHERE ID IN (%s) 
+			 AND post_type = 'attachment' 
 			" . $post_statuses . " ", 
 		$attachment_ids);
 		
@@ -613,16 +609,14 @@ function file_gallery_shortcode( $content = false, $attr = false )
 	else
 	{
 		if( '' == $orderby )
-			$orderby = "$wpdb->posts.menu_order, $wpdb->posts.ID";
+			$orderby = "menu_order ID";
 
 		$query = array(
 			'post_parent'		=> $id,
 			'post_status'		=> implode(',', $approved_attachment_post_statuses), 
-			//'post_status'		=> $approved_attachment_post_statuses, 
 			'post_type'			=> 'attachment', 
 			'order'				=> $order, 
 			'orderby'			=> $orderby,
-			//'numberposts'		=> $limit,
 			'posts_per_page'	=> $limit,
 			'post_mime_type'	=> $mimetype
 		);
@@ -635,7 +629,7 @@ function file_gallery_shortcode( $content = false, $attr = false )
 
 		$file_gallery_query = new WP_Query( $query );
 		$attachments = $file_gallery_query->posts;
-		
+
 		unset($query);
 	}
 	
@@ -656,6 +650,8 @@ function file_gallery_shortcode( $content = false, $attr = false )
 		}
 	}
 
+	$file_gallery->debug_add('attachments_query', compact('file_gallery_query'));
+	
 	if( empty($attachments) )
 		return '<!-- "File Gallery" plugin says: - No attachments found for the following shortcode arguments: "' . json_encode($attr) . '" -->';
 
