@@ -1,5 +1,41 @@
 <?php
 
+function add_media_tag( $meta, $file, $sourceImageType ) 
+{
+    $image_file_types = apply_filters( 'wp_read_image_metadata_types', array( IMAGETYPE_JPEG, IMAGETYPE_TIFF_II, IMAGETYPE_TIFF_MM ) );
+
+    // Check that it's an image type
+    if (  in_array( $sourceImageType, $image_file_types ) && function_exists('iptcparse') )
+	{
+        getimagesize($file, $info);
+		
+		if( isset($info['APP13']) )
+		{
+			$iptc = iptcparse($info['APP13']);
+			
+			if( isset($iptc['2#103']) && isset($iptc['2#103'][0]) ) {
+				$meta['mediatag'] = $iptc['2#103'][0];
+			}
+		}
+    }
+
+    return $meta;
+}
+add_filter('wp_read_image_metadata', 'add_media_tag', 10, 3);
+
+function add_media_tags_to_uploaded_file( $metadata, $attachment_id )
+{
+	if( defined('FILE_GALLERY_MEDIA_TAG_NAME') )
+	{
+		if( isset($metadata['image_meta']['mediatag']) ) {
+			wp_set_object_terms($attachment_id, $metadata['image_meta']['mediatag'] , FILE_GALLERY_MEDIA_TAG_NAME);
+		}
+	}
+	
+	return $metadata;
+}
+add_filter( 'wp_generate_attachment_metadata', 'add_media_tags_to_uploaded_file', 10, 2 );
+
 function file_gallery_check_attachment_originality()
 {
 	global $wp_query, $wpdb;
@@ -319,6 +355,14 @@ function file_gallery_edit_attachment()
 <?php do_action('file_gallery_pre_edit_attachment_post_form', $attachment->ID); ?>
 	
 	<div id="attachment_data_edit_form">
+	
+	<?php
+	
+		$imagemeta = get_post_meta( $attachment->ID, '_wp_attachment_metadata', true );
+		
+		print_r($imagemeta['image_meta']);
+	
+	?>
 	
 		<input type="hidden" name="post_id" id="fgae_post_id" value="<?php echo $_POST['post_id']; ?>" />
 		<input type="hidden" name="attachment_id" id="fgae_attachment_id" value="<?php echo $_POST['attachment_id']; ?>" />

@@ -6,6 +6,14 @@
  */
 function file_gallery_attachment_custom_fields_table( $attachment_id )
 {
+	if( function_exists('get_taxonomies_for_attachments') ) // WP 3.5
+	{
+		$attachment = get_post($attachment_id);
+		require_once(ABSPATH . '/wp-admin/includes/meta-boxes.php');
+		post_custom_meta_box($attachment);
+		return;
+	}
+	
 	$form_fields = array();
 	$custom = get_post_custom($attachment_id);
 	$options = get_option('file_gallery');
@@ -130,7 +138,7 @@ if( false === $file_gallery->acf )
 
 
 /**
- * Displays attachment custom fields on media editing page.
+ * Displays attachment custom fields on media editing page (pre 3.5)
  *
  * @since 1.6.5
  *
@@ -221,3 +229,12 @@ function file_gallery_attachment_fields_to_save( $attachment, $new_data )
 if( false === $file_gallery->acf )
 	add_filter('attachment_fields_to_save', 'file_gallery_attachment_fields_to_save', 10, 2);
 
+/**
+ * Attachment meta box for WordPress >= 3.5
+ * @since 1.7.6
+ */
+function file_gallery_attachment_custom_fields_metabox()
+{
+	global $post;
+	post_custom_meta_box($post);
+}

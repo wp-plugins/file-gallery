@@ -139,11 +139,11 @@ jQuery(document).ready(function($)
 		 */
 		tinymce_gallery : function( title )
 		{
-			var opt = title.replace("gallery", ""), // gets gallery options from image title
-				attachment_ids = opt.match(/attachment_ids=['"]([0-9,]+)['"]/),
+			var opt = title.replace("gallery", "").replace("attachment_ids", "ids"), // gets gallery options from image title
+				attachment_ids = opt.match(/ids=['"]([0-9,]+)['"]/),
 				attachment_includes = opt.match(/include=['"]([0-9,]+)['"]/),
 				post_id = opt.match(/id=['"](\d+)['"]/),
-				size = opt.match(/\ssize=['"]([^'"]+)['"]/i),
+				size = opt.match(/(^|[\s]+)size=['"]([^'"]+)['"]/i),
 				linkto = opt.match(/link=['"]([^'"]+)['"]/i),
 				thelink = linkto ? linkto[1] : "attachment",
 				linkrel = opt.match(/rel=['"]([^'"]+)['"]/i),
@@ -163,12 +163,16 @@ jQuery(document).ready(function($)
 				tags = opt.match(/tags=['"]([^'"]+)['"]/i),
 				tags_from = opt.match(/tags_from=['"]([^'"]+)['"]/i);
 
-			if( linkto && "none" != thelink && "file" != thelink && "parent_post" != thelink )
+			if( thelink === "attachment" && file_gallery_options.wp_version >= 3.5 ) {
+				thelink = "post";
+			}
+
+			if( linkto && thelink !== "none" && thelink !== "file" && thelink !== "parent_post" && thelink !== "post" )
 			{
 				external_url = decodeURIComponent(thelink);
 				thelink = "external_url";
 			}
-			
+		
 			$("#file_gallery_postid").val( post_id ? post_id[1] : ""  );
 			$("#file_gallery_size").val(size ? size[1] : "thumbnail" );
 			$("#file_gallery_linkto").val( thelink );
@@ -463,7 +467,8 @@ jQuery(document).ready(function($)
 				copies = "",
 				originals = "",
 				file_gallery_order = "",
-				file_gallery_orderby = "";
+				file_gallery_orderby = "",
+				include_attribute_name = file_gallery_options.wp_version >= 3.5 ? "ids" : "include";
 			
 			if( "undefined" == typeof(internal_event) )
 				internal_event = "normal";
@@ -608,11 +613,11 @@ jQuery(document).ready(function($)
 				tags_from = "";
 			else
 				tags_from = ' tags_from="all"';
-		
+
 			if( "" != tags )
 				serial = '[gallery tags="' + tags + '"' + tags_from;
 			else if( "" != serial && false === file_gallery.is_all_checked() )
-				serial = '[gallery include="' + serial + '"';
+				serial = '[gallery ' + include_attribute_name + '="' + serial + '"';
 			else
 				serial = '[gallery';
 		
@@ -2066,24 +2071,34 @@ jQuery(document).ready(function($)
 			);
 		});
 		
-		
-		// thickbox window closed
-		// WP >= 3.3
-		if( "function" === typeof(jQuery.fn.on) )
+		if( file_gallery_options.wp_version >= 3.5 )
 		{
-			jQuery(document.body).on("tb_unload", "#TB_window", function(e)
+			jQuery('.media-modal-close').live("click", function(e)
 			{
 				file_gallery.tinymce_deselect( true );
 				file_gallery.init();
 			});
 		}
-		else // WP < 3.3
+		else
 		{
-			jQuery('#TB_window').live("unload", function(e)
+			// thickbox window closed
+			// WP >= 3.3
+			if( "function" === typeof(jQuery.fn.on) )
 			{
-				file_gallery.tinymce_deselect( true );
-				file_gallery.init();
-			});
+				jQuery(document.body).on("tb_unload", "#TB_window", function(e)
+				{
+					file_gallery.tinymce_deselect( true );
+					file_gallery.init();
+				});
+			}
+			else // WP < 3.3
+			{
+				jQuery('#TB_window').live("unload", function(e)
+				{
+					file_gallery.tinymce_deselect( true );
+					file_gallery.init();
+				});
+			}
 		}
 	}
 

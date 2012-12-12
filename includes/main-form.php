@@ -86,7 +86,12 @@
 					<select name="file_gallery_linkto" id="file_gallery_linkto">
 						<option value="none"<?php if( "none" == $file_gallery_options["default_linkto"]){ ?> selected="selected"<?php } ?>><?php _e("nothing (do not link)", "file-gallery"); ?></option>
 						<option value="file"<?php if( "file" == $file_gallery_options["default_linkto"]){ ?> selected="selected"<?php } ?>><?php _e("file", "file-gallery"); ?></option>
-						<option value="attachment"<?php if( "attachment" == $file_gallery_options["default_linkto"]){ ?> selected="selected"<?php } ?>><?php _e("attachment page", "file-gallery"); ?></option>
+						<?php if( floatval(get_bloginfo('version')) >= 3.5 ) : ?>
+							<option value="post"<?php if( "attachment" == $file_gallery_options["default_linkto"]){ ?> selected="selected"<?php } ?>><?php _e("attachment page", "file-gallery"); ?></option>
+						<?php else: ?>
+							<option value="attachment"<?php if( "attachment" == $file_gallery_options["default_linkto"]){ ?> selected="selected"<?php } ?>><?php _e("attachment page", "file-gallery"); ?></option>
+						<?php endif; ?>
+
 						<option value="parent_post"<?php if( "parent_post" == $file_gallery_options["default_linkto"]){ ?> selected="selected"<?php } ?>><?php _e("parent post", "file-gallery"); ?></option>
 						<option value="external_url"<?php if( "external_url" == $file_gallery_options["default_external_url"]){ ?> selected="selected"<?php } ?>><?php _e("external url", "file-gallery"); ?></option>
 					</select>

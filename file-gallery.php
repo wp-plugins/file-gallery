@@ -2,7 +2,7 @@
 /*
 Plugin Name: File Gallery
 Plugin URI: http://skyphe.org/code/wordpress/file-gallery/
-Version: 1.7.5.3
+Version: 1.7.6
 Description: "File Gallery" extends WordPress' media (attachments) capabilities by adding a new gallery shortcode handler with templating support, a new interface for attachment handling when editing posts, and much more.
 Author: Bruno "Aesqe" Babic
 Author URI: http://skyphe.org
@@ -31,7 +31,7 @@ Author URI: http://skyphe.org
  * Setup default File Gallery options
  */
 
-define('FILE_GALLERY_VERSION', '1.7.5.3');
+define('FILE_GALLERY_VERSION', '1.7.6');
 define('FILE_GALLERY_DEFAULT_TEMPLATES', serialize( array('default', 'file-gallery', 'list', 'simple') ) );
 
 
@@ -998,7 +998,8 @@ function file_gallery_js_admin()
 			"num_attachments"    => 1,
 			"tags_from"          => true,
 			"clear_cache_nonce"  => wp_create_nonce('file-gallery-clear_cache'),
-			"post_thumb_nonce"   => wp_create_nonce( "set_post_thumbnail-" . $post_ID )
+			"post_thumb_nonce"   => wp_create_nonce( "set_post_thumbnail-" . $post_ID ),
+			"wp_version"         => floatval(get_bloginfo('version'))
 		);
 		
 		// acf.L10n
@@ -1230,6 +1231,11 @@ function file_gallery()
 	{
 		add_meta_box('file_gallery', __( 'File Gallery', 'file-gallery' ), 'file_gallery_content', 'post', 'normal');
 		add_meta_box('file_gallery', __( 'File Gallery', 'file-gallery' ), 'file_gallery_content', 'page', 'normal');
+	}
+	
+	if( function_exists('get_taxonomies_for_attachments') ) // WP 3.5
+	{
+		add_meta_box( 'file_gallery_attachment_custom_fields', __('File Gallery: Attachment Custom Fields'), 'file_gallery_attachment_custom_fields_metabox', 'attachment', 'normal' );
 	}
 }
 add_action('admin_menu', 'file_gallery');
