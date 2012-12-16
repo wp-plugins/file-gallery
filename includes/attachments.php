@@ -1,41 +1,5 @@
 <?php
 
-function add_media_tag( $meta, $file, $sourceImageType ) 
-{
-    $image_file_types = apply_filters( 'wp_read_image_metadata_types', array( IMAGETYPE_JPEG, IMAGETYPE_TIFF_II, IMAGETYPE_TIFF_MM ) );
-
-    // Check that it's an image type
-    if (  in_array( $sourceImageType, $image_file_types ) && function_exists('iptcparse') )
-	{
-        getimagesize($file, $info);
-		
-		if( isset($info['APP13']) )
-		{
-			$iptc = iptcparse($info['APP13']);
-			
-			if( isset($iptc['2#103']) && isset($iptc['2#103'][0]) ) {
-				$meta['mediatag'] = $iptc['2#103'][0];
-			}
-		}
-    }
-
-    return $meta;
-}
-add_filter('wp_read_image_metadata', 'add_media_tag', 10, 3);
-
-function add_media_tags_to_uploaded_file( $metadata, $attachment_id )
-{
-	if( defined('FILE_GALLERY_MEDIA_TAG_NAME') )
-	{
-		if( isset($metadata['image_meta']['mediatag']) ) {
-			wp_set_object_terms($attachment_id, $metadata['image_meta']['mediatag'] , FILE_GALLERY_MEDIA_TAG_NAME);
-		}
-	}
-	
-	return $metadata;
-}
-add_filter( 'wp_generate_attachment_metadata', 'add_media_tags_to_uploaded_file', 10, 2 );
-
 function file_gallery_check_attachment_originality()
 {
 	global $wp_query, $wpdb;
@@ -338,14 +302,29 @@ function file_gallery_edit_attachment()
 		<?php endif; ?>
 		<br />
 		<div id="attachment_data">
-			<p><strong><?php _e('ID:', 'file-gallery'); ?></strong> <a href="<?php echo admin_url('media.php?attachment_id=' . $attachment->ID . '&action=edit&TB_iframe=1'); ?>" class="thickbox" onclick="return false;"><?php echo $attachment->ID; ?></a></p>
+		<?php
+			$attachment_link = 'post.php?post=' . $attachment->ID . '&action=edit';
+			$original_link = 'post.php?post=' . $attachment->ID . '&action=edit';
+			
+			if( floatval(get_bloginfo('version')) < 3.5 ) {
+				$attachment_link = 'media.php?attachment_id=' . $attachment->ID . '&action=edit';
+			}
+		?>
+			<p><strong><?php _e('ID:', 'file-gallery'); ?></strong> <a href="<?php echo admin_url($attachment_link . '&TB_iframe=1'); ?>" class="thickbox" onclick="return false;"><?php echo $attachment->ID; ?></a></p>
 			<p><strong><?php _e('Date uploaded:', 'file-gallery'); ?></strong><br /><?php echo date(get_option('date_format'), strtotime($attachment->post_date)); ?></p>
 			<p><strong><?php _e('Uploaded by:', 'file-gallery'); ?></strong> <?php echo $post_author; ?></p>
 			<?php if( is_array($has_copies) ) : ?>
 			<p class="attachment_info_has_copies"><?php _e('IDs of copies of this attachment:', 'file-gallery'); ?> <strong><?php foreach( $has_copies as $c){ echo '<a href="' . admin_url('media.php?attachment_id=' . $c . '&action=edit') . '" target="_blank">' . $c . '</a>'; }?></strong></p>
 			<?php endif; ?>
-			<?php if( $is_copy ) : ?>
-			<p class="attachment_info_is_a_copy"><?php _e('This attachment is a copy of attachment ID', 'file-gallery'); ?> <strong><?php echo '<a href="' . admin_url('media.php?attachment_id=' . $is_copy . '&action=edit') . '" target="_blank">' . $is_copy . '</a>'; ?></strong></p>
+			<?php if( $is_copy ) : 
+			
+				$original_link = 'post.php?post=' . $is_copy . '&action=edit';
+			
+				if( floatval(get_bloginfo('version')) < 3.5 ) {
+					$original_link = 'media.php?attachment_id=' . $is_copy . '&action=edit';
+				}
+			?>
+			<p class="attachment_info_is_a_copy"><?php _e('This attachment is a copy of attachment ID', 'file-gallery'); ?> <strong><?php echo '<a href="' . admin_url($original_link) . '" target="_blank">' . $is_copy . '</a>'; ?></strong></p>
 			<?php endif; ?>
 
 			
@@ -355,14 +334,6 @@ function file_gallery_edit_attachment()
 <?php do_action('file_gallery_pre_edit_attachment_post_form', $attachment->ID); ?>
 	
 	<div id="attachment_data_edit_form">
-	
-	<?php
-	
-		$imagemeta = get_post_meta( $attachment->ID, '_wp_attachment_metadata', true );
-		
-		print_r($imagemeta['image_meta']);
-	
-	?>
 	
 		<input type="hidden" name="post_id" id="fgae_post_id" value="<?php echo $_POST['post_id']; ?>" />
 		<input type="hidden" name="attachment_id" id="fgae_attachment_id" value="<?php echo $_POST['attachment_id']; ?>" />
@@ -406,7 +377,6 @@ function file_gallery_edit_attachment()
 	
 	</div>	
 <?php
-
 	do_action('file_gallery_edit_attachment_post_form', $attachment->ID);
 
 	exit();

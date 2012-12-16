@@ -766,6 +766,7 @@ function file_gallery_shortcode( $content = false, $attr = false )
 					$param['link'] = wp_get_attachment_url($attachment->ID);
 					break;
 				case 'attachment' :
+				case 'post' :
 					$param['link'] = get_attachment_link($attachment->ID);
 					break;
 				case 'none' :
