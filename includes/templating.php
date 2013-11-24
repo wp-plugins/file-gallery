@@ -367,6 +367,8 @@ function file_gallery_shortcode( $content = false, $attr = false )
 {
 	global $file_gallery, $wpdb, $post;
 
+	require_once('html5lib/Parser.php');
+
 	// if the function is called directly, not via shortcode
 	if( false !== $content && false === $attr )
 		$attr = wp_parse_args($content);
@@ -435,6 +437,7 @@ function file_gallery_shortcode( $content = false, $attr = false )
 		'paginate'			=> 0,
 		'link_size'			=> 'full',
 		'include_meta'		=> false
+		//,'captions'           => true
 	);
 	
 	if( floatval(get_bloginfo('version')) >= 3.5 ) {
@@ -487,6 +490,10 @@ function file_gallery_shortcode( $content = false, $attr = false )
 	$limit  = (int) $limit;	
 	$offset = (int) $offset;
 	$page   = (int) get_query_var('page');
+
+	// if( $captions === 'false' || $captions == '0' ) {
+	// 	$captions = false;
+	// }
 
 	if( 'false' === $rel || (is_numeric($rel) && 0 === (int) $rel) )
 		$_rel = false;
@@ -777,9 +784,10 @@ function file_gallery_shortcode( $content = false, $attr = false )
 					break;
 			}
 						
-			$param['title'] 		= $attachment->post_title;
-			$param['caption'] 		= $attachment->post_excerpt;
-			$param['description'] 	= $attachment->post_content;
+			$param['title'] = $attachment->post_title;
+			// $param['caption'] = $captions !== false ? $attachment->post_excerpt : '';
+			$param['caption'] = $attachment->post_excerpt;
+			$param['description'] = $attachment->post_content;
 			
 			if( $attachment_is_image )
 			{
@@ -807,7 +815,52 @@ function file_gallery_shortcode( $content = false, $attr = false )
 			
 			$param['attachment_id'] = $attachment->ID;
 		}
-		
+
+		/**
+		 * Make sure that all attributes added/filtered via
+		 * 'wp_get_attachment_link' filter are included here as well
+		 */
+
+		/**
+			$dom_document = new DOMDocument();
+			@$dom_document->loadHTML(wp_get_attachment_link($attachment->ID)); //
+			$wp_attachment_link_attributes = $dom_document->getElementsByTagName('a')->item(0)->attributes;
+		**/
+
+		/**
+		$wp_attachment_link = new SimpleXMLElement(wp_get_attachment_link($attachment->ID));
+		$wp_attachment_link_attributes = $wp_attachment_link->attributes();
+
+		foreach( $wp_attachment_link_attributes as $key => $val )
+		{
+			if( $key === 'title' ) {
+				$param['title'] = $val;
+			}
+			else if( $key === 'class' ) {
+				$param['link_class'] .= ' ' . $val;
+			}
+			else if( $key === 'rel' ) {
+				$param['rel'] .= ' ' . $val;
+			}
+		}
+		**/
+
+		$dom_document = HTML5_Parser::parseFragment(wp_get_attachment_link($attachment->ID));
+		$wp_attachment_link_attributes = $dom_document->item(0)->attributes;
+
+		foreach( $wp_attachment_link_attributes as $attribute )
+		{
+			if( $attribute->name === 'title' ) {
+				$param['title'] = $attribute->value;
+			}
+			else if( $attribute->name === 'class' ) {
+				$param['link_class'] .= ' ' . $attribute->value;
+			}
+			else if( $attribute->name === 'rel' ) {
+				$param['rel'] .= ' ' . $attribute->value;
+			}
+		}
+
 		$param = array_map('trim', $param);
 		
 		if( $include_meta )
@@ -980,12 +1033,22 @@ function file_gallery_do_pagination( $total = 0, $page = 0 )
 			$limit--;
 		}
 		
-		if( $start )
+		if( $start ) {
 			array_unshift($out, str_replace('<a ', '<a title="' . __('Skip to first page', 'file-gallery') . '" class="page"', _wp_link_page(1)) . '&laquo;</a>');
+		}
 		
-		if( $end )
+		if( $end ) {
 			array_push($out, str_replace('<a ', '<a title="' . __('Skip to last page', 'file-gallery') . '" class="page"', _wp_link_page($total)) . '&raquo;</a>');
-		
+		}
+
+		if( $page > 1 ) {
+			array_unshift($out, str_replace('<a ', '<a title="' . __('Previous page', 'file-gallery') . '" class="page"', _wp_link_page($page-1)) . '&lsaquo;</a>');
+		}
+
+		if( $page > 0 && $page < $total ) {
+			array_push($out, str_replace('<a ', '<a title="' . __('Next page', 'file-gallery') . '" class="page"', _wp_link_page($page+1)) . '&rsaquo;</a>');
+		}
+
 		if( 'rtl' == get_bloginfo('text_direction') )
 			$out = array_reverse($out);
 		
