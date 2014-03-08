@@ -207,6 +207,7 @@
 	border: 1px solid #E0E0E0;
 	margin: 3px 2px;
 	padding: 0 2px 0 3px;
+	height: 32px;
 	
 	-moz-border-radius: 3px;
 	-webkit-border-radius: 3px;
@@ -230,7 +231,7 @@
 #file_gallery fieldset p input,
 #file_gallery fieldset p select
 {
-	margin: 0px;
+	/*margin: 0px;*/
 }
 
 #fg_container select option
@@ -446,7 +447,7 @@
 	margin-bottom: -1px;
 	margin-right: -1px;
 	padding: 0;
-	z-index: 99;
+	z-index: 98;
 	
 	border-radius: 5px;
 	-moz-border-radius: 5px;
@@ -530,7 +531,7 @@
 	margin: 0;
 	bottom: 0;
 	right: 0;
-	z-index: 100;
+	/*z-index: 100;*/
 }
 
 #file_gallery_list a.img_zoom
@@ -670,7 +671,7 @@
 	width: 30px;
 	margin-left: -35px;
 	position: relative;
-	z-index: 100;
+	/*z-index: 100;*/
 	background: none !important;
 }
 
@@ -1021,7 +1022,8 @@
 #file_gallery_single_imageclass,
 #file_gallery_single_linkclass,
 #file_gallery_galleryclass,
-#file_gallery_postid
+#file_gallery_postid,
+#file_gallery_linkrel_custom
 {
 	width: 93px;
 }
@@ -1570,4 +1572,82 @@ td.column-post_thumb .no-post-thumbnail
 .attach .media-modal-icon {
     background-image: url(../images/uploader-custom-icons.png);
     background-repeat: no-repeat;
+}
+
+
+/* attachment custom fields */
+
+#attachment-postcustomstuff thead th {
+	padding: 5px 8px 8px;
+	background-color: #f1f1f1;
+}
+
+#attachment-postcustomstuff .submit {
+	border: 0 none;
+	float: none;
+	padding: 0 8px 8px;
+}
+
+#side-sortables #attachment-postcustomstuff .submit {
+	margin: 0;
+	padding: 0;
+}
+
+#side-sortables #attachment-postcustomstuff #attachment-the-list textarea {
+	height: 85px;
+}
+
+#side-sortables #attachment-postcustomstuff td.left input,
+#side-sortables #attachment-postcustomstuff td.left select,
+#side-sortables #attachment-postcustomstuff #attachment-newmetaleft a {
+	margin: 3px 3px 0;
+}
+
+#attachment-postcustomstuff table {
+	margin: 0;
+	width: 100%;
+	border: 1px solid #dfdfdf;
+	border-spacing: 0;
+	background-color: #f9f9f9;
+}
+
+#attachment-postcustomstuff tr {
+	vertical-align: top;
+}
+
+#attachment-postcustomstuff table input,
+#attachment-postcustomstuff table select,
+#attachment-postcustomstuff table textarea {
+	width: 96%;
+	margin: 8px;
+}
+
+#side-sortables #attachment-postcustomstuff table input,
+#side-sortables #attachment-postcustomstuff table select,
+#side-sortables #attachment-postcustomstuff table textarea {
+	margin: 3px;
+}
+
+#attachment-postcustomstuff th.left,
+#attachment-postcustomstuff td.left {
+	width: 38%;
+}
+
+#attachment-postcustomstuff .submit input {
+	margin: 0;
+	width: auto;
+}
+
+#attachment-postcustomstuff #attachment-newmetaleft a {
+	display: inline-block;
+	margin: 0 8px 8px;
+	text-decoration: none;
+}
+
+.no-js #attachment-postcustomstuff #attachment-enternew {
+	display: none;
+}
+
+#post-body-content .compat-attachment-fields {
+	margin-bottom: 20px;
 }
