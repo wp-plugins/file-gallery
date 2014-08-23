@@ -43,7 +43,7 @@ jQuery(document).ready(function()
 						wp.media.model.settings.ajaxurl,
 						{
 							action : "file_gallery_copy_attachments_to_post",
-							post_id : wp.media.model.settings.post.id,
+							post_id : jQuery("#post_ID").val(),
 							ids : _.uniq( _.pluck(selection._byId, "id") ).join(","),
 							_ajax_nonce : file_gallery_attach_nonce
 						},
