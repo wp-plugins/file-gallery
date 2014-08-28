@@ -6,6 +6,7 @@
 	float: left;
 	margin: 0 4px 4px 0;
 	text-align: center;
+	width: calc(100% - 4px);
 }
 .gallery.default .gallery-caption {
 	margin-left: 0;

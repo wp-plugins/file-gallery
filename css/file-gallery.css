@@ -527,11 +527,10 @@
 	padding: 0;
 	display: none;
 	text-align: center;
-	z-index: 98;
+	z-index: 100;
 	margin: 0;
 	bottom: 0;
 	right: 0;
-	/*z-index: 100;*/
 }
 
 #file_gallery_list a.img_zoom
