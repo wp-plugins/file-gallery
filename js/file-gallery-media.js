@@ -4,6 +4,9 @@ jQuery(document).ready(function()
 {
 	"use strict";
 
+	var responseContainerAdded = false;
+	var responseContainer = jQuery('<div class="file-gallery-response" style="display: none;"></div>');
+
 	var wpMediaFramePost = wp.media.view.MediaFrame.Post;
 
 	wp.media.view.MediaFrame.Post = wpMediaFramePost.extend(
@@ -12,9 +15,7 @@ jQuery(document).ready(function()
 		{
 			wpMediaFramePost.prototype.mainInsertToolbar.call(this, view);
 
-			var controller = this,
-				responseContainerAdded = false,
-				responseContainer = jQuery('<div class="file-gallery-response" style="display: none;"></div>');
+			var controller = this;
 
 			view.set( "attach", {
 				style: "primary",
@@ -29,7 +30,8 @@ jQuery(document).ready(function()
 					var state = controller.state(),
 						selection = state.get("selection");
 
-					if( responseContainerAdded === false ) {
+					if( responseContainerAdded === false )
+					{
 						controller.content.get().sidebar.$el.append(responseContainer);
 						responseContainerAdded = true;
 					}
@@ -38,25 +40,21 @@ jQuery(document).ready(function()
 						responseContainer.html("");
 					});
 
-					jQuery.post
-					(
-						wp.media.model.settings.ajaxurl,
-						{
-							action : "file_gallery_copy_attachments_to_post",
-							post_id : jQuery("#post_ID").val(),
-							ids : _.uniq( _.pluck(selection._byId, "id") ).join(","),
-							_ajax_nonce : file_gallery_attach_nonce
-						},
-						function(response)
-						{
-							state.reset();
-							wp.media.editor.get(wpActiveEditor).views._views[".media-frame-content"][0].views._views[""][1].collection.props.set({nocache:(+(new Date()))});
-							responseContainer.html( response.split("#").pop() ).fadeIn(500, function() {
-								responseContainer.fadeOut(15000);
-							});
-						},
-						"html"
-					);
+					var data = {
+						action: "file_gallery_copy_attachments_to_post",
+						post_id: jQuery("#post_ID").val(),
+						ids: _.uniq( _.pluck(selection._byId, "id") ).join(","),
+						_ajax_nonce: file_gallery_attach_nonce
+					};
+
+					jQuery.post(wp.media.model.settings.ajaxurl, data, function ( response )
+					{
+						state.reset();
+
+						responseContainer.html( response.split("#").pop() ).fadeIn(500, function() {
+							responseContainer.fadeOut(15000);
+						});
+					}, "html");
 				}
 			});
 		}
@@ -68,10 +66,6 @@ jQuery(document).ready(function()
 			toolbar = wp.media.editor.get(editor).views._views[".media-frame-toolbar"][0];
 
 		toolbar.selection.reset();
-
-		if( toolbar.views._views[""][1].collection !== void 0 ) {
-			toolbar.views._views[""][1].collection.props.set({nocache:(+(new Date()))});
-		}
 		
 		var attachButton = jQuery(".media-frame-toolbar .media-button-attach"),
 			filters = jQuery("select.attachment-filters");
@@ -97,7 +91,7 @@ jQuery(document).ready(function()
 			attach: true
 		}
 	});
-	
-	jQuery('#tmpl-attachment').remove();
-	jQuery('#tmpl-attachment-new').attr('id','tmpl-attachment');
+
+	jQuery("#tmpl-attachment").remove();
+	jQuery("#tmpl-attachment-filegallery").attr("id", "tmpl-attachment");
 });

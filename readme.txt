@@ -169,6 +169,13 @@ Josh Eaton (https://github.com/jjeaton/)
 
 == Changelog ==
 
+= 1.7.9.6 =
+* September 6th, 2014
+* bugfix: updated media templates for WP4.0!
+* jQuery UI CSS included on post edit screens
+* different color for attachment thumbnail in FG list
+  (easier to distinguish)
+
 = 1.7.9.5 =
 * August 28th, 2014
 * two small css fixes (thanks Li-An!)

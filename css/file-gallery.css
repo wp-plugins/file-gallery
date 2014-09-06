@@ -343,13 +343,13 @@
 #file_gallery_list .sortableitem.post_thumb
 {
 	background-image: url(../images/overlay-featured.png);
-	border-color: #79d2d3;
+	border-color: #FF7A00;
 
-	-moz-box-shadow: 0 0 0 4px #FFCC00 !important;
-	-webkit-box-shadow: 0 0 0 4px #FFCC00 !important;
-	-ms-box-shadow: 0 0 0 4px #FFCC00 !important;
-	-o-box-shadow: 0 0 0 4px #FFCC00 !important;
-	box-shadow: 0 0 0 4px #FFCC00 !important;
+	-moz-box-shadow: 0 0 0 4px #FF7A00 !important;
+	-webkit-box-shadow: 0 0 0 4px #FF7A00 !important;
+	-ms-box-shadow: 0 0 0 4px #FF7A00 !important;
+	-o-box-shadow: 0 0 0 4px #FF7A00 !important;
+	box-shadow: 0 0 0 4px #FF7A00 !important;
 }
 
 #file_gallery_list .sortableitem.selected
@@ -1526,7 +1526,6 @@ td.column-post_thumb .no-post-thumbnail
     background: linear-gradient(to bottom, #F1F1F1, #E1E1E1) repeat scroll 0 0 #F1F1F1;
 	background-color:#F1F1F1;
     border: 1px solid #FFFFFF;
-    border-radius: 3px 3px 3px 3px;
     box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.4);
     display: none;
     height: 24px;
@@ -1541,11 +1540,11 @@ td.column-post_thumb .no-post-thumbnail
 /*
 //show on hover
 
-.attachment:hover .attach, 
+.attachment:hover .attach,
 */
 .attachment .attached .attach,
-.attachment .isattached .attach {   
-	display:block;
+.attachment .isattached .attach {
+	display: block;
 }
 
 .attachment.details .attach {

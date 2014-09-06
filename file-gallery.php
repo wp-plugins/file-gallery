@@ -2,7 +2,7 @@
 /*
 Plugin Name: File Gallery
 Plugin URI: http://skyphe.org/code/wordpress/file-gallery/
-Version: 1.7.9.5
+Version: 1.7.9.6
 Description: "File Gallery" extends WordPress' media (attachments) capabilities by adding a new gallery shortcode handler with templating support, a new interface for attachment handling when editing posts, and much more.
 Author: Bruno "Aesqe" Babic
 Author URI: http://skyphe.org
@@ -31,7 +31,7 @@ Author URI: http://skyphe.org
  * Setup default File Gallery options
  */
 
-define('FILE_GALLERY_VERSION', '1.7.9.5');
+define('FILE_GALLERY_VERSION', '1.7.9.6');
 define('FILE_GALLERY_DEFAULT_TEMPLATES', serialize( array('default', 'file-gallery', 'list', 'simple') ) );
 
 
@@ -1343,6 +1343,8 @@ function file_gallery_css_admin()
 	{
 		wp_enqueue_style('file_gallery_admin', apply_filters('file_gallery_admin_css_location', file_gallery_https( FILE_GALLERY_URL ) . '/css/file-gallery.css'), false, FILE_GALLERY_VERSION );
 
+		wp_enqueue_style('jquery-ui-css', apply_filters('file_gallery_admin_css_location', file_gallery_https( FILE_GALLERY_URL ) . '/css/jquery-ui.smoothness.min.css'), false, FILE_GALLERY_VERSION );
+
 		if( get_bloginfo('text_direction') == 'rtl' ) {
 			wp_enqueue_style('file_gallery_admin_rtl', apply_filters('file_gallery_admin_rtl_css_location', file_gallery_https( FILE_GALLERY_URL ) . '/css/file-gallery-rtl.css'), false, FILE_GALLERY_VERSION );
 		}
@@ -1559,65 +1561,19 @@ function file_gallery_media_columns( $columns )
 }
 add_filter('manage_media_columns', 'file_gallery_media_columns');
 
-function print_new_attachment_template()
+
+function file_gallery_print_media_templates()
 {
-	global $post;
+	global $post, $wp_version;
+
+	$v = (int) $wp_version < 4 ? 39 : 40;
 ?>
-	<script type="text/html" id="tmpl-attachment-new">
-		<# 	if ( <?php echo $post->ID; ?> == data.uploadedTo ) { #>
-		<div class="attachment-preview isattached type-{{ data.type }} subtype-{{ data.subtype }} {{ data.orientation }}">
-		<# } else { #>
-		<div class="attachment-preview type-{{ data.type }} subtype-{{ data.subtype }} {{ data.orientation }}">
-		<# } #>
-			<# if ( data.uploading ) { #>
-				<div class="media-progress-bar"><div></div></div>
-			<# } else if ( 'image' === data.type ) { #>
-				<div class="thumbnail">
-					<div class="centered">
-						<img src="{{ data.size.url }}" draggable="false" />
-					</div>
-				</div>
-			<# } else { #>
-				<img src="{{ data.icon }}" class="icon" draggable="false" />
-				<div class="filename">
-					<div>{{ data.filename }}</div>
-				</div>
-			<# } #>
-
-			<# if ( data.buttons.close ) { #>
-				<a class="close media-modal-icon" href="#" title="<?php _e('Remove'); ?>"></a>
-			<# } #>
-
-			<# if ( data.buttons.check ) { #>
-				<a class="check" href="#" title="<?php _e('Deselect'); ?>"><div class="media-modal-icon"></div></a>
-			<# } #>
-			
-			<# if ( data.buttons.attach ) { #>
-				<a class="attach id_{{ data.id }}" href="#" title="attach/detach"><div class="media-modal-icon"></div></a>
-			<# } #>
-
-		</div>
-		<#
-		var maybeReadOnly = data.can.save || data.allowLocalEdits ? '' : 'readonly';
-		if ( data.describe ) { #>
-			<# if ( 'image' === data.type ) { #>
-				<input type="text" value="{{ data.caption }}" class="describe" data-setting="caption"
-					placeholder="<?php esc_attr_e('Caption this image&hellip;'); ?>" {{ maybeReadOnly }} />
-			<# } else { #>
-				<input type="text" value="{{ data.title }}" class="describe" data-setting="title"
-					<# if ( 'video' === data.type ) { #>
-						placeholder="<?php esc_attr_e('Describe this video&hellip;'); ?>"
-					<# } else if ( 'audio' === data.type ) { #>
-						placeholder="<?php esc_attr_e('Describe this audio file&hellip;'); ?>"
-					<# } else { #>
-						placeholder="<?php esc_attr_e('Describe this media file&hellip;'); ?>"
-					<# } #> {{ maybeReadOnly }} />
-			<# } #>
-		<# } #>
-	</script>
+	<?php require_once('includes/templates-media-wp' . $v . '.php'); ?>
 <?php
 }
-add_action('print_media_templates','print_new_attachment_template');
+add_action('print_media_templates', 'file_gallery_print_media_templates');
+
+
 
 /**
  * Includes
