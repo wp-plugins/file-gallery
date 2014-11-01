@@ -10,6 +10,10 @@ jQuery(document).ready(function($)
 {
 	"use strict";
 
+	if( ! wp || ! wp.media ) {
+		return;
+	}
+
 	$.extend(file_gallery,
 	{
 		tmp : [],
@@ -2133,7 +2137,7 @@ jQuery(document).ready(function($)
 			file_gallery.tinymce_deselect( true );
 			file_gallery.init();
 		});
-
+		
 		jQuery("body").on("tb_unload", "#TB_window", function()
 		{
 			file_gallery.tinymce_deselect( true );

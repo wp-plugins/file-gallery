@@ -4,6 +4,10 @@ jQuery(document).ready(function()
 {
 	"use strict";
 
+	if( ! wp || ! wp.media ) {
+		return;
+	}
+
 	var responseContainerAdded = false;
 	var responseContainer = jQuery('<div class="file-gallery-response" style="display: none;"></div>');
 
