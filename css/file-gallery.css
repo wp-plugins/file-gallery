@@ -1572,6 +1572,10 @@ td.column-post_thumb .no-post-thumbnail
     background-repeat: no-repeat;
 }
 
+.file-gallery-media-menu-item {
+	background: #CAE7F2;
+}
+
 
 /* attachment custom fields */
 

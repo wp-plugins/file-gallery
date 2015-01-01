@@ -33,6 +33,12 @@ jQuery(document).ready(function($)
 			return null;
 		},
 
+		tinymce_is_active: function ()
+		{
+			var editor = file_gallery.tinymce_get_editor();
+			return editor && ! editor.isHidden()
+		},
+
 		/**
 		 * updates the contents of [gallery] shortcode
 		 */
