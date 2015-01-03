@@ -169,6 +169,10 @@ Josh Eaton (https://github.com/jjeaton/)
 
 == Changelog ==
 
+= 1.8.3 =
+* January 3rd, 2015
+* textual mode "detach / delete" dialog made visible
+
 = 1.8.2 =
 * January 3rd, 2015
 * "copy attachments to current post" bugfix

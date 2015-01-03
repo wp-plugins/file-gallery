@@ -162,15 +162,12 @@ function file_gallery_list_attachments(&$count_attachments, $post_id, $attachmen
 				$attached_files .= '<a href="#" class="delete_or_detach_link action" rel="' . $attachment->ID . '">
 					<img src="' . file_gallery_https( FILE_GALLERY_URL ) . '/images/famfamfam_silk/delete.png" alt="' . __("Detach / Delete", "file-gallery") . '" title="' . __("Detach / Delete", "file-gallery") . '" />
 				</a>
-				<div id="detach_or_delete_'  . $attachment->ID . '" class="detach_or_delete">
-					<br />';
+				<div id="detach_or_delete_'  . $attachment->ID . '" class="detach_or_delete">';
 	
 				if( current_user_can('delete_post', $attachment->ID) )
 				{
 					$attached_files .= '<a href="#" class="do_single_delete" rel="' . $attachment->ID . '">' . __("Delete", "file-gallery") . '</a>
-						<br />
-						' . __("or", "file-gallery") . '
-						<br />';
+						' . __("or", "file-gallery") . ' ';
 				}
 					
 				$attached_files .= '<a href="#" class="do_single_detach" rel="' . $attachment->ID . '">' . __("Detach", "file-gallery") . '</a>
