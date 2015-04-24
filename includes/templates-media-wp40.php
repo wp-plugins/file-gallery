@@ -1,9 +1,8 @@
+<!-- copied and modified from wp-includes/media-template.php -->
 <script type="text/html" id="tmpl-attachment-filegallery">
-
-<!-- FILE GALLERY ADDITION -->
-	<div class="{{ <?php echo $post->ID; ?> == data.uploadedTo ? 'isattached' : '' }} attachment-preview js--select-attachment type-{{ data.type }} subtype-{{ data.subtype }} {{ data.orientation }}">
-<!-- /FILE GALLERY ADDITION -->
-
+	<!-- FILE GALLERY ADDITION -->
+	<div class="{{ <?php echo $post->ID; ?> == data.uploadedTo ? 'isattached' : '' }} parent-{{data.uploadedTo}} attachment-preview js--select-attachment type-{{ data.type }} subtype-{{ data.subtype }} {{ data.orientation }}">
+	<!-- /FILE GALLERY ADDITION -->
 		<div class="thumbnail">
 			<# if ( data.uploading ) { #>
 				<div class="media-progress-bar"><div style="width: {{ data.percent }}%"></div></div>
@@ -27,18 +26,15 @@
 		<# if ( data.buttons.close ) { #>
 			<a class="close media-modal-icon" href="#" title="<?php esc_attr_e('Remove'); ?>"></a>
 		<# } #>
-
 		<!-- FILE GALLERY ADDITION -->
 		<# if ( data.buttons.attach ) { #>
 			<a class="attach id_{{ data.id }}" title="<?php _e('This file is attached to current post', 'file-gallery'); ?>"><div class="media-modal-icon"></div></a>
 		<# } #>
 		<!-- /FILE GALLERY ADDITION -->
-
 	</div>
 	<# if ( data.buttons.check ) { #>
 		<a class="check" href="#" title="<?php esc_attr_e('Deselect'); ?>" tabindex="-1"><div class="media-modal-icon"></div></a>
 	<# } #>
-
 	<#
 	var maybeReadOnly = data.can.save || data.allowLocalEdits ? '' : 'readonly';
 	if ( data.describe ) {

@@ -2,7 +2,7 @@
 /*
 Plugin Name: File Gallery
 Plugin URI: http://skyphe.org/code/wordpress/file-gallery/
-Version: 1.8.3
+Version: 1.8.4
 Description: "File Gallery" extends WordPress' media (attachments) capabilities by adding a new gallery shortcode handler with templating support, a new interface for attachment handling when editing posts, and much more.
 Author: Bruno "Aesqe" Babic
 Author URI: http://skyphe.org
@@ -31,7 +31,7 @@ Author URI: http://skyphe.org
  * Setup default File Gallery options
  */
 
-define('FILE_GALLERY_VERSION', '1.8.3');
+define('FILE_GALLERY_VERSION', '1.8.4');
 define('FILE_GALLERY_DEFAULT_TEMPLATES', serialize( array('default', 'file-gallery', 'list', 'simple') ) );
 
 
@@ -1345,7 +1345,7 @@ function file_gallery_css_admin()
 
 		wp_enqueue_style('jquery-ui-css', apply_filters('file_gallery_admin_css_location', file_gallery_https( FILE_GALLERY_URL ) . '/css/jquery-ui.smoothness.min.css'), false, FILE_GALLERY_VERSION );
 
-		if( get_bloginfo('text_direction') == 'rtl' ) {
+		if( is_rtl() ) {
 			wp_enqueue_style('file_gallery_admin_rtl', apply_filters('file_gallery_admin_rtl_css_location', file_gallery_https( FILE_GALLERY_URL ) . '/css/file-gallery-rtl.css'), false, FILE_GALLERY_VERSION );
 		}
 		
@@ -1353,7 +1353,7 @@ function file_gallery_css_admin()
 		{
 			wp_enqueue_style('file_gallery_admin_buttons', apply_filters('file_gallery_admin_css_location', file_gallery_https( FILE_GALLERY_URL ) . '/css/file-gallery-pre35.css'), false, FILE_GALLERY_VERSION );
 			
-			if( get_bloginfo('text_direction') == 'rtl' ) {
+			if( is_rtl() ) {
 				wp_enqueue_style('file_gallery_admin_rtl_buttons', apply_filters('file_gallery_admin_rtl_css_location', file_gallery_https( FILE_GALLERY_URL ) . '/css/file-gallery-pre35-rtl.css'), false, FILE_GALLERY_VERSION );
 			}
 		}
@@ -1566,12 +1566,7 @@ function file_gallery_print_media_templates()
 {
 	global $post, $wp_version;
 
-	$v = (string) $wp_version;
-	$v = str_replace('.', '', $v);
-	$v = substr($v, 0, 2);
-?>
-	<?php require_once('includes/templates-media-wp' . $v . '.php'); ?>
-<?php
+	require_once('includes/templates-media-wp' . ($wp_version < 4 ? 39 : 40) . '.php');
 }
 add_action('print_media_templates', 'file_gallery_print_media_templates');
 

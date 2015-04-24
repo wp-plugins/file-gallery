@@ -1537,6 +1537,11 @@ td.column-post_thumb .no-post-thumbnail
     z-index: 10;
 }
 
+.version-4-2 .attachment .attach
+{
+	right: -9px;
+}
+
 /*
 //show on hover
 

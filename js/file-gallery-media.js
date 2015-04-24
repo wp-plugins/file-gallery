@@ -182,6 +182,6 @@ jQuery(document).ready(function ()
         }
     });
 
-    jQuery("#tmpl-attachment").remove();
+    jQuery("#tmpl-attachment").attr("id", "tmpl-attachment_original");
     jQuery("#tmpl-attachment-filegallery").attr("id", "tmpl-attachment");
 });

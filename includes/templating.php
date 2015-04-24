@@ -1073,7 +1073,7 @@ function file_gallery_do_pagination( $total = 0, $page = 0 )
 			array_push($out, str_replace('<a ', '<a title="' . __('Next page', 'file-gallery') . '" class="page"', _wp_link_page($page+1)) . '&rsaquo;</a>');
 		}
 
-		if( 'rtl' == get_bloginfo('text_direction') )
+		if( is_rtl() )
 			$out = array_reverse($out);
 		
 		return '<div class="wp-pagenavi">' . "\n" . implode("\n", $out) . "\n</div>";
